@@ -1,0 +1,56 @@
+.selected {
+  color: white;
+}
+
+.control-panel-div {
+  background-color: #CFD8DC !important;
+  float: left;
+  width: 20vw;
+  height: 86vh;
+}
+a {
+  color: black;
+  text-decoration: none;
+}
+div.header {
+  display: inline;
+}
+
+.control-panel-div cdk-virtual-scroll-viewport{
+  background-color: #CFD8DC !important;
+  list-style: none;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.control-panel-div li.selected:hover {
+  background-color: rgb(207, 220, 187) !important;
+  color: white;
+}
+.control-panel-div li:hover {
+  color: rgb(139, 99, 96);
+  background-color: #DDD;
+  left: .1em;
+}
+
+.control-panel-div li {
+  font-family: 'Trebuchet MS';
+  font-size: 18px;
+  cursor: pointer;
+  margin: 5px;
+  /*background: rgb(255, 255, 255); */
+  box-shadow: 2px 2px 3px rgba(0.2);
+}
+/*
+li{
+  cursor: pointer;
+  margin: 10px;
+  background: whitesmoke;
+  box-shadow: 2px 2px 3px rgba(0.2);
+}
+*/

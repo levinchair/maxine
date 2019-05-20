@@ -1,0 +1,2 @@
+How to use?
+run 'npm i npm' -> run 'ng serve'/ 'npm start'

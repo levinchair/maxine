@@ -1,0 +1,32 @@
+<div>
+  <div class="chart-view">
+    <div style="display: block">
+      <canvas baseChart
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [legend]="barChartLegend"
+        [chartType]="barChartType">
+      </canvas>
+    </div>
+    <button mat-button mat-raised-button color="primary" (click)="ngAfterViewChecked()">Update</button>
+  </div>
+</div>
+<p>View1 data chart works!</p>
+
+<!-- <div class="container">
+  <div class="row" style="margin-top: 30px">
+      <div class="col-md-3 col-xs-6" *ngFor="let data of updatedData">
+          <div class="card">
+              <div class="card-body">
+                  <p class="card-title">{{ data._id.cat }}<p>
+                  <p class="card-subtitle">{{ data.percOfLand }}<p>
+                  <p class="card-text">{{ data.No_parcels }}</p>
+                  <p class="card-text">{{ data.Scale }}</p>
+                  <p class="card-text">{{ data.AssessedValue }}</p>
+                  <p class="card-text">{{ data.percOfAssessedVal }}</p>
+              </div>
+          </div>
+      </div>
+  </div>
+</div> -->

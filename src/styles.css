@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+body {
+  padding: 0%;
+  margin: 0%;
+}
+/* background color primary */
+.primary{
+  background-color: #3f51b5;
+}
+/* accent color */
+.accent {
+  color: #ff4081;
+}
+button {
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Roboto', sans-serif; }

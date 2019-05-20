@@ -1,0 +1,14 @@
+a {
+    color: black;
+    text-decoration: none;
+  }
+
+  /*.neighborhood-div li.selected:hover {
+    background-color: rgb(207, 220, 187) !important;
+    color: white;
+  } */
+  .neighborhood-div li:hover {
+    color: rgb(139, 99, 96);
+    background-color: #DDD;
+    left: .1em;
+  }

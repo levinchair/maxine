@@ -1,0 +1,8 @@
+<div class="neighbourhood-div">
+  <ul>
+    <li *ngFor= "let hood of neighbourhood" (click)="onSelect(hood)" [class.selected]="hood === selectedHood">      
+      <a routerLink="/view1/{{city}}/{{hood}}">{{hood | uppercase}}</a> 
+      <span  *ngIf=" hood==selectedHood" > </span>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,19 @@
+<header>
+
+  <mat-toolbar color="primary">
+    <span>Terra Mapping &nbsp;&nbsp;&nbsp;&nbsp; </span>
+    <mat-icon class="search">search</mat-icon>
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <input type="text" matInput
+        placeholder="Place"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="off"
+        #search
+        [formAction]="searchControl">
+      </mat-form-field>
+    </form>
+  </mat-toolbar>
+  
+</header>

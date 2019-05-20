@@ -1,0 +1,38 @@
+
+<div class="table-view" >
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- _id Column -->
+    <ng-container matColumnDef="_id" class="mat-table-line">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let element"> <a href="#" [ngStyle]="{'cursor': 'pointer'}">{{element._id.cat}}</a> &nbsp;</td>
+    </ng-container>      
+    <!-- percOfLand Column -->
+    <ng-container matColumnDef="percOfLand">
+      <th mat-header-cell *matHeaderCellDef> percOfLand </th>
+      <td mat-cell *matCellDef="let element"> {{element.percOfLand | number : '1.0-2'}} </td>
+    </ng-container>      
+    <!-- No_parcels Column -->
+    <ng-container matColumnDef="No_parcels">
+      <th mat-header-cell *matHeaderCellDef> No_parcels </th>
+      <td mat-cell *matCellDef="let element"> {{element.No_parcels}} </td>
+    </ng-container>      
+    <!-- Scale Column -->
+    <ng-container matColumnDef="Scale">
+      <th mat-header-cell *matHeaderCellDef> Scale </th>
+      <td mat-cell *matCellDef="let element"> {{element.Scale}} </td>
+    </ng-container>
+    <!-- AssessedValue -->
+    <ng-container matColumnDef="AssessedValue">
+            <th mat-header-cell *matHeaderCellDef> AssessedValue </th>
+            <td mat-cell *matCellDef="let element"> {{element.AssessedValue}} </td>
+    </ng-container>
+    <!-- percOfAssessedVal -->
+    <ng-container matColumnDef="percOfAssessedVal">
+            <th mat-header-cell *matHeaderCellDef> percOfAssessedVal </th>
+            <td mat-cell *matCellDef="let element"> {{element.percOfAssessedVal | number: '1.0-2'}} </td>
+    </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table> 
+</div>

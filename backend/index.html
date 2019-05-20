@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+</head>
+<body>
+  May Node and Express be with you.   
+  <form action="/quotes" method="POST">
+    <div>
+    <input type="text" placeholder="name" name="name">
+    <input type="text" placeholder="quote" name="quote">
+    <button type="submit">Submit</button>
+    </div>
+    <div>
+      <h2>Cities</h2>
+      <ul>
+        <% cities.forEach(function(result) {%>
+            <li> <%= result %></li>
+        <%}); %>
+        </ul>
+    </div>
+  </form>
+</body>
+</html>

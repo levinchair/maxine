@@ -1,0 +1,40 @@
+
+<agm-map 
+  [(latitude)]="location.lat" 
+  [(longitude)]="location.lng" 
+  [(zoom)]="location.zoom"
+  [disableDefaultUI]="true" 
+  [zoomControl]="true" 
+  [(fitBounds)]='location.viewport '
+  [mapTypeControl]="true" 
+  (boundsChange)="centerChanged($event)" 
+  (idle)="loadParkings()" 
+  (mapReady)="mapReady($event)" 
+  (boundsChange)="boundsChanged($event)">>
+  
+  <agm-marker 
+    [(latitude)]="location.marker.lat" 
+    [(longitude)]="location.marker.lng" 
+    [markerDraggable]="location.marker.draggable" 
+    (dragEnd)='markerDragEnd($event)'>
+  </agm-marker>
+
+  <agm-circle 
+    [latitude]="location.lat" 
+    [longitude]="location.lng"
+    [(radius)]="circleRadius"
+    [fillColor]="'blue'"
+    [circleDraggable]="true"
+    [editable]="true">
+  </agm-circle>
+
+  <button 
+    title="Search on map"  
+    (click)='updateOnMap()' 
+    type="submit" 
+    class="btn btn-primary" 
+    id="search">
+    Search
+  </button>
+  
+</agm-map><br>
