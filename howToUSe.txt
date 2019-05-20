@@ -1,2 +1,7 @@
 How to use?
 run 'npm i npm' -> run 'ng serve'/ 'npm start'
+
+To start the server, run in the root directory:
+	node server.js 
+
+
