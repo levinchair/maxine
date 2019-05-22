@@ -1,8 +1,9 @@
 var mongoose = require("mongoose");
-const mongo=mongoose.connect('mongodb://localhost:27017/urbanNeighbourhood',{ useNewUrlParser: true }
+// local database uri: 'mongodb://localhost:27017/urbanNeighbourhood'
+const mongo=mongoose.connect('mongodb://basic:chargerHPl1908w@18.223.172.169:27017/urbanNeighbourhood2',{ useNewUrlParser: true }
 ,(err,res)=>{
 if(err) throw err;
-console.log("Connected to database");
+console.log("Connected to database 1");
 });
 var schema = mongoose.Schema;
 var quotesDataSchema = new schema({},{collection:'cuyahoga'});

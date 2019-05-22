@@ -13,7 +13,11 @@ router.get("/view1/:city/:hood",(req,res)=>{
     var totalAssVal;
     console.log("selected hood: ",this.hood);
     //db.aggregate( [ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{ "$group":{ "_id":null, "Assval": {"$sum":"$properties.GCERT3"} } },{"$project":{"_id":1,"Assval":1}} ])//,function(err,data){
-    db.aggregate( [ {"$match":{"properties.PAR_CITY":this.city,"properties.SPA_NAME":this.hood}},{ "$group":{ "_id":null, "Assval": {"$sum":"$properties.GCERT3"} } },{"$project":{"_id":1,"Assval":1}} ])//,function(err,data){
+    db.aggregate( [ {"$match":
+                            {"properties.PAR_CITY":this.city,"properties.SPA_NAME":this.hood}},
+                    { "$group":{ "_id":null, "Assval": {"$sum":"$properties.GCERT3"} } },
+                    {"$project":{"_id":1,"Assval":1}} 
+                  ])//,function(err,data){
     .exec(function(err, data) {   
          if(err)
           {
