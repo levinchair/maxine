@@ -1,8 +1,11 @@
 import { Component, Input, ViewChild, NgZone, OnInit, HostBinding } from '@angular/core';
-import { MapsAPILoader, AgmMap} from '@agm/core';
+import { MapsAPILoader, AgmMap, AgmDataLayer 	} from '@agm/core';
 import { GoogleMapsAPIWrapper } from '@agm/core/services/google-maps-api-wrapper';
 import { LocationService } from '../Service/location.service';
 import { wrappedError } from '@angular/core/src/error_handler';
+ 
+import { GeometryService } from '../Service/geometry.service';
+import { featureCollection } from  "../../model/featurecollection.model";
  
 declare var google: any;
  
@@ -31,7 +34,9 @@ interface Location {
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.css'],
   })
-  export class MapComponent implements OnInit { 
+  export class MapComponent {
+	error: any;
+	layer: featureCollection;
     circleRadius:number = 1000;
     flag;
     geocoder:any;
@@ -52,9 +57,12 @@ interface Location {
     // @ViewChild(AgmMap) map: AgmMap;
     @ViewChild(AgmMap) map: any;
   header: string;
-    constructor(public mapsApiLoader: MapsAPILoader,
+    constructor(
+	  private geometryService: GeometryService,
+	  public mapsApiLoader: MapsAPILoader,
       private zone: NgZone,
-      private wrapper: GoogleMapsAPIWrapper, private locationService: LocationService) {
+      private wrapper: GoogleMapsAPIWrapper, 
+	  private locationService: LocationService) {
             this.mapsApiLoader = mapsApiLoader;
             this.zone = zone;
             this.wrapper = wrapper;
@@ -62,7 +70,7 @@ interface Location {
             this.geocoder = new google.maps.Geocoder();
             });
       }
-      ngOnInit() {
+    ngOnInit() {
         this.location.marker.draggable = true;
        
     }
@@ -70,9 +78,24 @@ interface Location {
       this.map = event;
       this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('search'));
     }
+	
+	//this function will get the geometry and store in layer var array
+	showGeometry() {
+		this.geometryService.getGeometry()
+			.subscribe( //subscribe is async since its waiting for http resp
+				data  => {
+					this.layer = data;
+					//alert(JSON.stringify(this.layer));
+				}		
+			);
+	}
+	
     updateOnMap() {
+	
+	  this.showGeometry();
+	  
       this.flag=this.locationService.getFlag();
-      console.log(" Map Flag: ",this.flag);
+      //console.log(" Map Flag: ",this.flag);
       let full_address:string 
       if(this.flag)
       {
@@ -110,7 +133,8 @@ interface Location {
       if (this.location.address_country) full_address = full_address + " " + this.location.address_country
       this.flag=false;
       this.header="";
-      this.findLocation(full_address);                                                                                                                                                                                                                                                                  
+      this.findLocation(full_address);
+	  
     }
     
     findLocation(address) {
@@ -118,7 +142,7 @@ interface Location {
       this.geocoder.geocode({
         'address': address
       }, (results, status) => {
-        console.log(results);
+        //console.log(results);
         if (status == google.maps.GeocoderStatus.OK) {
           for (var i = 0; i < results[0].address_components.length; i++) {
             let types = results[0].address_components[i].types

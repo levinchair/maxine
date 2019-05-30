@@ -47,12 +47,12 @@ export class NeighbourhoodService {
     // this is the ulitmate method to get selected city and selected hood from neighbourhood component
     sendCity(_city: string) {
         this._city = _city;
-        console.log(this._city);
+        //console.log(this._city);
         return this._city;
     }  
     sendNeighborhood(_hood: string) {
         this._hood = _hood;
-        console.log(this._hood);
+        //console.log(this._hood);
         return this._hood;
     }
     // getCity(){

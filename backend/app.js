@@ -12,13 +12,14 @@ var router6= require("./router/view3");
 var router7= require("./router/view4");
 var app = express();
 
-mongoose.Promise=global.Promise;
+mongoose.Promise = global.Promise;
+/*
 const mongo=mongoose.connect('mongodb://basic:chargerHPl1908w@18.223.172.169:27017/urbanNeighbourhood2',{ useNewUrlParser: true }
 ,(err,res)=>{
 if(err) throw err;
 console.log("Connected to database 2");
 });
-
+*/
 console.log("Node is running");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

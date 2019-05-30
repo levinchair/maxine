@@ -3,7 +3,7 @@ import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import { ChartsModule } from 'ng2-charts';
 import { DataTableService } from '../../Service/data-table.service';
-import { updateBinding } from '@angular/core/src/render3/instructions';
+//import { updateBinding } from '@angular/core/src/render3/instructions';
 import { Observable } from 'rxjs';
 import {view1 } from 'src/model/view1.model';
 

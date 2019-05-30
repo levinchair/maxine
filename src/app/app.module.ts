@@ -1,6 +1,7 @@
 import { AppRoutingModule } from './app-routing.module';
 import { GeojsonDataService } from './Service/geojson-data.service';
 import { CitiesService } from './Service/cities.service';
+import { GeometryService } from './Service/geometry.service';
 import { NeighbourhoodService } from './Service/neighbourhood.service';
 import { LocationService } from './Service/location.service';
 import { ToggleService } from './Service/toggle.service';
@@ -116,6 +117,7 @@ import { View4DataChartComponent } from './data-charts/view4-data-chart/view4-da
     DataTable2Service,
     DataTable3Service,
     DataTable3Service,
+	GeometryService,
     GoogleMapsAPIWrapper
   ],
   bootstrap: [AppComponent]

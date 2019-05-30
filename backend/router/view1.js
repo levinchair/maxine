@@ -25,9 +25,10 @@ router.get("/view1/:city/:hood",(req,res)=>{
           }
           else
           {
-                 console.log(JSON.stringify(data));
-                 totalAssVal=data.map(function(v){
-                             
+             console.log(JSON.stringify(data));
+             console.log(data);
+             totalAssVal = data.map(function (v) {
+                 
                      return v.Assval;
                  });
                  console.log("Total Assessed Value: "+totalAssVal);
