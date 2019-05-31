@@ -6,11 +6,13 @@
   [disableDefaultUI]="true" 
   [zoomControl]="true" 
   [(fitBounds)]='location.viewport '
-  [mapTypeControl]="true" 
-  (boundsChange)="centerChanged($event)" 
-  (idle)="loadParkings()" 
+  [mapTypeControl]="true" 	
   (mapReady)="mapReady($event)" 
-  (boundsChange)="boundsChanged($event)">>
+  >
+  
+  <agm-data-layer [geoJson]="layer"> 
+  
+  </agm-data-layer>
   
   <agm-marker 
     [(latitude)]="location.marker.lat" 

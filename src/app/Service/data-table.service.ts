@@ -67,8 +67,8 @@ export class DataTableService{
         
         this._city=this.sendCity();
         this._neighborhood=this.sendHood();
-        console.log("city",this._city);
-        console.log("hood",this._neighborhood);
+        //console.log("city",this._city);
+        //console.log("hood",this._neighborhood);
         if(this._city!=null && this._neighborhood!=null)
         {
               this.http.get<{viewData:view1[]}>(`http://localhost:3000/view1/${this._city}/${this._neighborhood}`)
