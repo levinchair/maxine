@@ -28,14 +28,25 @@ export class GeometryService {
 	getGeometry(){
 		 //alert(this._hood);
      //removed <featureCollection> for compatability with leaflet
-		return this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
-          .pipe( // rxJS pipe runs multiple RxJS operators
-			tap( // tap will allow me to peek into the response before subscribe
-				// for some reason i am forced to check this.
-				(data: any) => console.log("geo data: " + JSON.stringify(data)),
-				error => alert("Error: " + error)
-			)
-		  );
+     if(this._hood !== undefined && this._city !== undefined){
+  		return this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
+            .pipe( // rxJS pipe runs multiple RxJS operators
+  			tap( // tap will allow me to peek into the response before subscribe
+  				// for some reason i am forced to check this.
+  				(data: any) => console.log("geo data: " + JSON.stringify(data)),
+  				error => alert("Error: " + error)
+  			)
+  		  );
+    }else if(this._hood === undefined && this._city !== undefined){
+        return this.http.get(`http://localhost:3000/showgeometry/${this._city}/`)
+            .pipe( // rxJS pipe runs multiple RxJS operators
+        tap( // tap will allow me to peek into the response before subscribe
+          // for some reason i am forced to check this.
+          (data: any) => console.log("geo data: " + JSON.stringify(data)),
+          error => alert("Error: " + error)
+        )
+        );
+    }
 	}
 
 }
