@@ -28,7 +28,7 @@ export class ControlPanelComponent implements OnInit {
      private locationService:LocationService,
 	 private geometryService:GeometryService) { }
 
-  cities = [];
+  cities : string[];
   cityFromService = this.neighbourhoodService.getSelectedCity();
   selectedCity;
   private citiesSub: Subscription;
@@ -48,7 +48,7 @@ export class ControlPanelComponent implements OnInit {
   
  ngOnInit() {
     this.citiesSub = this.cityService.getCity()
-    .subscribe((cities: string[]) => {
+    .subscribe( (cities : string[]) => {
       this.cities = cities;
       //console.log(this.cities);
     });

@@ -120,7 +120,6 @@ export class DataTableService{
               ()=>{
                 this.updatedData1.complete();
               });
-             // return this.updatedData1.asObservable();
         }
         else if(this._city!=null && this._neighborhood==null)
         {

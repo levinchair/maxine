@@ -25,7 +25,7 @@ export class NeighborhoodComponent implements OnInit {
 private selectedCity;
 private selectedHood;
 onSelectFlag=false;
-neighbourhood=[];
+neighbourhood : string[];
 _neighbourhood:string;
 constructor( 
   private neighbourhoodService: NeighbourhoodService, 
@@ -58,7 +58,7 @@ onSelect(hood: string) {
     this.selectedCity = this.neighbourhoodService.getSelectedCity();
 	//alert("selected city should be undefined" + this.selectedCity);
     this.neighbourhoodService.getNeighbourhood(this.selectedCity)
-    .subscribe( (neighborhood :string[])=>{
+    .subscribe( (neighborhood: string[]) =>{
       this.neighbourhood=neighborhood;
     } );
    

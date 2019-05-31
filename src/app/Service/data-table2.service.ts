@@ -57,7 +57,7 @@ export class DataTable2Service{
                   this.http.get<{viewData:view2[]}>(`http://localhost:3000/view2/${this._city}/${this._neighborhood}`)
                   .subscribe( (view) => {        
                   this.viewData=view;
-                  console.log("viewData",this.viewData)
+                  console.log("viewData",JSON.stringify(this.viewData))
                   this.dupviewData.length=0;
                   this.viewData.forEach(v => {
                     // console.log("get v",v);
@@ -66,7 +66,7 @@ export class DataTable2Service{
                           this.dupviewData.push(v);              
                       }
                   })
-                  console.log("DupviewData",this.dupviewData);
+                  console.log("DupviewData",JSON.stringify(this.dupviewData));
                   this.dataSource=this.dupviewData;
                   this.dataSource.sort((l,r)=>{
                     if(l._id <r._id )
