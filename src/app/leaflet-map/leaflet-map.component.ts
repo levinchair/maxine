@@ -14,6 +14,8 @@ export class LeafletMapComponent implements OnInit {
   map: any;
   geoJsonLayer;
   layerGroup: any;
+  html_city: String;
+  html_neighborhood: String;
   constructor(
     private geometryService: GeometryService
   ) { }
@@ -27,13 +29,17 @@ export class LeafletMapComponent implements OnInit {
   }
 
   showGeometry(){
+    this.html_city = this.geometryService.getCity();
+    this.html_neighborhood = this.geometryService.getHood();
+    
     this.geometryService.getGeometry()
       .subscribe( //subscribe is async since its waiting for http resp
 				data  => {
-					this.geoJsonLayer.addData(data);
+          //console.log("SIZE = " + JSON.stringify(data).length);
+          this.geoJsonLayer.addData(data);
           //gets the maximum view size for map
           var latLngBounds = this.geoJsonLayer.getBounds();
-          this.map.fitBounds(latLngBounds);
+          this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
 				}
 			);
   }

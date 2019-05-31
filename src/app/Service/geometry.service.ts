@@ -13,7 +13,6 @@ import { featureCollection } from  "../../model/featurecollection.model";
 export class GeometryService {
 	private _city;
 	private _hood;
-
 	constructor(private http: HttpClient) { }
 
 	setCity(city: string){
@@ -25,6 +24,14 @@ export class GeometryService {
 	this._hood = hood;
      //alert("hood geo: " + this._hood);
 	}
+  getCity(){
+    //console.log(this._city);
+    return this._city;
+  }
+  getHood(){
+    //console.log(this._hood);
+    return this._hood;
+  }
 	getGeometry(){
 		 //alert(this._hood);
      //removed <featureCollection> for compatability with leaflet
