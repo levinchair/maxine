@@ -31,6 +31,9 @@ export class LeafletMapComponent implements OnInit {
       .subscribe( //subscribe is async since its waiting for http resp
 				data  => {
 					this.geoJsonLayer.addData(data);
+          //gets the maximum view size for map
+          var latLngBounds = this.geoJsonLayer.getBounds();
+          this.map.fitBounds(latLngBounds);
 				}
 			);
   }

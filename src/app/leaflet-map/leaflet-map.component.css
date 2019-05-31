@@ -1,7 +1,16 @@
 #map{
-  height:500px;
+  height:86vh;
   width:500px;
   float: left;
   box-sizing: border-box;
   background: whitesmoke;
+  z-index:1;
+}
+button{
+  position:relative;
+  width:55px;
+  height:25px;
+  left:-57px;
+  top:2px;
+  z-index:2;
 }

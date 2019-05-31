@@ -19,7 +19,7 @@ div.header {
 .control-panel-div cdk-virtual-scroll-viewport{
   background-color: #CFD8DC !important;
   list-style: none;
-  height: 100%;
+  height: 77vh;
   width: 100%;
   display: flex;
   align-items: center;
