@@ -61,7 +61,7 @@ export class View1DataChartComponent implements OnInit {
     this.dataTable.getData()
     .subscribe((data: view1[])=>{
         this.updatedData=data;
-            console.log("data: ",this.updatedData);
+            //console.log("data: ",this.updatedData);
 
     });
     // barChartLabels:this.updatedData._id;

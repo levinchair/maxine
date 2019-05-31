@@ -12,29 +12,30 @@ import { featureCollection } from  "../../model/featurecollection.model";
 })
 export class GeometryService {
 	private _city;
-	private _hood; 
+	private _hood;
 
 	constructor(private http: HttpClient) { }
-	
+
 	setCity(city: string){
 		this._city = city;
 		//alert("city geo: " +this._city);
 	}
 	setHood(hood: string){
-    
+
 	this._hood = hood;
      //alert("hood geo: " + this._hood);
 	}
 	getGeometry(){
 		 //alert(this._hood);
-		return this.http.get<featureCollection>(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
+     //removed <featureCollection> for compatability with leaflet
+		return this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
           .pipe( // rxJS pipe runs multiple RxJS operators
 			tap( // tap will allow me to peek into the response before subscribe
-				// for some reason i am forced to check this. 
-				(data: featureCollection) => console.log("geo data: " + JSON.stringify(data)),
+				// for some reason i am forced to check this.
+				(data: any) => console.log("geo data: " + JSON.stringify(data)),
 				error => alert("Error: " + error)
 			)
-		  );		
+		  );
 	}
 
 }

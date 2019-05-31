@@ -7,9 +7,9 @@ import { view2 } from '../../model/view2.model';
 @Injectable({
   providedIn: 'root'
 })
-export class DataTableService{ 
+export class DataTableService{
   private _city;
-  private _neighborhood; 
+  private _neighborhood;
   private viewData;
   private dupviewData = [];
 
@@ -22,17 +22,17 @@ export class DataTableService{
   private yLandChart: Array<number>;
   private updatedData;
 
-  constructor(private http:HttpClient) { 
+  constructor(private http:HttpClient) {
     this.viewData=[];
-    this.dupviewData=[];    
+    this.dupviewData=[];
   }
-  
+
   setCity(city: string){
     this._city = city;
     // console.log(this._city);
   }
   setHood(hood: string){
-    
+
     this._neighborhood = hood;
     // console.log(this._neighborhood);
   }
@@ -49,22 +49,22 @@ export class DataTableService{
     return this.xIDChart.asObservable();
   }
   setData(data){
-    console.log("setData",data);
+    //console.log("setData",data);
     this.updatedData=data;
   }
   public getData():any{
     const dataObservable = new Observable(observer=>{
       observer.next(this.updatedData);
     });
-    console.log("get data:",this.updatedData);
+    //console.log("get data:",this.updatedData);
     return dataObservable;
-    
+
     // return this.updatedData;
   }
-  
+
   // view1 methods: getView1() and getUpdatedData1()
   getView1(){
-        
+
         this._city=this.sendCity();
         this._neighborhood=this.sendHood();
         //console.log("city",this._city);
@@ -77,11 +77,11 @@ export class DataTableService{
                 this.viewData=view;
                 this.viewData.forEach(v => {
                   if(v._id.cat != null && !this.dupviewData.includes(v._id.cat)){
-                    this.dupviewData.push(v);              
+                    this.dupviewData.push(v);
                   }
               })
               this.dataSource=this.dupviewData;
-        
+
               console.log(this.dataSource);
               //this.dupviewData.length=0;
               this.dataSource.sort((l,r)=>{
@@ -91,8 +91,8 @@ export class DataTableService{
                     return 1;
                 else
                     return 0;
-              }) 
-             
+              })
+
               this.updatedData1.next([...this.dataSource]);
               console.log("updatedData1 ",this.dataSource);
               this.setData(this.dataSource);
@@ -113,7 +113,7 @@ export class DataTableService{
               this.yLandChart = this.dataSource.map((d)=> { return d.percOfLand});
               this.xIDChart = this.xIDChart;
               this.yLandChart = this.yLandChart;
-              console.log(this.xIDChart, this.yLandChart); 
+              console.log(this.xIDChart, this.yLandChart);
 
 //----------------------------------------------------------------------------chart----------------------------------------------------
               },
@@ -130,7 +130,7 @@ export class DataTableService{
                 this.viewData=view;
                 this.viewData.forEach(v => {
                   if(v._id.cat != null && !this.dupviewData.includes(v._id.cat)){
-                    this.dupviewData.push(v);              
+                    this.dupviewData.push(v);
                   }
               })
               this.dataSource=this.dupviewData;
@@ -143,7 +143,7 @@ export class DataTableService{
                     return 1;
                 else
                     return 0;
-              }) 
+              })
               this.updatedData1.next([...this.dataSource]);
               this.setData(this.updatedData1);
 //----------------------------------------------------------------------------chart----------------------------------------------------
@@ -161,20 +161,20 @@ export class DataTableService{
               this.yLandChart = this.dataSource.map((d)=> { return d.percOfLand});
               this.xIDChart = this.xIDChart.slice(1);
               this.yLandChart = this.yLandChart.slice(1);
-              console.log(this.xIDChart, this.yLandChart); 
+              console.log(this.xIDChart, this.yLandChart);
 //----------------------------------------------------------------------------chart----------------------------------------------------
               },
               ()=>{
-                
+
                 this.updatedData1.complete();
               });
-             
+
         }
-       
+
         this.setHood(null);
         return this.updatedData1.asObservable();
   }
-  
+
   // getUpdatedData1(){
   //   return this.updatedData1.asObservable();
   // }
@@ -185,13 +185,13 @@ export class DataTableService{
     /* From Heta:
     Neha, I was lately working on this function. The scene is the function isnt reached out. The reason
     is entire service is working only via observables, but this function is static. I am confused how to
-    call this.xIDChart and this.yLandChart as an observable! 
+    call this.xIDChart and this.yLandChart as an observable!
     */
     console.log('chart called');
-   
+
     this.xIDChart = this.xIDChart.slice(1);
     this.yLandChart = this.yLandChart.slice(1);
-    console.log("CHART",this.xIDChart, this.yLandChart); 
+    console.log("CHART",this.xIDChart, this.yLandChart);
   }
 
 }

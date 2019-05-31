@@ -27,13 +27,13 @@ export class ControlPanelComponent implements OnInit {
      private dataTable4Service:DataTable4Service,
      private locationService:LocationService,
 	 private geometryService:GeometryService) { }
-  
+
   cities = [];
   cityFromService = this.neighbourhoodService.getSelectedCity();
   selectedCity;
   private citiesSub: Subscription;
-  
-  onSelect(city: string) { 
+
+  onSelect(city: string) {
     this.selectedCity = city;
 	//alert("Control Panel: " + this.selectedCity);
     this.neighbourhoodService.setSelectedcity(this.selectedCity);
@@ -43,9 +43,9 @@ export class ControlPanelComponent implements OnInit {
     this.dataTable4Service.setCity(this.selectedCity);
     this.locationService.setCity(this.selectedCity);
     this.locationService.setFlag(true);
-	
-	this.geometryService.setCity(this.selectedCity);
+  	this.geometryService.setCity(this.selectedCity);
   }
+  
  ngOnInit() {
     this.citiesSub = this.cityService.getCity()
     .subscribe((cities: string[]) => {

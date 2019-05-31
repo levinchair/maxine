@@ -51,6 +51,7 @@ import { View1DataChartComponent } from './data-charts/view1-data-chart/view1-da
 import { View2DataChartComponent } from './data-charts/view2-data-chart/view2-data-chart.component';
 import { View3DataChartComponent } from './data-charts/view3-data-chart/view3-data-chart.component';
 import { View4DataChartComponent } from './data-charts/view4-data-chart/view4-data-chart.component';
+import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 
 
 
@@ -74,6 +75,7 @@ import { View4DataChartComponent } from './data-charts/view4-data-chart/view4-da
     View2DataChartComponent,
     View3DataChartComponent,
     View4DataChartComponent,
+    LeafletMapComponent,
     
   ],
   imports: [
