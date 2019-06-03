@@ -39,7 +39,7 @@ export class NeighbourhoodService {
         return this.http.get<string[]>(`http://localhost:3000/showhood/${this.selectedCity}`)
           .pipe(
               tap(
-                  (data : string[]) => //console.log("From getNeighboorhood: " + JSON.stringify(data))
+                  (data : string[]) => console.log("From getNeighboorhood: " + JSON.stringify(data))
               )
           )
     }

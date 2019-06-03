@@ -32,7 +32,8 @@ export class LeafletMapComponent implements OnInit {
     this.geoJsonLayer = L.geoJSON().addTo(this.map);
   }
 
-  updateOnMap(){
+  updateAllData(){
+    this.centralService.getChartData();
     this.centralService.getGeometry().subscribe(
         data  => {
           //removes layer from map
