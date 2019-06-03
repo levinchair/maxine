@@ -32,7 +32,6 @@ export class CentralService {
   }
 
   changeState(){
-    this.geoJsonObservable.next(data);
   }
 
   getGeometry(){

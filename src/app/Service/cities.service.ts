@@ -13,7 +13,7 @@ export class CitiesService {
     return this.http.get<string[]>('http://localhost:3000/showcities/')
       .pipe(
         tap(
-          data => //console.log("From getCity in Cities Service: " + JSON.stringify(data))
+          data => console.log("From getCity in Cities Service: " + JSON.stringify(data))
         )
       );
    }
