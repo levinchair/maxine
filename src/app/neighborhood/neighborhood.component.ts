@@ -7,16 +7,17 @@ import { DataTable3Service } from '../Service/data-table3.service';
 import { DataTable4Service } from '../Service/data-table4.service';
 import {LocationService} from '../Service/location.service';
 import {GeometryService} from '../Service/geometry.service';
+import { CentralService } from '../Service/central.service';
 
 @Component({
   selector: 'app-neighborhood',
-  template: `  
+  template: `
   <ul>
     <li *ngFor= "let hood of neighbourhood"
-    (click)="onSelect(hood)">      
-    <a routerLink="/view1/{{city}}/{{hood}}">{{hood | uppercase}} </a> 
+    (click)="onSelect(hood)">
+    <a routerLink="/view1/{{city}}/{{hood}}">{{hood | uppercase}} </a>
     </li>
-  </ul> 
+  </ul>
    `,
   styleUrls: ['./neighborhood.component.css']
 })
@@ -27,16 +28,17 @@ private selectedHood;
 onSelectFlag=false;
 neighbourhood : string[];
 _neighbourhood:string;
-constructor( 
-  private neighbourhoodService: NeighbourhoodService, 
-  private dataTableService: DataTableService, 
+constructor(
+  private neighbourhoodService: NeighbourhoodService,
+  private dataTableService: DataTableService,
   private dataTable2Service:DataTable2Service,
-  private dataTable3Service:DataTable3Service, 
+  private dataTable3Service:DataTable3Service,
   private dataTable4Service:DataTable4Service,
   private locationService:LocationService,
-  private geometryService:GeometryService) {
+  private geometryService:GeometryService,
+  private centralService:CentralService) {
  }
-  
+
 onSelect(hood: string) {
     this.neighbourhoodService.setOnselectFlag(true);
     this.selectedCity = this.neighbourhoodService.getSelectedCity();
@@ -45,7 +47,7 @@ onSelect(hood: string) {
     this.neighbourhoodService.setSelectedHood(this._neighbourhood);
     this.locationService.setFlag(true);
     this.locationService.getLocation();
-	
+	  this.centralService.setHood(this._neighbourhood);
 	// moved this here because this was being set every time a new lifecycle was intitated
     this.dataTableService.setHood(this._neighbourhood);
     this.dataTable2Service.setHood(this._neighbourhood);
@@ -61,7 +63,7 @@ onSelect(hood: string) {
     .subscribe( (neighborhood: string[]) =>{
       this.neighbourhood=neighborhood;
     } );
-   
+
     this.neighbourhoodService.setOnselectFlag(false);
   }
   ngAfterContentInit() {
@@ -75,7 +77,7 @@ onSelect(hood: string) {
     this.dataTable3Service.setCity(this.selectedCity);
     this.dataTable4Service.setCity(this.selectedCity);
     this.locationService.setCity(this.selectedCity);
-	
+
 
 
   }

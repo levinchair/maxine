@@ -8,6 +8,7 @@ import { DataTable3Service } from '../Service/data-table3.service';
 import { DataTable4Service } from '../Service/data-table4.service';
 import { LocationService } from '../Service/location.service';
 import { GeometryService}  from '../Service/geometry.service';
+import { CentralService } from '../Service/central.service';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class ControlPanelComponent implements OnInit {
      private dataTable3Service:DataTable3Service,
      private dataTable4Service:DataTable4Service,
      private locationService:LocationService,
-	 private geometryService:GeometryService) { }
+	   private geometryService:GeometryService,
+     private centralService:CentralService) { }
 
   cities : string[];
   cityFromService = this.neighbourhoodService.getSelectedCity();
@@ -36,6 +38,7 @@ export class ControlPanelComponent implements OnInit {
   onSelect(city: string) {
     this.selectedCity = city;
 	//alert("Control Panel: " + this.selectedCity);
+    this.centralService.setCity(this.selectedCity);
     this.neighbourhoodService.setSelectedcity(this.selectedCity);
     this.dataTableService.setCity(this.selectedCity);
     this.dataTable2Service.setCity(this.selectedCity);
@@ -45,7 +48,7 @@ export class ControlPanelComponent implements OnInit {
     this.locationService.setFlag(true);
   	this.geometryService.setCity(this.selectedCity);
   }
-  
+
  ngOnInit() {
     this.citiesSub = this.cityService.getCity()
     .subscribe( (cities : string[]) => {

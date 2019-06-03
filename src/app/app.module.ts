@@ -9,7 +9,7 @@ import { DataTableService } from './Service/data-table.service';
 import { DataTable2Service } from './Service/data-table2.service';
 import { DataTable3Service } from './Service/data-table3.service';
 import { DataTable4Service } from './Service/data-table4.service';
-
+import { CentralService } from './Service/central.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
@@ -76,7 +76,7 @@ import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
     View3DataChartComponent,
     View4DataChartComponent,
     LeafletMapComponent,
-    
+
   ],
   imports: [
     BrowserModule,
@@ -111,6 +111,7 @@ import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
   ],
   providers: [
     LocationService,
+    CentralService,
     CitiesService,
     GeojsonDataService,
     NeighbourhoodService,

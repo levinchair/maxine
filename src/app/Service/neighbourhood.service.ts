@@ -10,8 +10,8 @@ export class NeighbourhoodService {
     private selectedCity;
     private selectedHood = null;
     private onSelectFlag :boolean;
-    private _city; 
-    private _hood; 
+    private _city;
+    private _hood;
 
     constructor(private http: HttpClient,
         private cityService: CitiesService,) {}
@@ -21,9 +21,9 @@ export class NeighbourhoodService {
     }
     getSelectedCity() {
         return this.selectedCity;
-    }    
+    }
     setSelectedHood(selectedHood : string) {
-        this.selectedHood= selectedHood; 
+        this.selectedHood= selectedHood;
     }
     getSelectedHood() {
         return this.selectedHood;
@@ -39,7 +39,7 @@ export class NeighbourhoodService {
         return this.http.get<string[]>(`http://localhost:3000/showhood/${this.selectedCity}`)
           .pipe(
               tap(
-                  (data : string[]) => console.log("From getNeighboorhood: " + JSON.stringify(data))
+                  (data : string[]) => //console.log("From getNeighboorhood: " + JSON.stringify(data))
               )
           )
     }
@@ -48,7 +48,7 @@ export class NeighbourhoodService {
         this._city = _city;
         //console.log(this._city);
         return this._city;
-    }  
+    }
     sendNeighborhood(_hood: string) {
         this._hood = _hood;
         //console.log(this._hood);

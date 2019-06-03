@@ -64,7 +64,6 @@ export class DataTableService{
 
   // view1 methods: getView1() and getUpdatedData1()
   getView1(){
-
         this._city=this.sendCity();
         this._neighborhood=this.sendHood();
         //console.log("city",this._city);
@@ -187,7 +186,6 @@ export class DataTableService{
     call this.xIDChart and this.yLandChart as an observable!
     */
     console.log('chart called');
-
     this.xIDChart = this.xIDChart.slice(1);
     this.yLandChart = this.yLandChart.slice(1);
     console.log("CHART",this.xIDChart, this.yLandChart);

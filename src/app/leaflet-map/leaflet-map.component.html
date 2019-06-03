@@ -7,5 +7,5 @@
   id="search">
   Search
 </button>
-<h2>City:         {{html_city | titlecase }}</h2>
-<h3>Neighborhood: {{html_neighborhood | titlecase}}</h3>
+<h2>City:         {{this.centralService.getCity() | titlecase }}</h2>
+<h3>Neighborhood: {{this.centralService.getHood() | titlecase}}</h3>
