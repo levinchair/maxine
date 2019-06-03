@@ -45,7 +45,8 @@ export class LeafletMapComponent implements OnInit {
           // alert(JSON.stringify(data));
           L1.shapes({
             data: data,
-            map: this.map 
+            map: this.map,
+            opacity: 1
           });
           
         }

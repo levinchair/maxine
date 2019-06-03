@@ -32,10 +32,6 @@ export class CentralService {
     return this._hood;
     //console.log(this._hood);
   }
-<<<<<<< HEAD
-
-  changeState(){
-=======
   
   getChartData(){
     this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)
@@ -43,7 +39,6 @@ export class CentralService {
       console.log("view: " + JSON.stringify(view));
       this.view1Data.next(view);
     });
->>>>>>> 1fd915e976e73f3857a8ed22b13c05a084c31303
   }
 
   getGeometry(){
