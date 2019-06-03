@@ -81,7 +81,7 @@ export class DataTableService{
               })
               this.dataSource=this.dupviewData;
 
-              console.log(this.dataSource);
+              alert(this.dataSource);
               //this.dupviewData.length=0;
               this.dataSource.sort((l,r)=>{
                 if(l._id.cat < r._id.cat )
