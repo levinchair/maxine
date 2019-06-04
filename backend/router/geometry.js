@@ -22,7 +22,7 @@ router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
     //.exec(function(err, result) {
     //
       db.find({"properties.SPA_NAME":this.hood,"properties.PAR_CITY":this.city},
-			        {_id:0, type:1,"properties.PARCELPIN":1,"properties.PAR_CITY":1,
+			        {_id:0, type:1,"properties.PARCELPIN":1,"properties.PAR_CITY":1, "properties.SiteCat1":1,
               "properties.SPA_NAME":1,"geometry.type":1,"geometry.coordinates":1},
 	    (err,result)=>{
         if(err) {
