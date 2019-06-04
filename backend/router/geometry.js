@@ -32,11 +32,11 @@ router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
             //console.log(JSON.parse(result));
             console.log(result);
     		//wrap the resut in a new object to allow AGM maps to read it.
-    		// newJson = {
-    		// 	type: "FeatureCollection",
-    		// 	features: result
-    		// }
-            res.json(result);
+    		newJson = {
+    			type: "FeatureCollection",
+    			features: result
+    		}
+            res.json(newJson);
             //res.write(result);
             //res.end(result);
           }
