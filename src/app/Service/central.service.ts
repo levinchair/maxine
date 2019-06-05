@@ -32,11 +32,11 @@ export class CentralService {
     return this._hood;
     //console.log(this._hood);
   }
-  
+
   getChartData(){
     this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)
     .subscribe( (view) => {
-      console.log("view: " + JSON.stringify(view));
+      //console.log("view: " + JSON.stringify(view));
       this.view1Data.next(view);
     });
   }
@@ -48,7 +48,7 @@ export class CentralService {
             .pipe( // rxJS pipe runs multiple RxJS operators
         tap( // tap will allow me to peek into the response before subscribe
           // for some reason i am forced to check this.
-          (data: any) => console.log("geo data: " + JSON.stringify(data)),
+          (data: any) => console.log("geo data: "),
           error => alert("Error: " + error)
         )
         );
@@ -57,7 +57,7 @@ export class CentralService {
             .pipe( // rxJS pipe runs multiple RxJS operators
         tap( // tap will allow me to peek into the response before subscribe
           // for some reason i am forced to check this.
-          (data: any) => console.log("geo data: " + JSON.stringify(data)),
+          (data: any) => console.log("geo data: "),
           error => alert("Error: " + error)
         )
         );
