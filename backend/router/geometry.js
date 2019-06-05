@@ -8,7 +8,7 @@ var db = require("../model/db.js");
 router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
     this.city=req.params.city
 
-    //check to see if hood is undefined, else show all  
+    //check to see if hood is undefined, else show all
     if(req.params.hood !== undefined){
       this.hood=req.params.hood
     } else {
@@ -22,7 +22,7 @@ router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
     //.exec(function(err, result) {
     //
       db.find({"properties.SPA_NAME":this.hood,"properties.PAR_CITY":this.city},
-			        {_id:0, type:1,"properties.PARCELPIN":1,"properties.PAR_CITY":1,
+			        {_id:0, type:1,"properties.PARCELPIN":1,"properties.PAR_CITY":1, "properties.SiteCat1":1,
               "properties.SPA_NAME":1,"geometry.type":1,"geometry.coordinates":1},
 	    (err,result)=>{
         if(err) {
@@ -32,17 +32,17 @@ router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
             //console.log(JSON.parse(result));
             console.log(result);
     		//wrap the resut in a new object to allow AGM maps to read it.
-    		// newJson = {
-    		// 	type: "FeatureCollection",
-    		// 	features: result
-    		// }
-            res.json(result);
+    		newJson = {
+    			type: "FeatureCollection",
+    			features: result
+    		}
+            res.json(newJson);
             //res.write(result);
             //res.end(result);
           }
       //next();
     });
-  
+
   });
 
 module.exports=router;

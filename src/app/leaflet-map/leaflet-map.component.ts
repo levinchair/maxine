@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CentralService } from '../Service/central.service';
 
+//Models
+import { JsonForm } from '../../model/jsonform.model';
+
 import * as L from 'leaflet';
 import * as L1 from 'leaflet.glify';
 
@@ -46,9 +49,29 @@ export class LeafletMapComponent implements OnInit {
           L1.shapes({
             data: data,
             map: this.map,
-            opacity: 1
+            opacity: 1,
+            color: (index : Number, feature : JsonForm) => {
+              //this will take a feature and map its sitecat zone to a color
+              var zoneType : String = feature.properties.SiteCat1;
+              switch(zoneType){
+                case "Residential":
+                  return L1.color.red;
+                case "Commercial":
+                  return L1.color.blue;
+                case "Agricultural":
+                  return L1.color.green;
+                case "Industrial":
+                  return L1.color.yellow;
+                case "Mixed":
+                  return L1.color.teal;
+                case "Government":
+                  return L1.color.gray;
+                default:
+                  return L1.color.black;
+              }
+            }
           });
-          
+
         }
       );
   }
