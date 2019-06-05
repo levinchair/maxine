@@ -15,6 +15,7 @@ import * as L1 from 'leaflet.glify';
 export class LeafletMapComponent implements OnInit {
 
   features: any;
+  shapeLayer : any;
   map: any;
   //geoJsonLayer;
   layerGroup: any;
@@ -36,6 +37,12 @@ export class LeafletMapComponent implements OnInit {
     this.centralService.getChartData();
     this.centralService.getGeometry().subscribe(
         data  => {
+
+          //deletes the layer if already initialized
+          if(this.shapeLayer !== undefined){
+            this.shapeLayer.remove();
+          } 
+          console.log(this.shapeLayer);
           // //removes layer from map
           // this.geoJsonLayer.removeFrom(this.map);
           // //re-initializes layer
@@ -46,7 +53,7 @@ export class LeafletMapComponent implements OnInit {
           // var latLngBounds = this.geoJsonLayer.getBounds();
           // this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
           // alert(JSON.stringify(data));
-          L1.shapes({
+          this.shapeLayer = L1.shapes({
             data: data,
             map: this.map,
             opacity: 1,
@@ -64,14 +71,20 @@ export class LeafletMapComponent implements OnInit {
                   return L1.color.yellow;
                 case "Mixed":
                   return L1.color.teal;
-                case "Government":
+                case "Government": 
                   return L1.color.gray;
                 default:
                   return L1.color.black;
               }
+            },
+            click: (e, feature : JsonForm) => {
+              L.popup().setLatLng(e.latlng).setContent("You clicked on " + feature.properties.PARCELPIN + ", SiteCat1: " + feature.properties.SiteCat1)
+              .openOn(this.map);
+              console.log(feature); 
+              console.log(e);
             }
           });
-
+          
         }
       );
   }
