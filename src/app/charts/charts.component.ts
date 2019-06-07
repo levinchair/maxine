@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { CentralService } from '../Service/central.service';
 import { Chart } from 'chart.js';
 //models
@@ -10,19 +10,26 @@ import { view1 } from '../../model/view1.model';
   styleUrls: ['./charts.component.css']
 })
 export class ChartsComponent implements OnInit {
-
+  @Input() defaultChoice: string;
+  @Input() value: string;
   @ViewChild('chartA') private chartRef;
+  selected:string ="AssessedValue";
   chart: any;
   view1Data: any;
-  chartType: String;
+  chartType: string;
   labels = [];
   colors = [];
   chartData = [];
   //CREATE A MAP OF CAT->HEX COLORS
-  catColors = new Map([["Residential","#E5BE77"],["Commercial","#FF4C4C"],
+  CATCOLORS = new Map([["Residential","#E5BE77"],["Commercial","#FF4C4C"],
                       ["Industrial","#BE69F2"],["Mixed","#fd8f45"],
                       ["Government","#7A7ACB"],["Institutional","#3D3DCB"],
                       ["Utility","#BEBEBE"],[null,"#F1F1F1"]]);
+
+  PARCELCATEGORIES = [["AssessedValue","Assessed Value"],
+                      ["No_parcels","Number of Parcels"],
+                      ["percOfLand","Percentage of Land"],
+                      ["percOfAssessedVal","Percentage of Assessed Value"]];
   constructor(private centralService: CentralService) { }
 
   ngOnInit() {
@@ -31,7 +38,7 @@ export class ChartsComponent implements OnInit {
     this.centralService.view1Data
       .subscribe( view => {
         this.view1Data = view;
-        this.updateChart1();
+        this.updateChart1(this.selected);
       });
   }
 
@@ -54,8 +61,8 @@ export class ChartsComponent implements OnInit {
       },
       options: {
         title: {
-          display: true,
-          text: 'Number of Parcels',
+          display: false,
+          text: 'Displaying Parcel Data',
           fontSize: 16
         },
         cutoutPercentage:40
@@ -63,24 +70,31 @@ export class ChartsComponent implements OnInit {
     });
   }
 
-  updateChart1(){
+  updateChart1(parcelCategory:string){
     this.labels.length = 0;
     this.colors.length = 0;
     //IDK why array.map doesn't work so I have to use a for loop
     for(var x = 0; x < this.view1Data.length; x++){
       this.labels.push(this.view1Data[x]._id.cat);
-      if(this.catColors.has(this.labels[x])){
-        this.colors.push(this.catColors.get(this.labels[x]));
+      if(this.CATCOLORS.has(this.labels[x])){
+        this.colors.push(this.CATCOLORS.get(this.labels[x]));
       }else{
         this.colors.push("#5050505");
       }
     }
     this.chart.update(); //Charts can never have an empty data variable
     this.chartData.length = 0;
+    var fixed = (parcelCategory == ("percOfLand" || "percOfAssessedVal")) ? 2 : 0;
     for(var y = 0; y < this.view1Data.length; y++){
-      this.chartData.push(this.view1Data[y].No_parcels);
+      this.chartData.push(this.view1Data[y][parcelCategory].toFixed(fixed));
     }
     this.chart.update();
+  }
+
+  chart1Change(e){
+    this.selected = e;
+    console.log(e + this.view1Data[0][e]);
+    this.updateChart1(e);
   }
   // View1: [
   //   {"_id":{"cat":"Mixed"},
