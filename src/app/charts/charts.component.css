@@ -1,14 +1,9 @@
 #chartA{
 }
-chart-container{
+.chart-container{
   position:relative;
-  height:500px;
-  width:500px;
+  width:100%;
 }
 .PARCEL-radio{
-  position:relative;
-  float:left;
-}
-h3{
   position:relative;
 }
