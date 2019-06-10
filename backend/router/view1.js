@@ -16,9 +16,9 @@ router.get("/view1/:city/:hood",(req,res)=>{
     db.aggregate( [ {"$match":
                             {"properties.PAR_CITY":this.city,"properties.SPA_NAME":this.hood}},
                     { "$group":{ "_id":null, "Assval": {"$sum":"$properties.GCERT3"} } },
-                    {"$project":{"_id":1,"Assval":1}} 
+                    {"$project":{"_id":1,"Assval":1}}
                   ])//,function(err,data){
-    .exec(function(err, data) {   
+    .exec(function(err, data) {
          if(err)
           {
             console.log("error ocuured : "+err);
@@ -28,18 +28,18 @@ router.get("/view1/:city/:hood",(req,res)=>{
              console.log(JSON.stringify(data));
              console.log(data);
              totalAssVal = data.map(function (v) {
-                 
+
                      return v.Assval;
                  });
                  console.log("Total Assessed Value: "+totalAssVal);
           }
         });
-  
+
     var totalSqFeet;
     // calculate total square feet area
     // db.aggregate( [ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
     db.aggregate( [ {"$match":{"properties.PAR_CITY":this.city,"properties.SPA_NAME":this.hood}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
-    .exec(function(err, data) {   
+    .exec(function(err, data) {
           if(err)
            {
              console.log("error ocuured : "+err);
@@ -48,22 +48,22 @@ router.get("/view1/:city/:hood",(req,res)=>{
            {
                   console.log(JSON.stringify(data));
                   totalSqFeet=data.map(function(v){
-                              
+
                       return v.totalsqfeet;
                   });
                   console.log("total SquareFeet Area : "+totalSqFeet);
-       
-            /*db.aggregate([ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"}, 
-             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} }, 
+
+            /*db.aggregate([ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"},
+             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} },
              {"$project":{ "Scale":1,"No_parcels":1, "percOfLand":{"$multiply":[{"$divide":["$Scale",Number(totalSqFeet)]},100]},"AssessedValue":1,
               "percOfAssessedVal":{"$multiply":[{"$divide":["$AssessedValue",Number(totalAssVal)]},100]}  } }])
               */
-             db.aggregate([ {"$match":{"properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"}, 
-             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} }, 
-             {"$project":{ "Scale":1,"No_parcels":1, "percOfLand":{"$multiply":[{"$divide":["$Scale",Number(totalSqFeet)]},100]},"AssessedValue":1,
-              "percOfAssessedVal":{"$multiply":[{"$divide":["$AssessedValue",Number(totalAssVal)]},100]}  } }])
+             db.aggregate([ {"$match":{"properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"},
+             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} },
+             {"$project":{ "Scale":1,"No_parcels":1, "percOfLand":{"$divide":["$Scale",Number(totalSqFeet)]},"AssessedValue":1,
+              "percOfAssessedVal":{"$divide":["$AssessedValue",Number(totalAssVal)]}  } }])
               .exec(function(err,result){
-                
+
                if(err)
                {
                    console.log("error ocuured : "+err);
@@ -71,15 +71,15 @@ router.get("/view1/:city/:hood",(req,res)=>{
                else{
                   console.log(JSON.stringify(result,undefined,2))
                    res.json(result);
-                  
+
                }
-               
+
              });
-             
-              
+
+
           }
            });
-           
+
   });
 
   module.exports=router;
@@ -96,7 +96,7 @@ router.get("/view1/:city",(req,res)=>{
     console.log("selected city: ",req.params.city);
     //db.aggregate( [ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{ "$group":{ "_id":null, "Assval": {"$sum":"$properties.GCERT3"} } },{"$project":{"_id":1,"Assval":1}} ])//,function(err,data){
     db.aggregate( [ {"$match":{"properties.PAR_CITY":this.city}},{ "$group":{ "_id":null, "Assval": {"$sum":"$properties.GCERT3"} } },{"$project":{"_id":1,"Assval":1}} ])//,function(err,data){
-    .exec(function(err, data) {   
+    .exec(function(err, data) {
          if(err)
           {
             console.log("error ocuured : "+err);
@@ -105,18 +105,18 @@ router.get("/view1/:city",(req,res)=>{
           {
                  console.log(JSON.stringify(data));
                  totalAssVal=data.map(function(v){
-                             
+
                      return v.Assval;
                  });
                  console.log("Total Assessed Value: "+totalAssVal);
           }
         });
-  
+
     var totalSqFeet;
     // calculate total square feet area
     // db.aggregate( [ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
     db.aggregate( [ {"$match":{"properties.PAR_CITY":this.city}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
-    .exec(function(err, data) {   
+    .exec(function(err, data) {
           if(err)
            {
              console.log("error ocuured : "+err);
@@ -125,22 +125,22 @@ router.get("/view1/:city",(req,res)=>{
            {
                   console.log(JSON.stringify(data));
                   totalSqFeet=data.map(function(v){
-                              
+
                       return v.totalsqfeet;
                   });
                   console.log("total SquareFeet Area : "+totalSqFeet);
-       
-            /*db.aggregate([ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"}, 
-             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} }, 
+
+            /*db.aggregate([ {"$match":{"properties.PAR_CITY":"CLEVELAND","properties.SPA_NAME":"University"}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"},
+             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} },
              {"$project":{ "Scale":1,"No_parcels":1, "percOfLand":{"$multiply":[{"$divide":["$Scale",Number(totalSqFeet)]},100]},"AssessedValue":1,
               "percOfAssessedVal":{"$multiply":[{"$divide":["$AssessedValue",Number(totalAssVal)]},100]}  } }])
               */
-             db.aggregate([ {"$match":{"properties.PAR_CITY":upperCase(req.params.city)}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"}, 
-             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} }, 
+             db.aggregate([ {"$match":{"properties.PAR_CITY":upperCase(req.params.city)}},{"$group":{ "_id":{"cat":"$properties.SiteCat1"},
+             "Scale":{"$sum":"$properties.TOTAL_COM_"}, "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} },
              {"$project":{ "Scale":1,"No_parcels":1, "percOfLand":{"$multiply":[{"$divide":["$Scale",Number(totalSqFeet)]},100]},"AssessedValue":1,
               "percOfAssessedVal":{"$multiply":[{"$divide":["$AssessedValue",Number(totalAssVal)]},100]}  } }])
               .exec(function(err,result){
-                
+
                if(err)
                {
                    console.log("error ocuured : "+err);
@@ -148,15 +148,15 @@ router.get("/view1/:city",(req,res)=>{
                else{
                   console.log(JSON.stringify(result,undefined,2))
                    res.json(result);
-                  
+
                }
-               
+
              });
-             
-              
+
+
           }
            });
-           
+
   });
   module.exports=router;
 //--------------------------------------------------view1 of land data if city and neighbourhood selected ----------------------------------------------------
@@ -164,10 +164,10 @@ router.get("/view1/:city",(req,res)=>{
 
   //------------------------------------------------------view1 of land data with Assessed Value--------------------------------------------------------------------
   /*router.get("/view1/Ass",(req,res)=>{
-  
+
     var totalAssVal;
     db.aggregate( [ { "$group":{ "_id":null, "Assval": {"$sum":"$properties.GCERT3"} } },{"$project":{"_id":1,"Assval":1}} ])//,function(err,data){
-     .exec(function(err, data) {   
+     .exec(function(err, data) {
          if(err)
           {
             console.log("error ocuured : "+err);
@@ -176,21 +176,21 @@ router.get("/view1/:city",(req,res)=>{
           {
                  console.log(JSON.stringify(data));
                  totalAssVal=data.map(function(v){
-                             
+
                      return v.Assval;
                  });
                  console.log("total: "+totalAssVal);
-  
-                 db.aggregate([ {"$group":{ "_id":{"cat":"$properties.SiteCat1"}, 
-                 "AssessedValue":{"$sum":"$properties.GCERT3"}} }, 
+
+                 db.aggregate([ {"$group":{ "_id":{"cat":"$properties.SiteCat1"},
+                 "AssessedValue":{"$sum":"$properties.GCERT3"}} },
                  {"$project":{ "AssessedValue":1, "percOfAssessedVal":{"$multiply":[{"$divide":["$AssessedValue",Number(totalAssVal)]},100]} } }])//,function(err,result){
                  //Calculate Average Assessed Value :
-                /*db.aggregate([ {"$group":{ "_id":{"cat":"$properties.SiteCat1"}, 
-                "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} }, 
-                {"$project":{ "AssessedValue":1, "No_parcels":1,"AvgOfAssessedVal":{"$divide":["$AssessedValue","$No_parcels"]}} }]) 
-                */ 
+                /*db.aggregate([ {"$group":{ "_id":{"cat":"$properties.SiteCat1"},
+                "AssessedValue":{"$sum":"$properties.GCERT3"},"No_parcels":{"$sum":1}} },
+                {"$project":{ "AssessedValue":1, "No_parcels":1,"AvgOfAssessedVal":{"$divide":["$AssessedValue","$No_parcels"]}} }])
+                */
                 /*.exec(function(err,result){
-      
+
                    if(err)
                    {
                        console.log("error ocuured : "+err);
@@ -198,13 +198,13 @@ router.get("/view1/:city",(req,res)=>{
                    else{
                       console.log(JSON.stringify(result))
                        res.json(result);
-                      
+
                    }
-                       
+
                  });
-              
-  
-  
+
+
+
           }
         });
   });

@@ -11,14 +11,7 @@ import { CentralService } from '../Service/central.service';
 
 @Component({
   selector: 'app-neighborhood',
-  template: `
-  <ul>
-    <li *ngFor= "let hood of neighbourhood"
-    (click)="onSelect(hood)">
-    <a routerLink="/view1/{{city}}/{{hood}}">{{hood | uppercase}} </a>
-    </li>
-  </ul>
-   `,
+  templateUrl: './neighborhood.component.html',
   styleUrls: ['./neighborhood.component.css']
 })
 

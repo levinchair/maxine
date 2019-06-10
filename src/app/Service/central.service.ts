@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient,  HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
+import {MatSortModule} from '@angular/material/sort';
 //Models
 import { featureCollection } from  "../../model/featurecollection.model";
 import { view1 } from  "../../model/view1.model";

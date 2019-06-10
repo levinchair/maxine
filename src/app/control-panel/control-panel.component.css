@@ -6,7 +6,6 @@
   background-color: #CFD8DC !important;
   float: left;
   width: 20vw;
-  height: 86vh;
 }
 a {
   color: black;
@@ -19,20 +18,15 @@ div.header {
 .control-panel-div cdk-virtual-scroll-viewport{
   background-color: #CFD8DC !important;
   list-style: none;
-  height: 77vh;
+  height: 83vh;
   width: 100%;
-  display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
 }
 
 
-.control-panel-div li.selected:hover {
-  background-color: rgb(207, 220, 187) !important;
-  color: white;
-}
-.control-panel-div li:hover {
+
+.control-panel-div a:hover {
   color: rgb(139, 99, 96);
   background-color: #DDD;
   left: .1em;
