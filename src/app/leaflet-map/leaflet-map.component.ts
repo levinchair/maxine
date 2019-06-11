@@ -34,7 +34,7 @@ export class LeafletMapComponent implements OnInit {
   }
 
   updateAllData(){
-    this.centralService.getChartData();
+    this.centralService.getChartData(); // inital subscribe of the data
     this.centralService.getGeometry().subscribe(
         data  => {
 
@@ -56,8 +56,8 @@ export class LeafletMapComponent implements OnInit {
           this.shapeLayer = L1.shapes({
             data: data,
             map: this.map,
-            opacity: 0.85,
-            click:(e, feature) => {
+            opacity: 0.7,
+            click:(e, feature : JsonForm) => {
               //do something when a shape is clicked
               L.popup().setLatLng(e.latlng)
                 .setContent("ParcelPin: " + feature.properties.PARCELPIN +
