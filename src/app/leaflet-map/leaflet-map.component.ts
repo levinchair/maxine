@@ -37,7 +37,7 @@ export class LeafletMapComponent implements OnInit {
     this.centralService.getChartData(); // inital subscribe of the data
     this.centralService.getGeometry().subscribe(
         data  => {
-
+          //console.log("data from subscription: " + JSON.stringify(data));
           //deletes the layer if already initialized
           if(this.shapeLayer !== undefined){
             this.shapeLayer.remove();
@@ -60,7 +60,8 @@ export class LeafletMapComponent implements OnInit {
             click:(e, feature : JsonForm) => {
               //do something when a shape is clicked
               L.popup().setLatLng(e.latlng)
-                .setContent("ParcelPin: " + feature.properties.PARCELPIN +
+                .setContent("ParcelPin: " + feature.properties.parcelpin 
+                         + " Neighbourhood: " + feature.properties.SPA_NAME + 
                 " SiteCat1: " + feature.properties.SiteCat1).openOn(this.map);
             },
             color: (index : Number, feature : JsonForm) => {
