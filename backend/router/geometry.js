@@ -11,7 +11,7 @@ router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
     var query = {};
     this.city= upperCase(this.city); // all city names are capital in the database
                                      // only the first letter of the neighbourhood is capital
-    query["properties.PAR_CITY"] = this.city;
+    query["properties.par_city"] = this.city;
 
     var newJson = {};
     //check to see if hood is undefined, else show all
@@ -20,7 +20,7 @@ router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
     }
 
       db.find(query,
-			        {_id:0, type:1,"properties.PARCELPIN":1,"properties.PAR_CITY":1, "properties.SiteCat1":1,
+			        {_id:0, type:1,"properties.parcelpin":1,"properties.par_city":1, "properties.SiteCat1":1,
               "properties.SPA_NAME":1,"geometry.type":1,"geometry.coordinates":1},
 	    (err,result)=>{
         if(err) {
@@ -63,8 +63,8 @@ router.get("/getparcels/:geoObject?" , (req, res, next ) => {
       }
    },
    {
-           "properties.PARCELPIN" : 1,
-           "properties.SPA_NAME" : 1
+          "properties.parcelpin" : 1,
+          "properties.SPA_NAME" : 1
    }, (err , result) => {
      if (err) {
        res.send(err);

@@ -6,7 +6,7 @@ if(err) throw err;
 console.log("Connected to database 1");
 });
 var schema = mongoose.Schema;
-var quotesDataSchema = new schema({},{collection:'cuyahoga_full'});
+var quotesDataSchema = new schema({},{collection:'cuyahoga_test'});
 /*
 {collection:'cuyahoga'});
 var quotesDataSchema = new schema({
@@ -17,4 +17,4 @@ var quotesDataSchema = new schema({
 {collection:'cuyahoga'});*/
 
 
-module.exports = mongoose.model('cuyahoga_full',quotesDataSchema);
+module.exports = mongoose.model('cuyahoga_test',quotesDataSchema);

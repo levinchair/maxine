@@ -8,7 +8,7 @@ router.get("/showhood/:city",(req,res,next)=>{
    this.city=req.params.city
   this.city= upperCase(this.city);
   console.log("selected cities ",this.city);
-    db.distinct("properties.SPA_NAME",{"properties.PAR_CITY":this.city})
+    db.distinct("properties.SPA_NAME",{"properties.par_city":this.city})
     .exec(function(err, result) {
       if(err) {
        // res.send('error occured')

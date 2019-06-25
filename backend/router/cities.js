@@ -22,7 +22,7 @@ var db = require("../model/db.js");
   //--------------------------------------------------Show distinct cities from selected state--------------------------------------
   router.get("/showcities",(req,res,next)=>{
     var cities=[10000];
-    db.distinct("properties.PAR_CITY")
+    db.distinct("properties.par_city")
     .exec(function(err, result) {
       if(err) {
        // res.send('error occured')
