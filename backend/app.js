@@ -22,10 +22,11 @@ console.log("Connected to database 2");
 */
 console.log("Node is running");
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+//extended allows for parsing url-encoded data using the qs library
+app.use(bodyParser.urlencoded({extended: true, parameterLimit: 100})); 
 //app.use(cors());
-//anothe wau of doing cross origin resource sharing
-app.use((req,res,next)=>{
+//another way of doing cross origin resource sharing
+app.use((req,res,next)=>{ 
     res.setHeader("Access-Control-Allow-Origin","*");
     res.setHeader("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
     res.setHeader("Access-Control-Allow-Methods","GET,POST,PATCH,PUT,OPTIONS");

@@ -7,7 +7,6 @@ var db = require("../model/db.js");
 //--------------------------------------------------Show  geometric features  for selected neighbourhood--------------------------------------
 router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
     this.city=req.params.city;
-    this.hood = req.params;
     var query = {};
     this.city= upperCase(this.city); // all city names are capital in the database
                                      // only the first letter of the neighbourhood is capital
