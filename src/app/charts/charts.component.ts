@@ -65,7 +65,9 @@ export class ChartsComponent implements OnInit {
           display: false,
           text: 'Displaying Parcel Data',
           fontSize: 16
-        }
+        },
+        responsive:true,
+        maintainAspectRatio:false
       }
     });
   }

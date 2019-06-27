@@ -33,9 +33,19 @@ export class LeafletMapComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    //Initialize Map
+    //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
-    L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png').addTo(this.map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    	subdomains: 'abcd',
+    	maxZoom: 19,
+      zIndex: 1}).addTo(this.map);
+    //add only Labels to the map
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+    	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    	subdomains: 'abcd',
+    	maxZoom: 19,
+      zIndex: 3}).addTo(this.map);
     //Initialize geoJsonLayer
     this.geoJsonLayer = L.geoJSON();
   }
@@ -67,7 +77,7 @@ export class LeafletMapComponent implements OnInit {
             click:(e, feature : JsonForm) => {
               //do something when a shape is clicked
               L.popup().setLatLng(e.latlng)
-                .setContent("ParcelPin: " + feature.properties.PARCELPIN +
+                .setContent("ParcelPin: " + feature.properties.parcelpin +
                 " SiteCat1: " + feature.properties.SiteCat1
               ).openOn(this.map);
             },
@@ -94,9 +104,9 @@ export class LeafletMapComponent implements OnInit {
               }
             }
           });
-
         }
       );
+
   }
   //add check initialized/undefined flags
   getLassoPlots(){

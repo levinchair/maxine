@@ -1,7 +1,4 @@
 <div class="control-panel-div">
-    <h2 class="toggle" appToggleable
-      [ngStyle]="{'cursor':'pointer'}">Cities in Ohio
-    </h2>
   <cdk-virtual-scroll-viewport itemSize="7">
     <li *cdkVirtualFor= "let city of cities"
     (click)="onSelect(city)"

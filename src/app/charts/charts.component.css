@@ -2,7 +2,13 @@
 }
 .chart-container{
   position:relative;
+  float:left;
+  height:85%;
+  width:30vw;
 }
 .PARCEL-radio{
+    position:absolute;
+    display:none;
+    float:left;
     width:33%;
 }

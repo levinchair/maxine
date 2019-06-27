@@ -1,5 +1,5 @@
 #map{
-  height:90%;
+  height:85%;
   width:40vw;
   float: left;
   box-sizing: border-box;
@@ -11,17 +11,6 @@ button{
   width:55px;
   height:25px;
   left:-57px;
-  top:2px;
+  top:20px;
   z-index:2;
-}
-h2,h3{
-  position:absolute;
-  left:60vw;
-  color:whitesmoke;
-}
-h2{
-  top:-2%;
-}
-h3{
-  top:2%;
 }

@@ -2,9 +2,6 @@ body{
     position: absolute;
     height: 100%;
 }
-div.header {
-    width: 100%;
-}
 div.container {
     display: table;
     width: 100%;

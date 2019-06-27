@@ -3,9 +3,8 @@
 }
 
 .control-panel-div {
-  background-color: #CFD8DC !important;
   float: left;
-  width: 20vw;
+  width: 30vw;
 }
 a {
   color: black;
@@ -16,9 +15,8 @@ div.header {
 }
 
 .control-panel-div cdk-virtual-scroll-viewport{
-  background-color: #CFD8DC !important;
   list-style: none;
-  height: 83vh;
+  height: 50vh;
   width: 100%;
   align-items: center;
   justify-content: center;

@@ -7,8 +7,6 @@
   id="search">
   Search
 </button>
-<h2>City:         {{this.centralService.getCity() | titlecase }}</h2>
-<h3>Neighborhood: {{this.centralService.getHood() | titlecase}}</h3>
 <button (click)='this.selectfeature = this.map.selectAreaFeature.enable()'>ENABLE</button>
 <button (click)='this.selectfeature = this.map.selectAreaFeature.disable()'>DISABLE</button>
 <button (click)='this.getLassoPlots()'>Calculate</button>
