@@ -32,7 +32,9 @@ export class CentralService {
     return this._hood;
     //console.log(this._hood);
   }
-
+  changeView1(newData){
+    this.view1Data.next(newData);
+  }
   getChartData(){
     this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)
     .subscribe( (view) => {

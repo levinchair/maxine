@@ -44,11 +44,12 @@ export class ChartsComponent implements OnInit {
 
   createChart(){
     this.chart = new Chart(this.chartRef.nativeElement, {
-      type: 'pie',
+      type: 'bar',
       data: {
         labels: this.labels, // your labels array
         datasets: [
           {
+            label:"Bar Chart",
             data: this.chartData, // your data array
             backgroundColor: this.colors,
             borderColor: '#FFFFFF',
@@ -64,8 +65,7 @@ export class ChartsComponent implements OnInit {
           display: false,
           text: 'Displaying Parcel Data',
           fontSize: 16
-        },
-        cutoutPercentage:40
+        }
       }
     });
   }

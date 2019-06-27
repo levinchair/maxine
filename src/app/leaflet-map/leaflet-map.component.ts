@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CentralService } from '../Service/central.service';
+import inside from 'point-in-polygon';
 
 //Models
 import { JsonForm } from '../../model/jsonform.model';
 
 import * as L from 'leaflet';
+import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js';
 import * as L1 from 'leaflet.glify';
 
 @Component({
@@ -21,6 +23,11 @@ export class LeafletMapComponent implements OnInit {
   layerGroup: any;
   html_city: String;
   html_neighborhood: String;
+  latlng_area:any;
+  selectfeature:any;
+  EPSILON = 0.00001;
+  recentData:any;
+  lassoData = [];
   constructor(
     private centralService : CentralService
   ) { }
@@ -37,11 +44,11 @@ export class LeafletMapComponent implements OnInit {
     this.centralService.getChartData(); // inital subscribe of the data
     this.centralService.getGeometry().subscribe(
         data  => {
-
+          this.recentData = data;
           //deletes the layer if already initialized
           if(this.shapeLayer !== undefined){
             this.shapeLayer.remove();
-          } 
+          }
           console.log(this.shapeLayer);
           // //removes layer from map
           // this.geoJsonLayer.removeFrom(this.map);
@@ -61,7 +68,8 @@ export class LeafletMapComponent implements OnInit {
               //do something when a shape is clicked
               L.popup().setLatLng(e.latlng)
                 .setContent("ParcelPin: " + feature.properties.PARCELPIN +
-                " SiteCat1: " + feature.properties.SiteCat1).openOn(this.map);
+                " SiteCat1: " + feature.properties.SiteCat1
+              ).openOn(this.map);
             },
             color: (index : Number, feature : JsonForm) => {
               //this will take a feature and map its sitecat zone to a color
@@ -86,9 +94,70 @@ export class LeafletMapComponent implements OnInit {
               }
             }
           });
-          
+
         }
       );
   }
-
+  //add check initialized/undefined flags
+  getLassoPlots(){
+    //sets latlng_area to an array of Points objs, need them as touples
+    this.latlng_area = this.selectfeature.getAreaLatLng();
+    this.lassoData = [];
+    let tempArray = [];
+    for(let q = 0; q < this.latlng_area.length; q++){
+      let temp = [this.latlng_area[q].lng,this.latlng_area[q].lat]
+      tempArray.push(temp);
+    }
+    console.log(tempArray);
+    // console.log(JSON.stringify(this.recentData));
+    for(let i = 0; i < this.recentData.features.length;i++){
+      for(let j = 0; j < this.recentData.features[i].geometry.coordinates[0].length;j++){
+        if(inside(this.recentData.features[i].geometry.coordinates[0][j],tempArray) % 2 == 1){
+          //odd
+          //console.log("I:" + i + " Pushed");
+          this.lassoData.push(this.recentData.features[i]);
+          break;
+        }
+      }
+    }
+    console.log("Length:" + this.lassoData.length);
+    console.log(JSON.stringify(this.lassoData));
+    let tempView1Data = [];
+    // for(int k = 0; k < this.lassoData.length;k++){
+    //   // tempView1Data.push(e -> {"_id":{
+    //   //   this.lassoData[k].properties.SiteCat1},
+    //   //   "Scale":this.lassoData[k.],"AssessedValue":,"No_parcels":,"percOfLand":,"percOfAssessedVal":null
+    //   // });
+    // }
+    //this.centralService.changeView1(tempView1Data);
+  }
+  //Works using https://stackoverflow.com/questions/328107/how-can-you-determine-a-point-is-between-two-other-points-on-a-line-segment
+  //Find slope formular y = mx + b, get point on line segement AB
+  //Check new point D is between A and B on line-segment AB
+  findIntercept(A,B,C){
+    // console.log("A lng :" + A.lng + " Lat:" + A.lat);
+    // console.log("B lng :" + B.lng + " Lat:" + B.lat);
+    // console.log("C lng :" + C.lng + " Lat:" + C.lat);
+    let slope = (B.lat - A.lat)/(B.lng - A.lng);
+    let xIntercept = A.lat - (slope*A.lng);
+    //console.log("y=" + slope + "x + " + xIntercept);
+    let D = {
+      lat:(slope*C.lng + xIntercept),
+      lng:C.lng
+    };
+    let crossproduct = (D.lat - A.lat) * (B.lng - A.lng) - (D.lng - A.lng) * (B.lat - A.lat);
+    //console.log("Crossproduct:" + crossproduct);
+    if(Math.abs(crossproduct) > this.EPSILON){
+      return false;
+    }
+    let dotproduct = (C.lng - A.lng) * (B.lng - A.lng) + (C.lat - A.lat)*(B.lat - A.lat);
+    if (dotproduct < 0){
+        return false
+    }
+    let squaredlengthba = (B.lng - A.lng)*(B.lng - A.lng) + (B.lat - A.lat)*(B.lat - A.lat);
+    if (dotproduct > squaredlengthba){
+        return false
+    }
+    return true
+  }
 }
