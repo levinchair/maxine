@@ -16,7 +16,7 @@ router.get("/view4/:city", async (req,res,next)=>{
     var totalSqFeet;
     var SiteCat;
     // calculate total square feet area under Industrial category
-    db.aggregate( [ {"$match":{"properties.SiteCat1":"Industrial","properties.PAR_CITY":upperCase(req.params.city)}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
+    db.aggregate( [ {"$match":{"properties.SiteCat1":"Industrial","properties.par_city":upperCase(req.params.city)}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
     .exec()  
         
     .then((data)=>{
@@ -27,7 +27,7 @@ router.get("/view4/:city", async (req,res,next)=>{
                 });
                 console.log("total SquareFeet Area : "+totalSqFeet);
                 //Calculate # of square feet, % of square feet, Assessed value, % assessed value
-                db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.PAR_CITY":upperCase(req.params.city)}},{"$group":
+                db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.par_city":upperCase(req.params.city)}},{"$group":
                 {"_id":"$properties.SiteCat2","sq_feet":{"$sum":"$properties.TOTAL_COM_"},
                 "AssessedValue":{"$sum":"$properties.GCERT3"}}},{"$project":{ "sq_feet":1,"AssessedValue":1, 
                 "percSq_feet":{"$multiply":[{"$divide":["$sq_feet",Number(totalSqFeet)]},100]},
@@ -58,7 +58,7 @@ router.get("/view4/:city", async (req,res,next)=>{
                                 console.log();
 
                                 //calculate total  # of TOTAL_COM_ under each SiteCat2 Category
-                                await db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city)}},{"$group": {"_id":null,"com_sq_feet":{"$sum":"$properties.TOTAL_COM_"}}}])
+                                await db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group": {"_id":null,"com_sq_feet":{"$sum":"$properties.TOTAL_COM_"}}}])
                                 .exec()
                                 .then((data)=>{
                                     console.log(JSON.stringify(data));
@@ -77,7 +77,7 @@ router.get("/view4/:city", async (req,res,next)=>{
                             
                                 //Find the top 4 owner having heighest no of TOTAL_COM_ for each SiteCat2 under "Industrial category" 
                                 
-                                await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city)}},{"$group":
+                                await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group":
                                 {"_id":"$properties.PARCL_OWN3","com_sq_feet":{"$sum":"$properties.TOTAL_COM_"},"No_Parcels":{"$sum":1}}},{"$sort":{"com_sq_feet":-1}},
                                 {"$limit":4},{"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}])
                                 .exec()
@@ -101,7 +101,7 @@ router.get("/view4/:city", async (req,res,next)=>{
                                                     console.log("i ",i);
                                                     if(i==4)
                                                     {
-                                                        await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city),"properties.TOTAL_COM_":com_sq_feet_PerCat[rs]}},
+                                                        await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.TOTAL_COM_":com_sq_feet_PerCat[rs]}},
                                                         {"$group": {"_id":"$properties.PARCL_OWN3","No_Parcels":{"$sum":1}}},
                                                         {"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}])
                                                         .exec()
@@ -158,7 +158,7 @@ router.get("/view4/:city/:hood", async (req,res,next)=>{
     console.log("city: ",req.params.city)
     console.log("hood: ",req.params.hood)
     // calculate total square feet area under Industrial category
-    db.aggregate( [ {"$match":{"properties.SiteCat1":"Industrial","properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
+    db.aggregate( [ {"$match":{"properties.SiteCat1":"Industrial","properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
     .exec()  
         
     .then((data)=>{
@@ -169,7 +169,7 @@ router.get("/view4/:city/:hood", async (req,res,next)=>{
                 });
                 console.log("total SquareFeet Area : "+totalSqFeet);
                 //Calculate # of square feet, % of square feet, Assessed value, % assessed value
-                db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
+                db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
                 {"_id":"$properties.SiteCat2","sq_feet":{"$sum":"$properties.TOTAL_COM_"},
                 "AssessedValue":{"$sum":"$properties.GCERT3"}}},{"$project":{ "sq_feet":1,"AssessedValue":1, 
                 "percSq_feet":{"$multiply":[{"$divide":["$sq_feet",Number(totalSqFeet)]},100]},
@@ -200,7 +200,7 @@ router.get("/view4/:city/:hood", async (req,res,next)=>{
 
 
                                 //calculate total  # of TOTAL_COM_ under each SiteCat2 Category
-                                await db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group": {"_id":null,"com_sq_feet":{"$sum":"$properties.TOTAL_COM_"}}}])
+                                await db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group": {"_id":null,"com_sq_feet":{"$sum":"$properties.TOTAL_COM_"}}}])
                                 .exec()
                                 .then((data)=>{
                                     console.log(JSON.stringify(data));
@@ -219,7 +219,7 @@ router.get("/view4/:city/:hood", async (req,res,next)=>{
                             
                                 //Find the top 4 owner having heighest no of TOTAL_COM_ for each SiteCat2 under "Industrial category" 
                                 
-                                await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
+                                await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
                                 {"_id":"$properties.PARCL_OWN3","com_sq_feet":{"$sum":"$properties.TOTAL_COM_"},"No_Parcels":{"$sum":1}}},{"$sort":{"com_sq_feet":-1}},
                                 {"$limit":4},{"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}])
                                 .exec()
@@ -243,7 +243,7 @@ router.get("/view4/:city/:hood", async (req,res,next)=>{
                                                     console.log("i ",i);
                                                     if(i==4)
                                                     {
-                                                        await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood,"properties.TOTAL_COM_":com_sq_feet_PerCat[rs]}},
+                                                        await  db.aggregate([{"$match":{"properties.SiteCat1":"Industrial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood,"properties.TOTAL_COM_":com_sq_feet_PerCat[rs]}},
                                                         {"$group": {"_id":"$properties.PARCL_OWN3","No_Parcels":{"$sum":1}}},
                                                         {"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}])
                                                         .exec()

@@ -18,7 +18,7 @@ var _view2={
 // router.get("/view2/:city", async (req,res,next)=>{
 //       var SiteCat;
 //       //Calculate # of units, # of parcels, Assessed value, % assessed value
-//       db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.PAR_CITY":upperCase(req.params.city)}},{"$group":
+//       db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.par_city":upperCase(req.params.city)}},{"$group":
 //       {"_id":"$properties.SiteCat2","No_Units":{"$sum":"$properties.Units2"},"No_Parcels":{"$sum":1},
 //       "AssessedValue":{"$sum":"$properties.GCERT3"}}},{"$project":{ "No_Units":1,"No_Parcels":1,"AssessedValue":1, 
 //       "AssessedValPerUnit":{"$divide":["$AssessedValue","$No_Parcels"]} } }])
@@ -46,7 +46,7 @@ var _view2={
                 
                 
 //                         //calculate total  # of Units2 under each SiteCat2 Category
-//                         await db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city)}},{"$group": {"_id":null,"No_Units":{"$sum":"$properties.Units2"}}}])
+//                         await db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group": {"_id":null,"No_Units":{"$sum":"$properties.Units2"}}}])
 //                         .exec()
 //                         .then((data)=>{
 //                               console.log(JSON.stringify(data));
@@ -65,7 +65,7 @@ var _view2={
                             
 //                         //Find the top 4 owner having heighest no of Units2 for each SiteCat2 under "residential category" 
                         
-//                         await  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city)}},{"$group":
+//                         await  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group":
 //                               {"_id":"$properties.PARCL_OWN3","No_Units":{"$sum":"$properties.Units2"},"No_Parcels":{"$sum":1}}},{"$sort":{"No_Units":-1}},
 //                               {"$limit":4},{"$project":{"_id":1,"No_Units":1}}])
 //                               .exec()
@@ -115,7 +115,7 @@ var _view2={
       
       var SiteCat = [];
       //Calculate # of units, # of parcels, Assessed value, % assessed value
-      db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.PAR_CITY":upperCase(req.params.city)}},{"$group":
+      db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.par_city":upperCase(req.params.city)}},{"$group":
       {"_id":"$properties.SiteCat2","No_Units":{"$sum":"$properties.Units2"},"No_Parcels":{"$sum":1},
       "AssessedValue":{"$sum":"$properties.GCERT3"}}},{"$project":{ "No_Units":1,"No_Parcels":1,"AssessedValue":1, 
       "AssessedValPerUnit":{ $cond: [ { $eq: [ "$No_Parcels", 0 ] }, "N/A",{"$divide":["$AssessedValue","$No_Parcels"]} ]}} }])
@@ -149,7 +149,7 @@ var _view2={
                 
                 
                         //calculate total  # of Units2 under each SiteCat2 Category
-                        await db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city)}},{"$group": {"_id":null,"No_Units":{"$sum":"$properties.Units2"}}}])
+                        await db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group": {"_id":null,"No_Units":{"$sum":"$properties.Units2"}}}])
                         .exec()
                         .then((data)=>{
                               //console.log(JSON.stringify(data));
@@ -168,7 +168,7 @@ var _view2={
                             
                         //Find the top 4 owner having heighest no of Units2 for each SiteCat2 under "residential category" 
                         
-                        await  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city)}},{"$group":
+                        await  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group":
                               {"_id":"$properties.PARCL_OWN3","No_Units":{"$sum":"$properties.Units2"},"No_Parcels":{"$sum":1}}},{"$sort":{"No_Units":-1}},
                               {"$limit":4},{"$project":{"_id":1,"No_Units":1}}])
                               .exec()
@@ -229,7 +229,7 @@ router.get("/view2/:city/:hood", async (req,res,next)=>{
   console.log("city: ",req.params.city);
   console.log("hood: ",req.params.hood)
   //Calculate # of units, # of parcels, Assessed value, % assessed value
-  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.PAR_CITY":upperCase(req.params.city),
+  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.par_city":upperCase(req.params.city),
   "properties.SPA_NAME":req.params.hood}},
   {"$group": {"_id":"$properties.SiteCat2","No_Units":{"$sum":"$properties.Units2"},"No_Parcels":{"$sum":1},
   "AssessedValue":{"$sum":"$properties.GCERT3"}}},{"$project":{ "No_Units":1,"No_Parcels":1,"AssessedValue":1, 
@@ -261,7 +261,7 @@ router.get("/view2/:city/:hood", async (req,res,next)=>{
             
             
                     //calculate total  # of Units2 under each SiteCat2 Category
-                    await db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group": {"_id":null,"No_Units":{"$sum":"$properties.Units2"}}}])
+                    await db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group": {"_id":null,"No_Units":{"$sum":"$properties.Units2"}}}])
                     .exec()
                     .then((data)=>{
                           console.log(JSON.stringify(data));
@@ -280,7 +280,7 @@ router.get("/view2/:city/:hood", async (req,res,next)=>{
                         
                     //Find the top 4 owner having heighest no of Units2 for each SiteCat2 under "residential category" 
                     
-                    await  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.PAR_CITY":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
+                    await  db.aggregate([{"$match":{"properties.SiteCat1":"Residential","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
                           {"_id":"$properties.PARCL_OWN3","No_Units":{"$sum":"$properties.Units2"},"No_Parcels":{"$sum":1}}},{"$sort":{"No_Units":-1}},
                           {"$limit":4},{"$project":{"_id":1,"No_Units":1}}])
                           .exec()
