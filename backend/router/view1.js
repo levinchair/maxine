@@ -3,101 +3,53 @@ var router= express.Router()
 var upperCase = require('upper-case')
 var db = require("../model/db.js");
 
-router.get("/view1/:city/:hood?",(req,res)=>{
-    this.city= upperCase(req.params.city);
-    var query = {
-      "properties.par_city": this.city
+router.get("/view1/:param?/:hood?", (req, res, next) => {
+  /*This router will take an array of parcelpins (String[]) or a city and a neighbourhood and find the corresponding values specified by view1
+    Using this array for all residential testing: ["11029010", "11029075", "11029011", "11029076", "11029012", "11029077" ]
+    A test array with Com, Inst and Res Parcels: 
+    ["10924128", "10924051", "10924128", "10924052", "10924127", "10924131", "10924052", "10924027",
+     "10924053", "10924129", "10924054", "10924130", "10924023", "10924025", "10924024"  ] */
+  if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
+  console.log("here is the passed argument: " + req.params.param + ", attempting to parse...");
+  try{
+    this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
+  }catch(e){ //if cannot parse to json, then assume it is a name of a city
+    this.param = upperCase(req.params.param);
+  }
+  
+  this.query = {};
+  if(Array.isArray(this.param)) {
+    this.query = { 
+      "properties.parcelpin": { $in: this.param }
+    }
+  }else{
+    if(typeof this.param === "object") JSON.stringify(this.param); // make sure we are not passing an object
+    this.query = {
+      "properties.par_city": this.param
     }
     if(req.params.hood !== undefined){
-      //create another property in the query object with value req.params.hood and set enumerable to true,
-      //so that JSON.stringify will parse it. 
-      // little know fact, the property keys will be double quoted
-      Object.defineProperty(query, "properties.SPA_NAME", { value : req.params.hood, enumerable : true });       
+      Object.defineProperty(this.query, "properties.SPA_NAME", { value : req.params.hood, enumerable : true });       
     }
-
-    var totalAssVal; // total assessed Value (will be calculated)
-    console.log( "QUERY TO MATCH: \n" + JSON.stringify(query)); 
-
-    db.aggregate( [ {"$match": query},
-                    { "$group":{ "_id":null, "Assval": {"$sum":"$properties.gross_ce_2"} } },
-                    {"$project":{"_id":1,"Assval":1}}
-                  ])//,function(err,data){
-    .exec(function(err, data) {
-         if(err){ 
-            throw new Error(JSON.stringify(err));
-          }else{
-             console.log(JSON.stringify(data));
-             totalAssVal = data.map(function (v) {return v.Assval;}); // Assval corresponds to the sum of the properties.gross_ce_2
-             console.log("Total Assessed Value: "+totalAssVal);
-          }
-    });
-
-      var totalSqFeet;
-      // calculate total square feet area
-      db.aggregate( [ { "$match": query},
-                      { "$group":{ "_id":null, 
-                                   "totalsqfeet": {"$sum":"$properties.total_com_"} 
-                                 } 
-                      },
-                      { "$project":{"_id":0,
-                                    "totalsqfeet":1}
-                      }
-                    ])
-      .exec(function(err, data) {
-            if(err){
-                throw new Error(JSON.stringify(err));
-            }else{
-                console.log(JSON.stringify(data));
-                totalSqFeet= data.map(function(v){ return v.totalsqfeet;});
-                console.log("total SquareFeet Area : "+totalSqFeet);
-                db.aggregate([ {"$match":query},
-                               {"$group":{ "_id":{"cat":"$properties.SiteCat1"},
-                                           "Scale":{"$sum":"$properties.total_com_"},
-                                           "AssessedValue":{"$sum":"$properties.gross_ce_2"},
-                                           "No_parcels":{"$sum":1}
-                                         }},
-                               {"$project":{ "Scale":1,
-                                             "No_parcels":1, 
-                                             "percOfLand":{"$divide":["$Scale",Number(totalSqFeet)]},
-                                             "AssessedValue":1,
-                                             "percOfAssessedVal":{"$divide":["$AssessedValue",Number(totalAssVal)]}}}])
-                .exec(
-                  function(err,result){
-                    if(err)
-                    {
-                        console.log("error ocuured 3: "+err);
-                    }
-                    else{
-                        console.log(JSON.stringify(result,undefined,2));
-                        res.json(result);
-                    }
-                  });
-              }
-            });
-});
-
-module.exports=router;
-
-router.get("/view1byparcel/:arr?", (req, res, next) => {
-  /*This router will take an array of parcelpins  STRINGS and find the corresponding values specified by view1 */
-  if(req.params.arr === undefined) return next("Error: Please Specify array of Parcels (undefined)");
-  console.log("here is the passed argument: " + req.params.arr + ", attempting to parse...");
-  this.arr = JSON.parse(req.params.arr); //this will throw an error and exit if not possible to parse to JSON
-  if(!Array.isArray(this.arr)) return next("Error: Please Specify array of Parcels (not an array)");
-
-  var query = { 
-    "properties.parcelpin": { $in: this.arr}
   }
+
+  
   var sum1 = { // this contains the sums for totals for the pipeline from the query
     _id: null,  // property to group by, set to null to sum all documents
     tot_assessedval: {$sum: "$properties.gross_ce_2"},
-    tot_land:  {$sum: "$properties.total_com_"}, /* not sure if this works with residential buildings, might have to change */
+    tot_land:  {$sum: "$properties.total_acre"}, // total are of land
     indivs:{
-      $push: {
+      $push: { // creates an array
         indiv_pin: "$properties.parcelpin",
         indiv_assessed: "$properties.gross_ce_2",
-        indiv_land: "$properties.total_com_",
-        indiv_SiteCat1: "$properties.SiteCat1"
+        indiv_land: "$properties.total_acre",
+        indiv_SiteCat1: "$properties.SiteCat1",
+        indiv_Scale: { // scale measured by units for residential
+          $cond: {
+            if: {$eq: ["$properties.SiteCat1", "Residential"]},
+            then: "$properties.Units2", 
+            else: "$properties.total_com_"
+          }
+        }
       }
     }
   }
@@ -106,28 +58,29 @@ router.get("/view1byparcel/:arr?", (req, res, next) => {
     tot_assessedval: 1,
     tot_land: 1,
     cat:  "$indivs.indiv_SiteCat1", // indivs needs to be flattened in order for this to work. 
+    scale: "$indivs.indiv_Scale",
     tot_land: 1,
-    percOfland: {$divide: ["$indivs.indiv_land", "$tot_land"]},
+    percOfland: { $divide: ["$indivs.indiv_land", "$tot_land"]},
     percOfassessed: {$divide: [ "$indivs.indiv_assessed", "$tot_assessedval"]}
   }
   var sum2 = { //group by SiteCat1 
-    _id: "$cat",
+    _id: {cat: "$cat"},
     tot_AssessedValue: {$first: "$tot_assessedval"},
-    tot_Scale: {$first: "$tot_land" },
+    tot_Scale: {$sum: "$scale" }, //tot scale for each cat
     No_parcels: {$sum: 1},
     percOfLand: {$sum: "$percOfland"},
-    percOfAssessedval: {$sum: "$percOfassessed"}
+    percOfAssessedVal: {$sum: "$percOfassessed"}
   }
   var proj2 = {
     _id: 1,
-    AssessedValue: {$multiply: ["$percOfAssessedval", "$tot_AssessedValue"]}, //get assessedValue for specific Cat
-    Scale: {$multiply: ["$percOfLand", "$tot_Scale"]}, //get land Scale for Specific Cat
+    AssessedValue: {$multiply: ["$percOfAssessedVal", "$tot_AssessedValue"]}, //get assessedValue for specific Cat
+    Scale: "$tot_Scale", 
     No_parcels: 1,
     percOfLand: 1,
-    percOfAssessedval: 1
+    percOfAssessedVal: 1
   }
   var pipeline = [
-    {$match: query}, 
+    {$match: this.query}, 
     {$group: sum1}, 
     {$unwind: "$indivs"}, //flattens $indivs to separate documents/objects
     {$project: proj},
