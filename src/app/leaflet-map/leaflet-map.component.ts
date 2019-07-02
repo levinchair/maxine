@@ -119,14 +119,20 @@ export class LeafletMapComponent implements OnInit {
       tempArray.push(temp);
     }
     console.log(tempArray);
+    let feature = [];
+    let found; 
     // console.log(JSON.stringify(this.recentData));
-    for(let i = 0; i < this.recentData.features.length;i++){
-      for(let j = 0; j < this.recentData.features[i].geometry.coordinates[0].length;j++){
-        if(inside(this.recentData.features[i].geometry.coordinates[0][j],tempArray) % 2 == 1){
-          //odd
-          //console.log("I:" + i + " Pushed");
-          this.lassoData.push(this.recentData.features[i]);
-          break;
+    for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
+      feature = this.recentData.features[i].geometry.coordinates;
+      for(let j = 0; j < feature.length;j++){ //for each polygon in feature
+        for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
+          for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
+            //console.log(JSON.stringify(feature[0][j][l]));
+            if(inside(feature[j][k][l],tempArray) % 2 == 1){
+              //console.log("I:" + i + " Pushed");
+              if(!this.lassoData.includes(this.recentData.features[i])) this.lassoData.push(this.recentData.features[i]);
+            }
+          }
         }
       }
     }
