@@ -119,8 +119,7 @@ export class LeafletMapComponent implements OnInit {
       tempArray.push(temp);
     }
     console.log(tempArray);
-    let feature = [];
-    let found; 
+    let feature = []; 
     // console.log(JSON.stringify(this.recentData));
     for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
       feature = this.recentData.features[i].geometry.coordinates;
