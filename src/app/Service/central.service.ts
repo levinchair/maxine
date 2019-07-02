@@ -65,4 +65,23 @@ export class CentralService {
         );
     }
   }
+
+  getCities() {
+    return this.http.get<string[]>('http://localhost:3000/showcities/')
+      .pipe(
+        tap(
+          data => console.log("From getCity in Cities Service: " + JSON.stringify(data))
+        )
+      );
+   }
+
+   getNeighbourhood(city:string) {
+       this._city = city;
+       return this.http.get<string[]>(`http://localhost:3000/showhood/${this._city}`)
+         .pipe(
+             tap(
+                 (data : string[]) => console.log("From getNeighboorhood: " + JSON.stringify(data))
+             )
+         )
+   }
 }

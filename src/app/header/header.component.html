@@ -18,7 +18,8 @@
 </header>
 <mat-expansion-panel>
   <mat-expansion-panel-header>
-    <span>&nbsp;Cities</span>
+    <span id="header-city">&nbsp;City: {{this.centralService.getCity() | titlecase}}</span>
+    <span id='header-Hood'> Neighborhood: {{this.centralService.getHood() | titlecase}}</span>
   </mat-expansion-panel-header>
   <app-control-panel>Loading...</app-control-panel>
 </mat-expansion-panel>
