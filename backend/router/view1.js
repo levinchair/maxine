@@ -15,6 +15,7 @@ router.get("/view1/:param?/:hood?", (req, res, next) => {
     this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
   }catch(e){ //if cannot parse to json, then assume it is a name of a city
     this.param = upperCase(req.params.param);
+    console.log("Unable to parse, default to city");  
   }
   
   this.query = {};
