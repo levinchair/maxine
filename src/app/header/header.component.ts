@@ -1,6 +1,7 @@
 import { LocationService } from '../Service/location.service';
 import { Component, OnInit, ElementRef, ViewChild, Input, NgZone, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { CentralService } from '../Service/central.service';
 /// <reference types="@types/googlemaps" />
 import { MapsAPILoader } from '@agm/core';
 import { Location } from '../../model/location.model';
@@ -24,20 +25,21 @@ export class HeaderComponent implements OnInit {
   @ViewChild('search')
   public searchElementRef: ElementRef;
 
-  constructor( private mapsAPILoader: MapsAPILoader, 
-    private ngZone: NgZone, 
-    private locationService: LocationService) { }
+  constructor( private mapsAPILoader: MapsAPILoader,
+    private ngZone: NgZone,
+    private locationService: LocationService,
+    private centralService: CentralService) { }
 
   ngOnInit() {
     this.searchControl = new FormControl();
     this.mapsAPILoader.load().then(() => {
-      //@ts-ignore  
+      //@ts-ignore
       const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
       autocomplete.addListener('place_changed', () => {
-        //@ts-ignore  
+        //@ts-ignore
         const place: google.maps.places.PlaceResult = autocomplete.getPlace();
         this.search = place.formatted_address;
-        
+
         this.latitude = place.geometry.location.lat();
         this.longitude = place.geometry.location.lng();
         this.zoom = 12;

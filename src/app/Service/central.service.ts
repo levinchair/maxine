@@ -12,8 +12,10 @@ import { view1 } from  "../../model/view1.model";
 })
 export class CentralService {
   private _city;
-	private _hood;
+  private _hood;
+  private _arr;
   view1Data = new Subject<any>();
+  view1parcelData = new Subject<any>();
   constructor(private http: HttpClient) { }
 
   setCity(city: string){
@@ -23,7 +25,10 @@ export class CentralService {
 	setHood(hood: string){
 	   this._hood = hood;
      //alert("hood geo: " + this._hood);
-	}
+  }
+  setParcelArray(arr: Array<String>){
+    this._arr = arr;
+  }
   getCity(){
     return this._city;
     //console.log(this._city);
@@ -31,6 +36,9 @@ export class CentralService {
   getHood(){
     return this._hood;
     //console.log(this._hood);
+  }
+  getParcelArray(){
+    return this._arr;
   }
   changeView1(newData){
     this.view1Data.next(newData);
@@ -40,6 +48,14 @@ export class CentralService {
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.view1Data.next(view);
+    });
+  }
+
+  getbyParcelpins(){
+    this.http.get(`http://localhost:3000/view1/${this._arr}/`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.view1parcelData.next(view);
     });
   }
 
@@ -65,4 +81,23 @@ export class CentralService {
         );
     }
   }
+
+  getCities() {
+    return this.http.get<string[]>('http://localhost:3000/showcities/')
+      .pipe(
+        tap(
+          data => console.log("From getCity in Cities Service: " + JSON.stringify(data))
+        )
+      );
+   }
+
+   getNeighbourhood(city:string) {
+       this._city = city;
+       return this.http.get<string[]>(`http://localhost:3000/showhood/${this._city}`)
+         .pipe(
+             tap(
+                 (data : string[]) => console.log("From getNeighboorhood: " + JSON.stringify(data))
+             )
+         )
+   }
 }
