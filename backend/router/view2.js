@@ -36,18 +36,18 @@ var _view2={
        }
      }else{
        if(typeof this.param === "object") JSON.stringify(this.param); // make sure we are not passing an object
-       this.query = {
-            "properties.SiteCat1": "Residential",
-            "properties.par_city": this.param
-       }
+            this.query = {
+                  "properties.SiteCat1": "Residential",
+                  "properties.par_city": this.param
+            }
        if(req.params.hood !== undefined){
-         Object.defineProperty(this.query, "properties.SPA_NAME", { value : req.params.hood, enumerable : true });       
+             Object.defineProperty(this.query, "properties.SPA_NAME", { value : req.params.hood, enumerable : true });       
        }
      }
      console.log("query: " + JSON.stringify(this.query));
       var SiteCat = [];
       //Calculate # of units, # of parcels, Assessed value, % assessed value
-      db.aggregate([
+      await db.aggregate([
             {"$match": this.query},
             {"$group": {
                   "_id":"$properties.SiteCat2",
@@ -75,7 +75,6 @@ var _view2={
                   var parcelsPerUnit;
                   var totalParcelsPerUnit=0;
                   var cr4;
-                  var cat;
                   for(var i in SiteCat){
                         cat=SiteCat[i];
                        // console.log("I am in for "+SiteCat[i]);

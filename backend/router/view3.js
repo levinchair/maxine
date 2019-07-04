@@ -50,7 +50,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
     var totalSqFeet;
     var SiteCat;
     // calculate total square feet area under Commercial category
-    db.aggregate( [ 
+    await db.aggregate( [ 
         {"$match": this.query},
         {"$group":{ 
             "_id":null, 
@@ -60,12 +60,12 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
             "totalsqfeet":1}} ])
     .exec()  
         
-    .then((data)=>{
+    .then(async (data)=>{
                 console.log(JSON.stringify(data));
                 totalSqFeet=data.map(function(v){return v.totalsqfeet;});
                 console.log("total SquareFeet Area : "+totalSqFeet);
                 //Calculate # of square feet, % of square feet, Assessed value, % assessed value
-                db.aggregate([
+                 await db.aggregate([
                     {"$match": this.query},
                     {"$group":{
                         "_id":"$properties.SiteCat2",

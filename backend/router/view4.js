@@ -42,14 +42,14 @@ router.get("/view4/:param?/:hood?", async (req,res,next)=>{
     var totalSqFeet;
     var SiteCat;
     // calculate total square feet area under Industrial category
-    db.aggregate([ 
+    await db.aggregate([ 
         {"$match":this.query},
         { "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.total_com_"} } },
         {"$project":{"_id":0,"totalsqfeet":1}} 
     ])//,function(err,data){
     .exec()  
         
-    .then((data)=>{
+    .then(async (data)=>{
                 console.log(JSON.stringify(data));
                 totalSqFeet=data.map(function(v){
                             
@@ -57,7 +57,7 @@ router.get("/view4/:param?/:hood?", async (req,res,next)=>{
                 });
                 console.log("total SquareFeet Area : "+totalSqFeet);
                 //Calculate # of square feet, % of square feet, Assessed value, % assessed value
-                db.aggregate([
+                await db.aggregate([
                 {"$match":this.query},
                 {"$group":{
                     "_id":"$properties.SiteCat2",
