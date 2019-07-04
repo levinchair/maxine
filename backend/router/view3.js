@@ -12,27 +12,71 @@ _id: String,
     CR4 : Number
 }
 //--------------------------------------------------view3 of land data with city -----------------------------------------------------------------
-router.get("/view3/:city", async (req,res,next)=>{
+router.get("/view3/:param?/:hood?", async (req,res,next)=>{
+  /*This router will take an array of parcelpins (String[]) or a city and a neighbourhood and find the corresponding values specified by view1
+    Using this array for all residential testing: ["11029010", "11029075", "11029011", "11029076", "11029012", "11029077" ]
+    A test array with Com, Inst and Res Parcels: 
+    ["10924128", "10924051", "10924128", "10924052", "10924127", "10924131", "10924052", "10924027",
+     "10924053", "10924129", "10924054", "10924130", "10924023", "10924025", "10924024"  ] */
+
+     if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
+     console.log("here is the passed arguments: " + req.params.param + " and " + req.params.hood + ", attempting to parse...");
+     try{
+       this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
+     }catch(e){ //if cannot parse to json, then assume it is a name of a city
+       console.log("Unable to parse, default to city");  
+       this.param = upperCase(req.params.param);
+     }
+     
+     this.query = {};
+     if(Array.isArray(this.param)) {
+       this.query = { 
+            "properties.SiteCat1": "Commercial", 
+            "properties.parcelpin": { $in: this.param }
+       }
+     }else{
+       if(typeof this.param === "object") JSON.stringify(this.param); // make sure we are not passing an object
+       this.query = {
+            "properties.SiteCat1": "Commercial",
+            "properties.par_city": this.param
+       }
+       if(req.params.hood !== undefined){
+         Object.defineProperty(this.query, "properties.SPA_NAME", { value : req.params.hood, enumerable : true });       
+       }
+     }
+     console.log("query: " + JSON.stringify(this.query));
+    
+    
     var totalSqFeet;
     var SiteCat;
     // calculate total square feet area under Commercial category
-    db.aggregate( [ {"$match":{"properties.SiteCat1":"Commercial","properties.par_city":upperCase(req.params.city)}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
+    await db.aggregate( [ 
+        {"$match": this.query},
+        {"$group":{ 
+            "_id":null, 
+            "totalsqfeet": {"$sum":"$properties.total_com_"} } },
+        {"$project":{
+            "_id":0,
+            "totalsqfeet":1}} ])
     .exec()  
         
-    .then((data)=>{
+    .then(async (data)=>{
                 console.log(JSON.stringify(data));
-                totalSqFeet=data.map(function(v){
-                            
-                    return v.totalsqfeet;
-                });
+                totalSqFeet=data.map(function(v){return v.totalsqfeet;});
                 console.log("total SquareFeet Area : "+totalSqFeet);
                 //Calculate # of square feet, % of square feet, Assessed value, % assessed value
-                db.aggregate([{"$match":{"properties.SiteCat1":"Commercial","properties.par_city":upperCase(req.params.city)}},{"$group":
-                {"_id":"$properties.SiteCat2","sq_feet":{"$sum":"$properties.TOTAL_COM_"},
-                "AssessedValue":{"$sum":"$properties.GCERT3"}}},{"$project":{"sq_feet":1,"AssessedValue":1, 
-                "percSq_feet":{"$multiply":[{"$divide":["$sq_feet",Number(totalSqFeet)]},100]},
-                "AssessedValPerSqFeet":{ $cond: [ { $eq: [ "$sq_feet", 0 ] }, "0",{"$divide":["$AssessedValue","$sq_feet"]} ]}} }])
-                .exec()
+                 await db.aggregate([
+                    {"$match": this.query},
+                    {"$group":{
+                        "_id":"$properties.SiteCat2",
+                        "sq_feet":{"$sum":"$properties.total_com_"},
+                        "AssessedValue":{"$sum":"$properties.gross_ce_2"}}},
+                    {"$project":{
+                        "sq_feet":1,
+                        "AssessedValue":1, 
+                        "percSq_feet":{"$multiply":[{"$divide":["$sq_feet",Number(totalSqFeet)]},100]},
+                        "AssessedValPerSqFeet":{ $cond: [ { $eq: [ "$sq_feet", 0 ] }, "0",{"$divide":["$AssessedValue","$sq_feet"]} ]}} }
+                ]).exec()
                 .then(async (result)=>{
                     _view3=result;
 
@@ -58,9 +102,15 @@ router.get("/view3/:city", async (req,res,next)=>{
                                 console.log("I am in for "+SiteCat[i]);
 
 
-                                //calculate total  # TotAL_COM_ (square feet) under each SiteCat2 Category
-                                await db.aggregate([{"$match":{"properties.SiteCat1":"Commercial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group": {"_id":null,"com_sq_feet":{"$sum":"$properties.TOTAL_COM_"}}}])
-                                .exec()
+                                //calculate total  # total_com_ (square feet) under each SiteCat2 Category
+                                Object.defineProperty(this.query, "properties.SiteCat2" , {value: SiteCat[i], enumerable: true, configurable: true});
+                                console.log("query after cat2 added: " + JSON.stringify(this.query));
+                                await db.aggregate([
+                                    {"$match": this.query},
+                                    {"$group": {
+                                        "_id":null,
+                                        "com_sq_feet":{"$sum":"$properties.total_com_"}}}
+                                ]).exec()
                                 .then((data)=>{
                                     console.log(JSON.stringify(data));
                                     totalcom_sq_feet=data.map(function(v){
@@ -72,16 +122,22 @@ router.get("/view3/:city", async (req,res,next)=>{
                                 
                                 })  
                                 .catch((err)=>{
-                                    console.log("error ocuured : "+err);  
+                                    console.log("error occurred at aggregation 2 : "+err);  
                                 })
 
                             
-                                //Find the top 4 owner having heighest  # TotAL_COM_ (square feet) for each SiteCat2 under "Commercial category" 
+                                //Find the top 4 owner having heighest  # total_com_ (square feet) for each SiteCat2 under "Commercial category" 
                                 
-                                await  db.aggregate([{"$match":{"properties.SiteCat1":"Commercial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city)}},{"$group":
-                                {"_id":"$properties.PARCL_OWN3","com_sq_feet":{"$sum":"$properties.TOTAL_COM_"},"No_Parcels":{"$sum":1}}},{"$sort":{"com_sq_feet":-1}},
-                                {"$limit":4},{"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}])
-                                .exec()
+                                await  db.aggregate([
+                                    {"$match": this.query},
+                                    {"$group":{
+                                        "_id":"$properties.deeded_own2",
+                                        "com_sq_feet":{"$sum":"$properties.total_com_"},
+                                        "No_Parcels":{"$sum":1}}},
+                                        {"$sort":{"com_sq_feet":-1}},
+                                        {"$limit":4},
+                                        {"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}
+                                ]).exec()
                                 .then((result)=>{
                                             console.log(JSON.stringify(result));
                                             com_sq_feetPerCat=result.map(function(v){     
@@ -92,15 +148,15 @@ router.get("/view3/:city", async (req,res,next)=>{
                                             //res.send(parcelsPerUnit);
                                 
                         
-                                            //Sum all  # TotAL_COM_ (square feet)
+                                            //Sum all  # total_com_ (square feet)
                         
                                             totalCom_sq_feetPerCat=0;
                                             for(var rs in com_sq_feetPerCat)
                                             {
                                                     totalCom_sq_feetPerCat+=com_sq_feetPerCat[rs];
                                             }
-                                            console.log("total Sum of parcelsPerUnit: "+totalCom_sq_feetPerCat+" for cat "+cat);
-                                            //cocentratic ratio of sum  # TotAL_COM_ (square feet)  of top 4 owners to total  # TotAL_COM_ (square feet) under Commertial categary
+                                            //console.log("total Sum of parcelsPerUnit: "+totalCom_sq_feetPerCat+" for cat "+cat);
+                                            //cocentratic ratio of sum  # total_com_ (square feet)  of top 4 owners to total  # total_com_ (square feet) under Commertial categary
                                             cr4=totalCom_sq_feetPerCat/totalcom_sq_feet;
                                             if(_view3[i]._id==SiteCat[i])
                                                 _view3[i].CR4=cr4;
@@ -111,19 +167,16 @@ router.get("/view3/:city", async (req,res,next)=>{
                                 
                                 })
                                 .catch((err)=>{
-                                            console.log("error ocuured : "+err);
-                                })
-
-                            
-                        }
                     
-
+                                            console.log("error occurred at aggregation 3 : "+err);
+                                })                
+                        }
                 })
                 .catch((err)=>{
-                        console.log("error ocuured : "+err);
+                        console.log("error occurred at Aggregation 1 : "+err);
                 })
-                console.log("this.view2: ",JSON.stringify(_view3,undefined,2));
-                  res.json(_view3);
+                console.log("this.view3: ",JSON.stringify(_view3,undefined,2));
+                res.json(_view3);
     })
     .catch((err)=>{
         console.log("error ocuured : "+err);
@@ -131,134 +184,5 @@ router.get("/view3/:city", async (req,res,next)=>{
 
  
 });
-
-
-//--------------------------------------------------view3 of land data with city and hood-----------------------------------------------------------------
-router.get("/view3/:city/:hood", async (req,res,next)=>{
-        var totalSqFeet;
-        var SiteCat;
-        console.log("city: ",req.params.city)
-        console.log("hood: ",req.params.hood)
-        // calculate total square feet area under Commercial category
-        db.aggregate( [ {"$match":{"properties.SiteCat1":"Commercial","properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{ "$group":{ "_id":null, "totalsqfeet": {"$sum":"$properties.TOTAL_COM_"} } },{"$project":{"_id":0,"totalsqfeet":1}} ])//,function(err,data){
-        .exec()  
-            
-        .then((data)=>{
-                    console.log(JSON.stringify(data));
-                    totalSqFeet=data.map(function(v){
-                                
-                        return v.totalsqfeet;
-                    });
-                    console.log("total SquareFeet Area : "+totalSqFeet);
-                    //Calculate # of square feet, % of square feet, Assessed value, % assessed value
-                    db.aggregate([{"$match":{"properties.SiteCat1":"Commercial","properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
-                    {"_id":"$properties.SiteCat2","sq_feet":{"$sum":"$properties.TOTAL_COM_"},
-                    "AssessedValue":{"$sum":"$properties.GCERT3"}}},{"$project":{"sq_feet":1,"AssessedValue":1, 
-                    "percSq_feet":{"$multiply":[{"$divide":["$sq_feet",Number(totalSqFeet)]},100]},
-                    "AssessedValPerSqFeet":{ $cond: [ { $eq: [ "$sq_feet", 0 ] }, 0,{"$divide":["$AssessedValue","$sq_feet"]} ]} }}])
-                    .exec()
-                    .then(async (result)=>{
-                        _view3=result;
-                            // console.log(JSON.stringify(result,undefined,2))
-                            // res.json(result);
-                            SiteCat=result.map(function(v){
-                            
-                                return v._id;
-                            })
-                            console.log("Site Categories : "+SiteCat);
-                            //Calculate CR4 ratio
-
-                            var totalcom_sq_feet;
-                            var com_sq_feetPerCat;
-                            var totalCom_sq_feetPerCat=0;
-                            var cr4;
-                            var cat;
-        
- 
-                            for(var i in SiteCat){
-
-                                    cat=SiteCat[i];
-                                    console.log("I am in for "+SiteCat[i]);
-
-
-                                    //calculate total  # TotAL_COM_ (square feet) under each SiteCat2 Category
-                                    await db.aggregate([{"$match":{"properties.SiteCat1":"Commercial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group": {"_id":null,"com_sq_feet":{"$sum":"$properties.TOTAL_COM_"}}}])
-                                    .exec()
-                                    .then((data)=>{
-                                        console.log(JSON.stringify(data));
-                                        totalcom_sq_feet=data.map(function(v){
-                                            
-                                        return v.com_sq_feet;
-                                        });
-                                        console.log("Total com_sq_feet: "+totalcom_sq_feet);
-                                
-                                    
-                                    })  
-                                    .catch((err)=>{
-                                        console.log("error ocuured : "+err);  
-                                    })
-
-                                
-                                    //Find the top 4 owner having heighest  # TotAL_COM_ (square feet) for each SiteCat2 under "Commercial category" 
-                                    
-                                    await  db.aggregate([{"$match":{"properties.SiteCat1":"Commercial","properties.SiteCat2":SiteCat[i],"properties.par_city":upperCase(req.params.city),"properties.SPA_NAME":req.params.hood}},{"$group":
-                                    {"_id":"$properties.PARCL_OWN3","com_sq_feet":{"$sum":"$properties.TOTAL_COM_"},"No_Parcels":{"$sum":1}}},{"$sort":{"com_sq_feet":-1}},
-                                    {"$limit":4},{"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}])
-                                    .exec()
-                                    .then((result)=>{
-                                                console.log(JSON.stringify(result));
-                                                com_sq_feetPerCat=result.map(function(v){     
-                                                return v.com_sq_feet;
-                                                });
-                                                
-                                                console.log("com_sq_feet: "+com_sq_feetPerCat+" cat= "+cat);
-                                                //res.send(parcelsPerUnit);
-                                    
-                            
-                                                //Sum all  # TotAL_COM_ (square feet)
-                            
-                                                totalCom_sq_feetPerCat=0;
-                                                for(var rs in com_sq_feetPerCat)
-                                                {
-                                                        totalCom_sq_feetPerCat+=com_sq_feetPerCat[rs];
-                                                }
-                                                console.log("total Sum of parcelsPerUnit: "+totalCom_sq_feetPerCat+" for cat "+cat);
-                                                //cocentratic ratio of sum  # TotAL_COM_ (square feet)  of top 4 owners to total  # TotAL_COM_ (square feet) under Commertial categary
-                                                cr4=totalCom_sq_feetPerCat/totalcom_sq_feet;
-                                                if(_view3[i]._id==SiteCat[i])
-                                                    _view3[i].CR4=cr4;
-                                                console.log("CR4 : "+cr4);
-                                                console.log();
-                                                    //res.JSON(cr4);
-                                                return result;
-                                    
-                                    })
-                                    .catch((err)=>{
-                                                console.log("error ocuured : "+err);
-                                    })
-
-                                
-                            }
-                        
-
-                    })
-                    .catch((err)=>{
-                            console.log("error ocuured : "+err);
-                    })
-                    console.log("this.view3: ",JSON.stringify(_view3,undefined,2));
-                    res.json(_view3);
-      
-                    
-        })
-        .catch((err)=>{
-            console.log("error ocuured : "+err);
-        })
-
-       
-        
-
-});
-
-
 
 module.exports=router;
