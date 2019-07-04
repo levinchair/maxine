@@ -30,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -111,7 +112,8 @@ import { TablesComponent } from './tables/tables.component';
     NgbModule,
     MatPaginatorModule,
     MatTabsModule,
-    ChartsModule
+    ChartsModule,
+    Ng2SmartTableModule
   ],
   providers: [
     LocationService,

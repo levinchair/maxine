@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CentralService } from '../Service/central.service';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
 @Component({
   selector: 'app-tables',
   templateUrl: './tables.component.html',
@@ -9,15 +7,34 @@ import {MatSort} from '@angular/material/sort';
 })
 
 export class TablesComponent implements OnInit {
-
   view1Data: any;
-  view1ColumnDisplay = ['AssessedValue','No_parcels','percOfLand','percOfAssessedVal','cat'];
+  settings = {
+    
+    columns: {
+      cat:{
+        title: 'Land Use'
+      },
+      AssessedValue: {
+        title: 'Total Value'
+      },
+      No_parcels: {
+        title: '# Parcels'
+      },
+      percOfLand: {
+        title: '% Land'
+      },
+      percOfAsseessedVal: {
+        title: '% Value'
+      }
+    }
+  };
   constructor(private centralService: CentralService) { }
-  @ViewChild(MatSort) sort:MatSort;
+
   ngOnInit() {
     this.centralService.view1Data
       .subscribe( view => {
         this.view1Data = view;
+        console.log(JSON.stringify(view));
       });
   }
 
