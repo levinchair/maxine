@@ -81,7 +81,8 @@ router.get("/view1/:param?/:hood?", (req, res, next) => {
     percOfAssessedVal: {$sum: "$percOfassessed"}
   }
   var proj2 = {
-    _id: 1,
+    _id: 0,
+    cat: "$_id",
     AssessedValue: {$multiply: ["$percOfAssessedVal", "$tot_AssessedValue"]}, //get assessedValue for specific Cat
     Scale: "$tot_Scale", 
     No_parcels: 1,
