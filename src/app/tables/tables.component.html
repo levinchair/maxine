@@ -5,7 +5,7 @@
     <td mat-cell
       (click)="selectCategory(parcel._id.cat)"
       *matCellDef="let parcel">
-      {{parcel._id.cat | titlecase }}
+      {{parcel.cat | titlecase }}
     <td>
   </ng-container>
   <ng-container matColumnDef="AssessedValue">
