@@ -44,6 +44,7 @@ router.get("/view1/:param?/:hood?", (req, res, next) => {
         indiv_assessed: "$properties.gross_ce_2",
         indiv_land: "$properties.total_acre",
         indiv_SiteCat1: "$properties.SiteCat1",
+        indiv_SiteCat2: "$properties.SiteCat2",
         indiv_Scale: { // scale measured by units for residential
           $cond: {
             if: {$eq: ["$properties.SiteCat1", "Residential"]},
@@ -58,14 +59,21 @@ router.get("/view1/:param?/:hood?", (req, res, next) => {
     _id: 0,
     tot_assessedval: 1,
     tot_land: 1,
-    cat:  "$indivs.indiv_SiteCat1", // indivs needs to be flattened in order for this to work. 
+    //"indivs.indiv_SiteCat2": 1,
+    cat:  { 
+      $cond: { // checks to see if it is vacant land
+        if: { $in: ["$indivs.indiv_SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]] },
+        then: "Vacant",
+        else: "$indivs.indiv_SiteCat1"
+      }
+    }, // indivs needs to be flattened in order for this to work. 
     scale: "$indivs.indiv_Scale",
     tot_land: 1,
     percOfland: { $divide: ["$indivs.indiv_land", "$tot_land"]},
     percOfassessed: {$divide: [ "$indivs.indiv_assessed", "$tot_assessedval"]}
   }
-  var sum2 = { //group by SiteCat1 
-    _id: {cat: "$cat"},
+  var sum2 = { //group by SiteCat1 (cat)
+    _id: "$cat",
     tot_AssessedValue: {$first: "$tot_assessedval"},
     tot_Scale: {$sum: "$scale" }, //tot scale for each cat
     No_parcels: {$sum: 1},
