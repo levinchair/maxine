@@ -24,7 +24,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
      try{
        this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
      }catch(e){ //if cannot parse to json, then assume it is a name of a city
-       console.log("Unable to parse, default to city");  
+       console.log("Unable to parse, default to city. Parse Error: " + JSON.stringify(e));  
        this.param = upperCase(req.params.param);
      }
      
@@ -99,6 +99,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                         for(var i in SiteCat){
 
                                 cat=SiteCat[i];
+                                Object.defineProperty(_view3[i], "cat", {value: SiteCat[i], enumerable: true});
                                 console.log("I am in for "+SiteCat[i]);
 
 
@@ -158,10 +159,8 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                                             //console.log("total Sum of parcelsPerUnit: "+totalCom_sq_feetPerCat+" for cat "+cat);
                                             //cocentratic ratio of sum  # total_com_ (square feet)  of top 4 owners to total  # total_com_ (square feet) under Commertial categary
                                             cr4=totalCom_sq_feetPerCat/totalcom_sq_feet;
-                                            if(_view3[i]._id==SiteCat[i])
-                                                _view3[i].CR4=cr4;
-                                            console.log("CR4 : "+cr4);
-                                            console.log();
+                                            if(_view3[i]._id==SiteCat[i])  _view3[i].CR4=cr4;
+                                            
                                                 //res.JSON(cr4);
                                             return result;
                                 
