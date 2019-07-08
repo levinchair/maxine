@@ -6,14 +6,16 @@ import {MatSortModule} from '@angular/material/sort';
 //Models
 import { featureCollection } from  "../../model/featurecollection.model";
 import { view1 } from  "../../model/view1.model";
+import { JsonForm } from '../../model/jsonform.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CentralService {
-  private _city = "CLEVELAND";
-  private _hood = "Downtown";
-  private _arr;
+  private _city;
+  private _hood;
+  private _arr : Array<String> = [];
+  private _arrStr: String;
   view1Data = new Subject<any>();
   view1parcelData = new Subject<any>();
   constructor(private http: HttpClient) { }
@@ -26,8 +28,13 @@ export class CentralService {
 	   this._hood = hood;
      //alert("hood geo: " + this._hood);
   }
-  setParcelArray(arr: Array<String>){
-    this._arr = arr;
+  setParcelArray(arr: Array<JsonForm>){
+    for(var i =0; i < arr.length; i++){ // needs to be an array of only parcelpins
+      this._arr.push(arr[i].properties.parcelpin);
+    }
+    this._arrStr = JSON.stringify(this._arr);
+    // console.log(this._arr);
+    // console.log(this._arrStr);
   }
   getCity(){
     return this._city;
@@ -43,7 +50,7 @@ export class CentralService {
   changeView1(newData){
     this.view1Data.next(newData);
   }
-  
+
   getChartData(){
     this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)
     .subscribe( (view) => {
@@ -53,10 +60,10 @@ export class CentralService {
   }
 
   getbyParcelpins(){
-    this.http.get(`http://localhost:3000/view1/${this._arr}/`)
+    this.http.get(`http://localhost:3000/view1/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view1parcelData.next(view);
+      this.view1Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
     });
   }
 

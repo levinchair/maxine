@@ -25,7 +25,7 @@ var _view2={
        this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
      }catch(e){ //if cannot parse to json, then assume it is a name of a city
        this.param = upperCase(req.params.param);
-       console.log("Unable to parse, default to city");  
+       console.log("Unable to parse, default to city. Parse Error: " + JSON.stringify(e)); 
      }
      
      this.query = {};
@@ -63,20 +63,21 @@ var _view2={
                   }}
             ])
       .exec()
-      .then(async (result)=>{
+      .then(
+      async (result)=>{
             //console.log("Reesult : "+result)
             _view2=result;
-                  //console.log("_view2: ",JSON.stringify(_view2,undefined,2))
-                 // res.json(result);
-                  SiteCat=result.map(function(v){ return v._id; })
-                  //console.log("view2 : "+JSON.stringify(_view2,undefined,2))
-                  //calculate CR4
-                  var totalParcels;
-                  var parcelsPerUnit;
-                  var totalParcelsPerUnit=0;
-                  var cr4;
+            //console.log("view2 raw: " + JSON.stringify(_view2));
+            SiteCat=result.map(function(v){ return v._id; })
+            //console.log("view2 : "+JSON.stringify(_view2,undefined,2))
+            //calculate CR4
+            var totalParcels;
+            var parcelsPerUnit;
+            var totalParcelsPerUnit=0;
+            var cr4;
                   for(var i in SiteCat){
                         cat=SiteCat[i];
+                        Object.defineProperty(_view2[i], "cat", {value: SiteCat[i], enumerable: true});
                        // console.log("I am in for "+SiteCat[i]);
                         //calculate total  # of Units2 under each SiteCat2 Category
                         //define another property for the query. configure to true to allow redefinition.
@@ -120,10 +121,11 @@ var _view2={
                               console.log("totalParcels: " + totalParcels);
                               console.log("CR4 : "+cr4);
                               //console.log("cr4: "+cr4);
-                              if(_view2[i]._id==SiteCat[i])
-                                    _view2[i].CR4=cr4;
+                              if(_view2[i]._id==SiteCat[i]) _view2[i].CR4=cr4;
                               //console.log("result.cr4 ",cat," ",result.cr4);
-
+                              //console.log(JSON.stringify(Object.keys(_view2)));
+                              _view2[i].cat = _view2[i].id;
+                              
                               return result;
 
                             })
@@ -131,8 +133,8 @@ var _view2={
                                   console.log("error ocuured : "+err);
                             })
                   }
-                  //console.log("this.view2: ",JSON.stringify(_view2,undefined,2));
-                  res.json(_view2);
+            //console.log("this.view2: ",JSON.stringify(_view2,undefined,2));
+            res.json(_view2);
       })
       .catch((err)=>{
             console.log("query error: " + JSON.stringify(this.query));

@@ -17,7 +17,7 @@ router.get("/view4/:param?/:hood?", async (req,res,next)=>{
     try{
       this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
     }catch(e){ //if cannot parse to json, then assume it is a name of a city
-      console.log("Unable to parse, default to city");  
+      console.log("Unable to parse, default to city. Parse Error: " + JSON.stringify(e));  
       this.param = upperCase(req.params.param);
     }
     
@@ -91,7 +91,7 @@ router.get("/view4/:param?/:hood?", async (req,res,next)=>{
 
                                 cat=SiteCat[i];
                                 console.log("I am in for "+SiteCat[i]);
-                                console.log();
+                                Object.defineProperty(_view4[i], "cat", {value: SiteCat[i], enumerable: true});
 
                                 //calculate total  # of total_com_ under each SiteCat2 Category
                                 Object.defineProperty(this.query, "properties.SiteCat2" , {value: SiteCat[i], enumerable: true, configurable: true});
@@ -169,10 +169,8 @@ router.get("/view4/:param?/:hood?", async (req,res,next)=>{
                                             console.log("total Sum of parcelsPerUnit: "+totalCom_sq_feet_PerCat+" for cat "+cat);
                                             //cocentratic ratio of sum of paercels per unit of top 4 owners to total parcels under Industrial categary
                                             cr4=totalCom_sq_feet_PerCat/totalcom_sq_feet;
-                                            if(_view4[i]._id==SiteCat[i])
-                                                _view4[i].CR4=cr4;
-                                            console.log("CR4 : "+cr4);
-                                            console.log();
+                                            if(_view4[i]._id==SiteCat[i])  _view4[i].CR4=cr4;
+                                            
                                                 //res.JSON(cr4);
                                                 // result.cr4=cr4;
                                                 // console.log("result.cr4 ",cat," ",result.cr4);

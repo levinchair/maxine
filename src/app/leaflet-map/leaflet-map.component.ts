@@ -27,7 +27,7 @@ export class LeafletMapComponent implements OnInit {
   selectfeature:any;
   EPSILON = 0.00001;
   recentData:any;
-  lassoData = [];
+  lassoData : any[];
   constructor(
     private centralService : CentralService
   ) { }
@@ -78,7 +78,7 @@ export class LeafletMapComponent implements OnInit {
               //do something when a shape is clicked
               L.popup().setLatLng(e.latlng)
                 .setContent("ParcelPin: " + feature.properties.parcelpin +
-                " SiteCat1: " + feature.properties.SiteCat1
+                " SiteCat1: " + feature.properties.SiteCat1 + " SiteCat2" + feature.properties.SiteCat2
               ).openOn(this.map);
             },
             color: (index : Number, feature : JsonForm) => {
@@ -135,8 +135,11 @@ export class LeafletMapComponent implements OnInit {
         }
       }
     }
-    console.log("Length:" + this.lassoData.length);
-    console.log(JSON.stringify(this.lassoData));
+    // console.log("Length:" + this.lassoData.length);
+    // console.log(JSON.stringify(this.lassoData));
+
+    this.centralService.setParcelArray(this.lassoData);
+    this.centralService.getbyParcelpins(); // this will initiate a http request
     let tempView1Data = [];
     // for(int k = 0; k < this.lassoData.length;k++){
     //   // tempView1Data.push(e -> {"_id":{
