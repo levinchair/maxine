@@ -11,8 +11,8 @@ import { view1 } from  "../../model/view1.model";
   providedIn: 'root'
 })
 export class CentralService {
-  private _city;
-  private _hood;
+  private _city = "CLEVELAND";
+  private _hood = "Downtown";
   private _arr;
   view1Data = new Subject<any>();
   view1parcelData = new Subject<any>();
@@ -43,6 +43,7 @@ export class CentralService {
   changeView1(newData){
     this.view1Data.next(newData);
   }
+  
   getChartData(){
     this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)
     .subscribe( (view) => {

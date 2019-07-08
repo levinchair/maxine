@@ -16,6 +16,9 @@ import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts';
+import { ModalService } from './Service/modal-service.service';
+import { DomService } from './Service/dom-service.service';
+
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -55,6 +58,7 @@ import { View4DataChartComponent } from './data-charts/view4-data-chart/view4-da
 import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { ChartsComponent } from './charts/charts.component';
 import { TablesComponent } from './tables/tables.component';
+import { ModalComponent } from './modal/modal.component';
 
 
 
@@ -81,7 +85,7 @@ import { TablesComponent } from './tables/tables.component';
     LeafletMapComponent,
     ChartsComponent,
     TablesComponent,
-
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -126,8 +130,13 @@ import { TablesComponent } from './tables/tables.component';
     DataTable2Service,
     DataTable3Service,
     DataTable3Service,
-	GeometryService,
-    GoogleMapsAPIWrapper
+	  GeometryService,
+    GoogleMapsAPIWrapper,
+    ModalService,
+    DomService
+  ],
+  entryComponents:[
+    ModalComponent
   ],
   bootstrap: [AppComponent]
 })

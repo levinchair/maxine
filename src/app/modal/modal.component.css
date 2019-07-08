@@ -1,0 +1,24 @@
+.sample-container{
+  display:grid;
+  grid-template-columns: 1fr;
+}
+.sample-text{
+  color: black;
+  font-size: 20px;
+  text-align:center;
+}
+.sample-close{
+  text-align:center;
+}
+.sample-close button{
+  width: 50px;
+  height: 50px;
+  color: tomato;
+}
+ng2-smart-table{
+  text-align: right;
+}
+span{
+  float:left;
+  font-size: 1.25em;
+}

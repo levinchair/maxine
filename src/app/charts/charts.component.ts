@@ -77,7 +77,7 @@ export class ChartsComponent implements OnInit {
     this.colors.length = 0;
     //IDK why array.map doesn't work so I have to use a for loop
     for(var x = 0; x < this.view1Data.length; x++){
-      this.labels.push(this.view1Data[x]._id.cat);
+      this.labels.push(this.view1Data[x].cat);
       if(this.CATCOLORS.has(this.labels[x])){
         this.colors.push(this.CATCOLORS.get(this.labels[x]));
       }else{

@@ -1,7 +1,19 @@
 ng2-smart-table{
-  width:30vw;
   float:left;
+  width:30vw;
+  max-width: 30vw;
+  text-align: right;
+  overflow:scroll;
 }
-.category:hover{
-  background-color:teal;
+span{
+  font-size:1.5em;
+  float:left;
+  margin:0;
+  padding-left:14px;
+  padding-top:14px;
+}
+button{
+  float:right;
+  margin-right:14px;
+  margin-top:-7px;
 }

@@ -1,0 +1,11 @@
+<div class="sample-container">
+  <span>{{currentView}}</span>
+  <span>City:{{this.centralService.getCity()  | titlecase}}</span>
+  <span>Neighborhood:{{this.centralService.getHood() | titlecase}}</span>
+  <ng2-smart-table [settings]="this.settings" [source]="this.view1Data"></ng2-smart-table>
+  <div class="sample-close">
+    <button (click)="close()">
+      Close Modal
+    </button>
+  </div>
+</div>

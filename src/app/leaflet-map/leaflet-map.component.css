@@ -8,9 +8,9 @@
 }
 button{
   position:relative;
-  width:55px;
+  width:auto;
   height:25px;
   left:-57px;
-  top:20px;
+  top:-35px;
   z-index:2;
 }
