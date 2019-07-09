@@ -6,7 +6,7 @@ import inside from 'point-in-polygon';
 import { JsonForm } from '../../model/jsonform.model';
 
 import * as L from 'leaflet';
-import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js';
+import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
 
 @Component({
@@ -131,7 +131,7 @@ export class LeafletMapComponent implements OnInit {
       let temp = [this.latlng_area[q].lng,this.latlng_area[q].lat]
       tempArray.push(temp);
     }
-    console.log(tempArray);
+    console.log("temparray: " + tempArray);
     let feature = []; 
     // console.log(JSON.stringify(this.recentData));
     for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
@@ -174,6 +174,11 @@ export class LeafletMapComponent implements OnInit {
       this.googleSat.addTo(this.map);
       this.streets.removeFrom(this.map);
     }
+  }
+
+  removeLassoPolygons(){
+    this.selectfeature.removeAllArea();
+    this.centralService.setParcelArray([]);
   }
 
 

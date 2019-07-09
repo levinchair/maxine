@@ -29,12 +29,16 @@ export class CentralService {
      //alert("hood geo: " + this._hood);
   }
   setParcelArray(arr: Array<JsonForm>){
-    for(var i =0; i < arr.length; i++){ // needs to be an array of only parcelpins
-      this._arr.push(arr[i].properties.parcelpin);
+    if(Object.keys(arr).length === 0 || !Array.isArray(arr)){
+      this._arr = [];
+    }else {
+      for(var i =0; i < arr.length; i++){ // needs to be an array of only parcelpins
+        this._arr.push(arr[i].properties.parcelpin);
+      }
     }
     this._arrStr = JSON.stringify(this._arr);
     // console.log(this._arr);
-    // console.log(this._arrStr);
+    //console.log(this._arrStr);
   }
   getCity(){
     return this._city;
