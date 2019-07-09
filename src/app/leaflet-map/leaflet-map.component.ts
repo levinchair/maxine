@@ -162,13 +162,13 @@ export class LeafletMapComponent implements OnInit {
     // }
     //this.centralService.changeView1(tempView1Data);
   }
+  
   setBaseLayer(){ 
     /* Toggles between satellite view and street view */
     if(this.sat){
       this.sat = false;
       this.streets.addTo(this.map);
       this.googleSat.removeFrom(this.map);
-
     }else{
       this.sat = true;
       this.googleSat.addTo(this.map);
