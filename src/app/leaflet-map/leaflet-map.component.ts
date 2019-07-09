@@ -86,7 +86,7 @@ export class LeafletMapComponent implements OnInit {
           this.shapeLayer = L1.shapes({
             data: data,
             map: this.map,
-            opacity: 0.8,
+            opacity: 0.7,
             click:(e, feature : JsonForm) => {
               //do something when a shape is clicked
               L.popup().setLatLng(e.latlng)
