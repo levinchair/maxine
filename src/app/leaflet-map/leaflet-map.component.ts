@@ -6,7 +6,7 @@ import inside from 'point-in-polygon';
 import { JsonForm } from '../../model/jsonform.model';
 
 import * as L from 'leaflet';
-import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js';
+import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
 
 @Component({
@@ -28,6 +28,10 @@ export class LeafletMapComponent implements OnInit {
   EPSILON = 0.00001;
   recentData:any;
   lassoData : any[];
+  sat: boolean;
+  googleSat: any;
+  maplabels:any;
+  streets: any;
   constructor(
     private centralService : CentralService
   ) { }
@@ -35,19 +39,30 @@ export class LeafletMapComponent implements OnInit {
   ngOnInit() {
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-    	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    	subdomains: 'abcd',
-    	maxZoom: 19,
-      zIndex: 1}).addTo(this.map);
-    //add only Labels to the map
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+
+    //init layers
+    this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+      maxZoom: 20,
+      subdomains:['mt0','mt1','mt2','mt3']
+    });
+    this.streets = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+      zIndex: 1});
+    //only labels
+    this.maplabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
     	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     	subdomains: 'abcd',
     	maxZoom: 19,
       zIndex: 3}).addTo(this.map);
     //Initialize geoJsonLayer
     this.geoJsonLayer = L.geoJSON();
+
+    //set layer to the map
+    this.sat = true;
+    this.setBaseLayer();
+    
   }
 
   updateAllData(){
@@ -55,9 +70,7 @@ export class LeafletMapComponent implements OnInit {
         data  => {
           this.recentData = data;
           //deletes the layer if already initialized
-          if(this.shapeLayer !== undefined){
-            this.shapeLayer.remove();
-          }
+          if(this.shapeLayer !== undefined) this.shapeLayer.remove();
           console.log(this.shapeLayer);
           // //removes layer from map
           // this.geoJsonLayer.removeFrom(this.map);
@@ -117,8 +130,13 @@ export class LeafletMapComponent implements OnInit {
       let temp = [this.latlng_area[q].lng,this.latlng_area[q].lat]
       tempArray.push(temp);
     }
+<<<<<<< HEAD
     console.log(tempArray);
     let feature = [];
+=======
+    console.log("temparray: " + tempArray);
+    let feature = []; 
+>>>>>>> bf56a16cf218c3495cc47d16c51be33cb2543de7
     // console.log(JSON.stringify(this.recentData));
     for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
       feature = this.recentData.features[i].geometry.coordinates;
@@ -148,6 +166,26 @@ export class LeafletMapComponent implements OnInit {
     // }
     //this.centralService.changeView1(tempView1Data);
   }
+  
+  setBaseLayer(){ 
+    /* Toggles between satellite view and street view */
+    if(this.sat){
+      this.sat = false;
+      this.streets.addTo(this.map);
+      this.googleSat.removeFrom(this.map);
+    }else{
+      this.sat = true;
+      this.googleSat.addTo(this.map);
+      this.streets.removeFrom(this.map);
+    }
+  }
+
+  removeLassoPolygons(){
+    this.selectfeature.removeAllArea();
+    this.centralService.setParcelArray([]);
+  }
+
+
   //Works using https://stackoverflow.com/questions/328107/how-can-you-determine-a-point-is-between-two-other-points-on-a-line-segment
   //Find slope formular y = mx + b, get point on line segement AB
   //Check new point D is between A and B on line-segment AB
