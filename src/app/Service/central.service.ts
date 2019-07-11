@@ -12,11 +12,15 @@ import { JsonForm } from '../../model/jsonform.model';
   providedIn: 'root'
 })
 export class CentralService {
-  private _city;
-  private _hood;
+  private _city = "CLEVELAND";
+  private _hood = "Downtown";
   private _arr : Array<String> = [];
   private _arrStr: String;
+  currentView = "view1";
   view1Data = new Subject<any>();
+  view2Data = new Subject<any>();
+  view3Data = new Subject<any>();
+  view4Data = new Subject<any>();
   view1parcelData = new Subject<any>();
   constructor(private http: HttpClient) { }
 
@@ -47,18 +51,46 @@ export class CentralService {
   getParcelArray(){
     return this._arr;
   }
+
   changeView1(newData){
     this.view1Data.next(newData);
   }
 
-  getChartData(){
+  getViews(){
+    //Set view1 data
     this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.view1Data.next(view);
     });
+    //set view2 data
+    this.http.get(`http://localhost:3000/view2/${this._city}/${this._hood}`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.view2Data.next(view);
+    });
+    //Set view3 data
+    this.http.get(`http://localhost:3000/view3/${this._city}/${this._hood}`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.view3Data.next(view);
+    });
+    //Set view4 data
+    this.http.get(`http://localhost:3000/view4/${this._city}/${this._hood}`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.view4Data.next(view);
+    });
   }
-
+  //Ignore this for now(-_-)working on a better way
+  getView(view){
+    switch (view){
+      case 'view1': return this.view1Data; break;
+      case 'view2': return this.view2Data; break;
+      case 'view3': return this.view3Data; break;
+      case 'view4': return this.view4Data; break;
+    }
+  }
   getbyParcelpins(){
     this.http.get(`http://localhost:3000/view1/${this._arrStr}/`)
     .subscribe( (view) => {

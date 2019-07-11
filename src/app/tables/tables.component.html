@@ -1,3 +1,11 @@
-<span>{{currentView}}</span>
-<button mat-raised-button (click)="initTableModal()">*Modal-Icon*</button>
-<ng2-smart-table [settings]="this.settings" [source] = "this.view1Data"></ng2-smart-table>
+<mat-radio-group (change)="changeView($event)" aria-label="Select an option">
+  <mat-radio-button checked value="view1">View 1</mat-radio-button>
+  <mat-radio-button value="view2">View 2</mat-radio-button>
+  <mat-radio-button value="view3">View 3</mat-radio-button>
+  <mat-radio-button value="view4">View 4</mat-radio-button>
+</mat-radio-group>
+<button mat-raised-button (click)="initTableModal()">[M]</button>
+<ng2-smart-table [ngClass]="table1" [settings]="this.view1settings" [source] = "this.view1Data"></ng2-smart-table>
+<ng2-smart-table [ngClass]="table2" [settings]="this.view2settings" [source] = "this.view2Data"></ng2-smart-table>
+<ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source] = "this.view3Data"></ng2-smart-table>
+<ng2-smart-table [ngClass]="table4" [settings]="this.view4settings" [source] = "this.view4Data"></ng2-smart-table>

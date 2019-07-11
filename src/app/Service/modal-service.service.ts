@@ -4,8 +4,7 @@ import { CentralService } from '../Service/central.service';
 @Injectable()
 export class ModalService {
 
-  constructor(private domService: DomService,
-              private centralService: CentralService) { }
+  constructor(private domService: DomService) { }
 
   private modalElementId = 'modal-container';
   private overlayElementId = 'overlay';
@@ -16,7 +15,6 @@ export class ModalService {
       outputs:outputs
     }
     this.domService.appendComponentTo(this.modalElementId, component, componentConfig);
-    this.centralService.getChartData();
     document.getElementById(this.modalElementId).className = 'show';
     document.getElementById(this.overlayElementId).className = 'show';
   }
