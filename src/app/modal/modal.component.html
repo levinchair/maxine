@@ -1,11 +1,9 @@
 <div class="sample-container">
-  <span>{{currentView}}</span>
+    <button (click)="close()">
+      X
+    </button>
+  <span>{{this.centralService.currentView | titlecase}}</span>
   <span>City:{{this.centralService.getCity()  | titlecase}}</span>
   <span>Neighborhood:{{this.centralService.getHood() | titlecase}}</span>
-  <ng2-smart-table [settings]="this.settings" [source]="this.view1Data"></ng2-smart-table>
-  <div class="sample-close">
-    <button (click)="close()">
-      Close Modal
-    </button>
-  </div>
+  <ng2-smart-table [settings]="this.settings" [source]="this.viewData"></ng2-smart-table>
 </div>

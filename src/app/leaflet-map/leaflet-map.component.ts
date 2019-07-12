@@ -66,7 +66,6 @@ export class LeafletMapComponent implements OnInit {
   }
 
   updateAllData(){
-    this.centralService.getChartData(); // inital subscribe of the data
     this.centralService.getGeometry().subscribe(
         data  => {
           this.recentData = data;
@@ -119,7 +118,7 @@ export class LeafletMapComponent implements OnInit {
           });
         }
       );
-
+    this.centralService.getViews(); // inital subscribe of the data
   }
   //add check initialized/undefined flags
   getLassoPlots(){
@@ -131,8 +130,13 @@ export class LeafletMapComponent implements OnInit {
       let temp = [this.latlng_area[q].lng,this.latlng_area[q].lat]
       tempArray.push(temp);
     }
+<<<<<<< HEAD
+    console.log(tempArray);
+    let feature = [];
+=======
     console.log("temparray: " + tempArray);
     let feature = []; 
+>>>>>>> bf56a16cf218c3495cc47d16c51be33cb2543de7
     // console.log(JSON.stringify(this.recentData));
     for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
       feature = this.recentData.features[i].geometry.coordinates;

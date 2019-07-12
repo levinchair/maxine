@@ -12,6 +12,7 @@ import {
 export class DomService {
 
   private childComponentRef:any;
+  viewData: any;
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
@@ -37,7 +38,7 @@ export class DomService {
 
     // Append DOM element to the body
     document.getElementById(parentId).appendChild(childDomElem);
-
+    this.viewData = childConfig;
   }
 
   public removeComponent() {
@@ -55,7 +56,6 @@ export class DomService {
     for(var key in outputs){
       componentRef.instance[key] = outputs[key];
     }
-
   }
 }
 interface childConfig{

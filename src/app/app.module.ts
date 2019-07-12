@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts';
 import { ModalService } from './Service/modal-service.service';
 import { DomService } from './Service/dom-service.service';
+import { MatRadioModule } from '@angular/material/radio';
 
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
@@ -85,7 +86,7 @@ import { ModalComponent } from './modal/modal.component';
     LeafletMapComponent,
     ChartsComponent,
     TablesComponent,
-    ModalComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -117,7 +118,8 @@ import { ModalComponent } from './modal/modal.component';
     MatPaginatorModule,
     MatTabsModule,
     ChartsModule,
-    Ng2SmartTableModule
+    Ng2SmartTableModule,
+    MatRadioModule
   ],
   providers: [
     LocationService,

@@ -1,5 +1,6 @@
 .sample-container{
   display:grid;
+  position:relative;
   grid-template-columns: 1fr;
 }
 .sample-text{
@@ -21,4 +22,9 @@ ng2-smart-table{
 span{
   float:left;
   font-size: 1.25em;
+}
+button{
+  text-align: center;
+  position:absolute;
+  left:10px;
 }
