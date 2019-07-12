@@ -130,13 +130,8 @@ export class LeafletMapComponent implements OnInit {
       let temp = [this.latlng_area[q].lng,this.latlng_area[q].lat]
       tempArray.push(temp);
     }
-<<<<<<< HEAD
-    console.log(tempArray);
-    let feature = [];
-=======
     console.log("temparray: " + tempArray);
     let feature = []; 
->>>>>>> bf56a16cf218c3495cc47d16c51be33cb2543de7
     // console.log(JSON.stringify(this.recentData));
     for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
       feature = this.recentData.features[i].geometry.coordinates;
