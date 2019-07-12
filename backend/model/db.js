@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 // local database uri: 'mongodb://localhost:27017/urbanNeighbourhood'
-const mongo=mongoose.connect('mongodb://basic:chargerHPl1908w@52.14.228.17:27017/urbanNeighbourhood2',{ useNewUrlParser: true }
+const mongo=mongoose.connect('mongodb://basic:chargerHPl1908w@3.13.14.21:27017/urbanNeighbourhood2',{ useNewUrlParser: true }
 ,(err,res)=>{
 if(err) throw err;
 console.log("Connected to database 1");

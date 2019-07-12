@@ -28,10 +28,7 @@ mongoose.connect('mongodb://peter:laptopbottlekey@52.14.228.17:27017/urbanNeighb
 var parceldataformat = {
     "type": String,
     "properties" : Object,
-    "geometry": {
-        "type": String,
-        "coordinates": Array
-    }
+    "geometry": Object
 
 }
 var parceldataSchema = new mongoose.Schema(parceldataformat, {collection:'cuyahoga_full'});
@@ -46,11 +43,11 @@ var getStream = function () {
 
 getStream()
 .pipe(es.mapSync(function (data) {
-    // console.log(data);
-    cuyahoga.update({"properties.PARCELPIN" : data.properties.parcelpin}, data, {upsert : true})
-        .exec((err, res) => {
-            if(err) console.log(err);
-        });
+    console.log(data);
+    //  cuyahoga.replaceOne({"properties.PARCELPIN" : data.properties.parcelpin}, data, {upsert : true})
+    //     .exec((err, res) => {
+    //         if(err) console.log(err);
+    //     });
 }));
 
 
