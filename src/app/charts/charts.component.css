@@ -3,12 +3,16 @@
 .chart-container{
   position:relative;
   float:left;
-  height:85%;
+  height:75%;
   width:30vw;
+  max-width:30vw;
+
 }
-.PARCEL-radio{
-    position:absolute;
-    display:none;
-    float:left;
-    width:33%;
+.chart-radio{
+  display:block;
+}
+mat-radio-button{
+  padding-left:10px;
+  padding-right:10px;
+  margin-top:10px;
 }

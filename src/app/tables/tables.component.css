@@ -1,10 +1,10 @@
 ng2-smart-table{
   float:left;
-  width:30vw;
-  max-width: 30vw;
+  max-width: 29vw;
   max-height: 78%;
   text-align: right;
-  overflow:scroll;
+  overflow-x:scroll;
+  overflow-y:hidden;
 }
 span{
   font-size:1.5em;
@@ -17,11 +17,12 @@ button{
   float:right;
   margin-right:14px;
   margin-top:-7px;
+  margin-top:10px;
 }
 mat-radio-button{
   padding-left:10px;
   padding-right:10px;
-
+  margin-top:10px;
 }
 .hidden{
   display:none;

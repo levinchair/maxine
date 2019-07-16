@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { CentralService } from '../Service/central.service';
 import { Chart } from 'chart.js';
+import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
+
 //models
 import { view1 } from '../../model/view1.model';
 
@@ -12,6 +14,7 @@ import { view1 } from '../../model/view1.model';
 export class ChartsComponent implements OnInit {
   @Input() defaultChoice: string;
   @Input() value: string;
+  @Output() change: EventEmitter<MatRadioChange>;
   @ViewChild('chartA') private chartRef;
   selected:string ="AssessedValue";
   chart: any;
@@ -62,9 +65,30 @@ export class ChartsComponent implements OnInit {
       },
       options: {
         title: {
-          display: false,
+          display: true,
           text: 'Displaying Parcel Data',
           fontSize: 16
+        },
+        legend:{
+          display:false
+        },
+        scales: {
+            yAxes: [{
+                    ticks: {
+                        callback: function(label, index, labels) {
+                            if(label >= 1000000){
+                              return label/1000000+'m';
+                            }else if(label >= 1000){
+                              return label/1000+'k';
+                            }else{
+                              return label;
+                            }
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: '1k = 1,000 | 1m = 1,000,000'
+                    }}]
         },
         responsive:true,
         maintainAspectRatio:false
@@ -95,7 +119,7 @@ export class ChartsComponent implements OnInit {
 
   chart1Change(e){
     this.selected = e;
-    console.log(e + this.view1Data[0][e]);
+    //console.log(e + this.view1Data[0][e]);
     this.updateChart1(e);
   }
   // View1: [

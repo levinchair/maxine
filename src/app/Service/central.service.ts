@@ -17,6 +17,7 @@ export class CentralService {
   private _arr : Array<String> = [];
   private _arrStr: String;
   currentView = "view1";
+  neighborhoods = new Subject<any>();
   view1Data = new Subject<any>();
   view2Data = new Subject<any>();
   view3Data = new Subject<any>();
@@ -135,13 +136,10 @@ export class CentralService {
       );
    }
 
-   getNeighbourhood(city:string) {
-       this._city = city;
-       return this.http.get<string[]>(`http://localhost:3000/showhood/${this._city}`)
-         .pipe(
-             tap(
-                 (data : string[]) => console.log("From getNeighboorhood: " + JSON.stringify(data))
-             )
-         )
+   getNeighbourhood() {
+       this.http.get<string[]>(`http://localhost:3000/showhood/${this._city}`)
+         .subscribe( (hoods) => {
+           this.neighborhoods.next(hoods);
+         });
    }
 }

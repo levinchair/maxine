@@ -22,6 +22,7 @@ export class ControlPanelComponent implements OnInit {
   onSelect(city: string) {
     this.selectedCity = city;
     this.centralService.setCity(city);
+    this.centralService.getNeighbourhood();
   }
 
  ngOnInit() {

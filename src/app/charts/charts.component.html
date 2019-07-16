@@ -1,17 +1,14 @@
-<div class="PARCEL-radio">
-  <!-- <input type="radio" name="" value=""> -->
-  <p>Select Chart Data</p>
-  <div *ngFor="let category of PARCELCATEGORIES">
-    <input type="radio"
-      id = "category[0]"
-      name="category[1]"
-      [value]="category[0]"
-      [(ngModel)]="defaultChoice"
-      (ngModelChange)="chart1Change($event)"/>
-    <label>{{ category[1] }}</label>
-  </div>
-</div>
 <!-- <h3>Displaying Parcel Data: {{selected}}</h3> -->
 <div class="chart-container">
   <canvas #chartA>{{ chart }}</canvas>
+  <div class="chart-radio">
+    <!-- <input type="radio" name="" value=""> -->
+    <p>Select Chart Data</p>
+    <mat-radio-group (change)="changeView($event)" aria-label="Select an option">
+      <mat-radio-button checked value="view1">1</mat-radio-button>
+      <mat-radio-button value="view2">2</mat-radio-button>
+      <mat-radio-button value="view3">3</mat-radio-button>
+      <mat-radio-button value="view4">4</mat-radio-button>
+    </mat-radio-group>
+  </div>
 </div>

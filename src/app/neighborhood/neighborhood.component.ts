@@ -13,8 +13,8 @@ export class NeighborhoodComponent implements OnInit {
 private selectedCity;
 private selectedHood;
 onSelectFlag=false;
-neighbourhood : string[];
-_neighbourhood:string;
+neighborhood : string[];
+_neighborhood:string;
 constructor(
   private centralService:CentralService) {
  }
@@ -25,14 +25,11 @@ onSelect(hood: string) {
   }
   ngOnInit() {
     this.selectedCity = this.centralService.getCity();
+    this.centralService.getNeighbourhood();
 	  //alert("selected city should be undefined" + this.selectedCity);
-    this.centralService.getNeighbourhood(this.selectedCity)
-    .subscribe( (neighborhood: string[]) =>{
-      this.neighbourhood=neighborhood;
-    } );
-
-  }
-  ngAfterContentInit() {
-
+    this.centralService.neighborhoods.subscribe( (hoods) => {
+        this.neighborhood = hoods;
+        //console.log(JSON.stringify(view));
+      });
   }
 }

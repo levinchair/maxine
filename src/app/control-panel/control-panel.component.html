@@ -1,15 +1,12 @@
 <div class="control-panel-div">
-  <cdk-virtual-scroll-viewport itemSize="7">
-    <li *cdkVirtualFor= "let city of cities"
+  <div class="cities">
+    <li *ngFor= "let city of cities"
     (click)="onSelect(city)"
-    [class.selected] = "city === selectedCity"
-    >
+    [class.selected] = "city === selectedCity">
       <a routerLink="/showhood/{{city}}" >
         {{ city | titlecase }}
-        <span  *ngIf=" city===selectedCity" >
-          <app-neighborhood></app-neighborhood>
-        </span>
       </a>
     </li>
-  </cdk-virtual-scroll-viewport>
+  </div>
+  <app-neighborhood></app-neighborhood>
 </div>

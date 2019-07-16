@@ -110,8 +110,9 @@ export class TablesComponent implements OnInit {
         title: '% Land',
         valuePrepareFunction: (value) => {value= value*100; return this.changeFix(value,1);}
       },
-      percOfAsseessedVal: {
-        title: '% Value'
+      percOfAssessedVal: {
+        title: '% Value',
+        valuePrepareFunction: (value) => {return this.changeFix(value,2);}
       },
       Scale: {
         title: 'Scale'
@@ -167,7 +168,8 @@ export class TablesComponent implements OnInit {
         title: 'Sq Feet'
       },
       percSq_feet: {
-        title: '% Sq Feet'
+        title: '% Sq Feet',
+        valuePrepareFunction: (value) => {return this.changeFix(value,1);}
       },
       AssessedValPerSqFeet: {
         title: 'Total Value/Sq Foot',
@@ -199,7 +201,8 @@ export class TablesComponent implements OnInit {
         title: 'Sq Feet'
       },
       percSq_feet: {
-        title: '% Sq Feet'
+        title: '% Sq Feet',
+        valuePrepareFunction: (value) => {return this.changeFix(value,1);}
       },
       AssessedValPerSqFeet: {
         title: 'Value/Sq Foot',

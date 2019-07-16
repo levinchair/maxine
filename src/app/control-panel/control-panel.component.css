@@ -3,8 +3,8 @@
 }
 
 .control-panel-div {
-  float: left;
-  width: 30vw;
+  width: 100%;
+  max-height:50vh;
 }
 a {
   color: black;
@@ -14,15 +14,18 @@ div.header {
   display: inline;
 }
 
-.control-panel-div cdk-virtual-scroll-viewport{
+.cities {
+  position:relative;
   list-style: none;
-  height: 50vh;
-  width: 100%;
+  max-height:inherit;
+  height: 100%;
+  width: 21vw;
+  display:inline-block;
   align-items: center;
   justify-content: center;
+  overflow-y:scroll;
+  float:left;
 }
-
-
 
 .control-panel-div a:hover {
   color: rgb(139, 99, 96);

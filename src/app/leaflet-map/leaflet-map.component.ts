@@ -32,6 +32,7 @@ export class LeafletMapComponent implements OnInit {
   googleSat: any;
   maplabels:any;
   streets: any;
+  lassoToggle:boolean = false;
   constructor(
     private centralService : CentralService
   ) { }
@@ -62,7 +63,7 @@ export class LeafletMapComponent implements OnInit {
     //set layer to the map
     this.sat = true;
     this.setBaseLayer();
-    
+
   }
 
   updateAllData(){
@@ -131,7 +132,7 @@ export class LeafletMapComponent implements OnInit {
       tempArray.push(temp);
     }
     console.log("temparray: " + tempArray);
-    let feature = []; 
+    let feature = [];
     // console.log(JSON.stringify(this.recentData));
     for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
       feature = this.recentData.features[i].geometry.coordinates;
@@ -161,8 +162,8 @@ export class LeafletMapComponent implements OnInit {
     // }
     //this.centralService.changeView1(tempView1Data);
   }
-  
-  setBaseLayer(){ 
+
+  setBaseLayer(){
     /* Toggles between satellite view and street view */
     if(this.sat){
       this.sat = false;
@@ -180,7 +181,15 @@ export class LeafletMapComponent implements OnInit {
     this.centralService.setParcelArray([]);
   }
 
-
+  toggleLasso(){
+    if(this.lassoToggle){
+      this.map.selectAreaFeature.disable();
+      this.lassoToggle = false;
+    }else{
+      this.selectfeature = this.map.selectAreaFeature.enable();
+      this.lassoToggle = true;
+    }
+  }
   //Works using https://stackoverflow.com/questions/328107/how-can-you-determine-a-point-is-between-two-other-points-on-a-line-segment
   //Find slope formular y = mx + b, get point on line segement AB
   //Check new point D is between A and B on line-segment AB

@@ -1,5 +1,7 @@
-<div class="neighborhood-div">
-    <li *ngFor= "let hood of neighbourhood" (click)="onSelect(hood)" [class.selected]="hood === selectedHood">
+<div class="neighborhoods">
+  <li *ngFor= "let hood of neighborhood"
+      (click)="onSelect(hood)"
+      [class.selected]="hood === selectedHood">
       <a>{{hood | titlecase}}</a>
-    </li>
+  </li>
 </div>

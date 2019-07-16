@@ -6,11 +6,24 @@
   background: whitesmoke;
   z-index:1;
 }
+#search{
+  position:absolute;
+  font-size:18px;
+  top:20px;
+  right:3vw;
+  z-index:3;
+}
+.map-controls{
+  position:absolute;
+  top:75px;
+  right:3vw;
+  z-index:3;
+}
 button{
-  position:relative;
+  border-style:solid;
+  border-color:white;
+  border-width:1px;
   width:auto;
-  height:25px;
-  left:-57px;
-  top:-35px;
-  z-index:2;
+  float:left;
+  font-size:14px;
 }

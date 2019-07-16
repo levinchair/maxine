@@ -7,8 +7,9 @@
   id="search">
   Search
 </button>
-<button (click)='this.selectfeature = this.map.selectAreaFeature.enable()'>ENABLE</button>
-<button (click)='this.selectfeature = this.map.selectAreaFeature.disable()'>DISABLE</button>
-<button (click)='this.removeLassoPolygons()'>DELETE POLYGONS</button>
-<button (click)='this.setBaseLayer()'>Satellite View: {{sat}}</button>
-<button (click)='this.getLassoPlots()'>Calculate</button>
+<div class="map-controls">
+  <button (click)='this.toggleLasso()'>Lasso</button>
+  <button (click)='this.getLassoPlots()'>Calculate</button>
+  <button (click)='this.removeLassoPolygons()'>Delete Lassos</button>
+  <button (click)='this.setBaseLayer()'>Satellite View: {{sat}}</button>
+</div>
