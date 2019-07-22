@@ -1,11 +1,10 @@
 var express= require('express')
 var router= express.Router();
-var upperCase = require('upper-case');
 var db = require("../model/db.js");
+var utils = require('./utils');
 
 const VALID_LANDUSE = ["Industrial", "Government", "Institutional", "Commercial", "Mixed", "Other", "Utility", "Residential"];
 const [RESIDENTIAL] = VALID_LANDUSE.slice(-1);
-
 
 router.get("/concentration/:land_use?/:param?/:hood?", (req, res, next) => {
       /*This router will take an array of parcelpins (String[]) or a city and a neighbourhood and find the corresponding values specified by Concentration by Owner
@@ -16,28 +15,9 @@ router.get("/concentration/:land_use?/:param?/:hood?", (req, res, next) => {
   if(req.params.land_use === undefined) return next("Error: Please Specify a SiteCat1 value (undefined)");
   if(!VALID_LANDUSE.includes(req.params.land_use)) return next("Error: Invalid Land Use");
   if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
-  console.log("here is the passed argument: " + req.params.param + ", attempting to parse...");
-  try{
-    this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
-  }catch(e){ //if cannot parse to json, then assume it is a name of a city
-    this.param = upperCase(req.params.param);
-    console.log("Unable to parse, default to city. Parse Error: " + JSON.stringify(e));  
-  }
   
-  this.query = {}; //this is the initial match query
-  if(Array.isArray(this.param)) {
-    this.query = { 
-      "properties.parcelpin": { $in: this.param }
-    }
-  }else{
-    if(typeof this.param === "object") JSON.stringify(this.param); // make sure we are not passing an object
-    this.query = {
-      "properties.par_city": this.param
-    }
-    if(req.params.hood !== undefined){
-      Object.defineProperty(this.query, "properties.SPA_NAME", { value : req.params.hood, enumerable : true });       
-    }
-  }
+  this.query = utils.createQuery(req.params.param, req.params.hood); //this is the initial match query
+
   Object.defineProperty(this.query, "properties.SiteCat1", { value : req.params.land_use, enumerable : true });       
 
   var catfilter = { //filter for SiteCat to appropriate value
@@ -132,4 +112,5 @@ router.get("/concentration/:land_use?/:param?/:hood?", (req, res, next) => {
 
  });
 
+ 
  module.exports = router;

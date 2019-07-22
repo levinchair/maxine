@@ -1,7 +1,7 @@
 var express= require('express')
 var router= express.Router()
 var db = require("../model/db.js");
-var upperCase = require('upper-case')
+var utils = require("./utils");
 
 var _view3={
 _id: String,   
@@ -20,32 +20,8 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
      "10924053", "10924129", "10924054", "10924130", "10924023", "10924025", "10924024"  ] */
 
      if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
-     console.log("here is the passed arguments: " + req.params.param + " and " + req.params.hood + ", attempting to parse...");
-     try{
-       this.param = JSON.parse(req.params.param); //this will throw an error and exit if not possible to parse to JSON
-     }catch(e){ //if cannot parse to json, then assume it is a name of a city
-       console.log("Unable to parse, default to city. Parse Error: " + JSON.stringify(e));  
-       this.param = upperCase(req.params.param);
-     }
      
-     this.query = {};
-     if(Array.isArray(this.param)) {
-       this.query = { 
-            "properties.SiteCat1": "Commercial", 
-            "properties.parcelpin": { $in: this.param }
-       }
-     }else{
-       if(typeof this.param === "object") JSON.stringify(this.param); // make sure we are not passing an object
-       this.query = {
-            "properties.SiteCat1": "Commercial",
-            "properties.par_city": this.param
-       }
-       if(req.params.hood !== undefined){
-         Object.defineProperty(this.query, "properties.SPA_NAME", { value : req.params.hood, enumerable : true });       
-       }
-     }
-     console.log("query: " + JSON.stringify(this.query));
-    
+     this.query = utils.createQuery(req.params.param, req.params.hood);    
     
     var totalSqFeet;
     var SiteCat;
