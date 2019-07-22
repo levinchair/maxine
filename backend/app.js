@@ -10,6 +10,7 @@ var router4= require("./router/view1");
 var router5= require("./router/view2");
 var router6= require("./router/view3");
 var router7= require("./router/view4");
+var router8= require("./router/OwnerConcentration");
 var app = express();
 
 mongoose.Promise = global.Promise;
@@ -39,6 +40,7 @@ app.use("/",router4);
 app.use("/",router5);
 app.use("/",router6); 
 app.use("/",router7);
+app.use("/",router8);
 
 /*app.listen(3000,function(){
     console.log("Listning on 3000");
