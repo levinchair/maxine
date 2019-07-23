@@ -13,10 +13,16 @@
   right:3vw;
   z-index:3;
 }
+#lasso-calculate{
+  padding-top:10.39px;
+  padding-bottom:10.39px;
+  width:46px;
+}
 .map-controls{
-  position:absolute;
-  top:75px;
-  right:3vw;
+  position:relative;
+  float:right;
+  top:4px;
+  right: 31vw;
   z-index:3;
 }
 button{

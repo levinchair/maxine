@@ -102,6 +102,21 @@ export class CentralService {
       //console.log("view: " + JSON.stringify(view));
       this.view1Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
     });
+    this.http.get(`http://localhost:3000/view2/${this._arrStr}/`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.view2Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+    });
+    this.http.get(`http://localhost:3000/view3/${this._arrStr}/`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.view3Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+    });
+    this.http.get(`http://localhost:3000/view4/${this._arrStr}/`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.view4Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+    });
   }
 
   getGeometry(){
