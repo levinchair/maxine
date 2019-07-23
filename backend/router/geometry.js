@@ -1,43 +1,27 @@
 var express= require('express')
-var upperCase = require('upper-case');
+var utils = require('./utils');
 var router= express.Router()
 var db = require("../model/db.js");
 
 
 //--------------------------------------------------Show  geometric features  for selected neighbourhood--------------------------------------
-router.get("/showgeometry/:city/:hood?",(req,res,next)=>{
-    this.city=req.params.city;
-    var query = {};
-    this.city= upperCase(this.city); // all city names are capital in the database
-                                     // only the first letter of the neighbourhood is capital
-    query["properties.par_city"] = this.city;
+router.get("/showgeometry/:param?/:hood?",(req,res,next)=>{
+
+    this.query = utils.createQuery(req.params.param, req.params.hood);
 
     var newJson = {};
-    //check to see if hood is undefined, else show all
-    if(req.params.hood !== undefined){
-      query["properties.SPA_NAME"] = req.params.hood;
-    }
 
-      db.find(query,
+      db.find(this.query,
 			        {_id:0, type:1,"properties.parcelpin":1,"properties.par_city":1, "properties.SiteCat1":1,"properties.SiteCat2": 1,
               "properties.SPA_NAME":1,"geometry.type":1,"geometry.coordinates":1},
-	    (err,result)=>{
-        if(err) {
-            res.send(err);
-            console.log("error occured");
-          } else {
-            //console.log(JSON.parse(result));
-            console.log(result);
-    		//wrap the resut in a new object to allow AGM maps to read it.
+	    (err,result)=>{ //callback
+        if(err) return next("Error: " + err);
     		newJson = {
     			type: "FeatureCollection",
     			features: result
     		}
             res.json(newJson);
-            //res.write(result);
-            //res.end(result);
-          }
-      //next();
+            console.log(newJson);
     });
 
   });
