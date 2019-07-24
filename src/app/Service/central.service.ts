@@ -166,7 +166,7 @@ export class CentralService {
          });
    }
    getOwnerConcentration(){
-       this.http.get(`http://localhost:3000/concentration/${this._currentLandUse}/${this._city}/${this._hood}`)
+       this.http.get(`http://localhost:3000/concentration/${this._city}/${this._hood}`)
        .subscribe( (view) => {
          //console.log("view: " + JSON.stringify(view));
          this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed

@@ -238,7 +238,7 @@ export class TablesComponent implements OnInit {
       OwnerValue: {
         title: 'Owner Value'
       },
-      landUse: {
+      landuse: {
         title: 'Land Use'
       }
     },

@@ -101,6 +101,7 @@ export class LeafletMapComponent implements OnInit {
               L.popup().setLatLng(e.latlng)
                 .setContent(popupContent).openOn(this.map);
             },
+            border: true,
             color: (index : Number, feature : JsonForm) => {
               //this will take a feature and map its sitecat zone to a color
               var zoneType : String = feature.properties.SiteCat1;
