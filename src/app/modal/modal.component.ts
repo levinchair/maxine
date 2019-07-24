@@ -27,6 +27,7 @@ export class ModalComponent implements OnInit {
       case 'view2': return this.viewData.view2Data; break;
       case 'view3': return this.viewData.view3Data; break;
       case 'view4': return this.viewData.view4Data; break;
+      case 'concentration': return this.viewData.concentrationData; break;
     }
   }
   setSettings(view){
@@ -35,7 +36,7 @@ export class ModalComponent implements OnInit {
       case 'view2': return this.view2settings; break;
       case 'view3': return this.view3settings; break;
       case 'view4': return this.view4settings; break;
-
+      case 'concentration': return this.view5settings; break;
     }
   }
   changeFix(value, precision){
@@ -171,6 +172,32 @@ export class ModalComponent implements OnInit {
         CR4: {
           title: 'CR4',
           valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+        }
+      },
+      pager : {
+        perPage: 6
+      }
+    };
+    view5settings = {
+      actions:false,
+      noDataMessage: "Choose a City and Neighborhood",
+      columns: {
+        OwnerName:{
+          title: 'Owner'
+        },
+        MarketCR4: {
+          title: 'Market CR4',
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+        },
+        MarketShare: {
+          title: 'MarketShare',
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+        },
+        OwnerValue: {
+          title: 'Owner Value'
+        },
+        landUse: {
+          title: 'Land Use'
         }
       },
       pager : {

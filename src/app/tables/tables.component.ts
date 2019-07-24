@@ -16,13 +16,14 @@ export class TablesComponent implements OnInit {
   view2Data: any;
   view3Data: any;
   view4Data: any;
+  concentrationData: any;
   @Output() change: EventEmitter<MatRadioChange>;
   @Input() checked: Boolean;
   private table1 : String = "show";
   private table2 : String = "hidden";
   private table3 : String = "hidden";
   private table4 : String = "hidden";
-
+  private table5 : String = "hidden";
   constructor(
     private centralService: CentralService,
     private modalService : ModalService
@@ -48,30 +49,29 @@ export class TablesComponent implements OnInit {
       .subscribe( view => {
         this.view4Data = view;
       });
+    this.centralService.concentrationData
+      .subscribe( view => {
+        this.concentrationData = view;
+      });
   }
 
   changeView(e){
     this.centralService.currentView = e.value;
     if(e.value == 'view1'){
-      this.table1 = "show";
-      this.table2 = "hidden"
-      this.table3 = "hidden";
-      this.table4 = "hidden";
+      this.table1 = "show";this.table2 = "hidden";this.table3 = "hidden";
+      this.table4 = "hidden";this.table5="hidden";
     }else if(e.value == 'view2'){
-      this.table1 = "hidden";
-      this.table2 = "show";
-      this.table3 = "hidden";
-      this.table4 = "hidden";
+      this.table1 = "hidden";this.table2 = "show";this.table3 = "hidden";
+      this.table4 = "hidden";this.table5="hidden";
     }else if(e.value == 'view3'){
-      this.table1 = "hidden";
-      this.table2 = "hidden";
-      this.table3 = "show";
-      this.table4 = "hidden";
+      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "show";
+      this.table4 = "hidden";this.table5="hidden";
     }else if(e.value == 'view4'){
-      this.table1 = "hidden";
-      this.table2 = "hidden";
-      this.table3 = "hidden";
-      this.table4 = "show";
+      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
+      this.table4 = "show";this.table5="hidden";
+    }else if(e.value == 'concentration'){
+      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
+      this.table4 = "hidden";this.table5="show";
     }
   }
   changeFix(value, precision){
@@ -87,7 +87,8 @@ export class TablesComponent implements OnInit {
       view1Data: this.view1Data,
       view2Data: this.view2Data,
       view3Data: this.view3Data,
-      view4Data: this.view4Data};
+      view4Data: this.view4Data,
+      concentrationData: this.concentrationData};
     this.modalService.init(ModalComponent, {viewDataFromTable}, {});
   }
 //------------------------------------------------------------------------
@@ -110,11 +111,11 @@ export class TablesComponent implements OnInit {
       },
       percOfLand: {
         title: '% Land',
-        valuePrepareFunction: (value) => {value= value*100; return this.changeFix(value,1);}
+        valuePrepareFunction: (value) => { return this.changeFix(value*100,1)+ "%";}
       },
       percOfAssessedVal: {
         title: '% Value',
-        valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,2)+ "%";}
       },
       Scale: {
         title: 'Scale'
@@ -146,7 +147,7 @@ export class TablesComponent implements OnInit {
       },
       CR4: {
         title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+        valuePrepareFunction: (value) => {return this.changeFix(value,2)+ "%";}
       }
     },
     pager : {
@@ -171,7 +172,7 @@ export class TablesComponent implements OnInit {
       },
       percSq_feet: {
         title: '% Sq Feet',
-        valuePrepareFunction: (value) => {return this.changeFix(value,1);}
+        valuePrepareFunction: (value) => {return this.changeFix(value,1)+ "%";}
       },
       AssessedValPerSqFeet: {
         title: 'Total Value/Sq Foot',
@@ -179,7 +180,7 @@ export class TablesComponent implements OnInit {
       },
       CR4: {
         title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+        valuePrepareFunction: (value) => {return this.changeFix(value,2)+ "%";}
       }
     },
     pager : {
@@ -204,7 +205,7 @@ export class TablesComponent implements OnInit {
       },
       percSq_feet: {
         title: '% Sq Feet',
-        valuePrepareFunction: (value) => {return this.changeFix(value,1);}
+        valuePrepareFunction: (value) => {return this.changeFix(value,1) + "%";}
       },
       AssessedValPerSqFeet: {
         title: 'Value/Sq Foot',
@@ -212,7 +213,33 @@ export class TablesComponent implements OnInit {
       },
       CR4: {
         title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+        valuePrepareFunction: (value) => {return this.changeFix(value,2)+ "%";}
+      }
+    },
+    pager : {
+      perPage: 6
+    }
+  };
+  view5settings = {
+    actions:false,
+    noDataMessage: "Choose a City and Neighborhood",
+    columns: {
+      OwnerName:{
+        title: 'Owner'
+      },
+      MarketCR4: {
+        title: 'Market CR4',
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+      },
+      MarketShare: {
+        title: 'MarketShare',
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+      },
+      OwnerValue: {
+        title: 'Owner Value'
+      },
+      landUse: {
+        title: 'Land Use'
       }
     },
     pager : {

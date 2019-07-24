@@ -33,6 +33,7 @@ export class LeafletMapComponent implements OnInit {
   maplabels:any;
   streets: any;
   lassoToggle:boolean = false;
+
   constructor(
     private centralService : CentralService
   ) { }
@@ -88,11 +89,17 @@ export class LeafletMapComponent implements OnInit {
             map: this.map,
             opacity: 0.7,
             click:(e, feature : JsonForm) => {
+              let popupContent = "<p>" +
+                "Parcel Pin : " + feature.properties.parcelpin + "</p>"; 
+                // "Land Use   : " + feature.properties.SiteCat1 + "<br>" +
+                // "-> Sub-Category : " + feature.properties.SiteCat2 + "<br>" +
+                // "Address    : " + feature.properties.par_addr + " " + feature.properties.par_street +  " " + feature.properties.par_suffix + "<br>" +
+                // "->         : " + feature.properties.par_city + " " + feature.properties.par_zip + "<br>" +
+                // "Total SqFt : " + feature.properties.total_squa + "<br>" +
+                // "Owner      : " + feature.properties.list + "</p>";
               //do something when a shape is clicked
               L.popup().setLatLng(e.latlng)
-                .setContent("ParcelPin: " + feature.properties.parcelpin +
-                " SiteCat1: " + feature.properties.SiteCat1 + " SiteCat2" + feature.properties.SiteCat2
-              ).openOn(this.map);
+                .setContent(popupContent).openOn(this.map);
             },
             color: (index : Number, feature : JsonForm) => {
               //this will take a feature and map its sitecat zone to a color

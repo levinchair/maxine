@@ -14,7 +14,7 @@ span{
   padding-top:14px;
 }
 button{
-  float:right;
+  position:absolute;
   margin-right:14px;
   margin-top:-7px;
   margin-top:10px;

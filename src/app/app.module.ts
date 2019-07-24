@@ -15,6 +15,7 @@ import { ChartsModule } from 'ng2-charts';
 import { ModalService } from './Service/modal-service.service';
 import { DomService } from './Service/dom-service.service';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
@@ -95,7 +96,8 @@ import { ModalComponent } from './modal/modal.component';
     MatTabsModule,
     ChartsModule,
     Ng2SmartTableModule,
-    MatRadioModule
+    MatRadioModule,
+    MatCheckboxModule
   ],
   providers: [
     LocationService,

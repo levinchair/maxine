@@ -12,16 +12,18 @@ import { JsonForm } from '../../model/jsonform.model';
   providedIn: 'root'
 })
 export class CentralService {
-  private _city = "CLEVELAND";
+  private _city = "Cleveland";
   private _hood = "Downtown";
   private _arr : Array<String> = [];
   private _arrStr: String;
+  private _currentLandUse: String = "Commercial";
   currentView = "view1";
   neighborhoods = new Subject<any>();
   view1Data = new Subject<any>();
   view2Data = new Subject<any>();
   view3Data = new Subject<any>();
   view4Data = new Subject<any>();
+  concentrationData = new Subject<any>();
   view1parcelData = new Subject<any>();
   constructor(private http: HttpClient) { }
 
@@ -86,6 +88,7 @@ export class CentralService {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view);
     });
+    this.getOwnerConcentration();
   }
   //Ignore this for now(-_-)working on a better way
   getView(view){
@@ -116,6 +119,11 @@ export class CentralService {
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+    });
+    this.http.get(`http://localhost:3000/concentration/${this._currentLandUse}/${this._arrStr}/`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
     });
   }
 
@@ -156,5 +164,12 @@ export class CentralService {
          .subscribe( (hoods) => {
            this.neighborhoods.next(hoods);
          });
+   }
+   getOwnerConcentration(){
+       this.http.get(`http://localhost:3000/concentration/${this._currentLandUse}/${this._city}/${this._hood}`)
+       .subscribe( (view) => {
+         //console.log("view: " + JSON.stringify(view));
+         this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+       });
    }
 }
