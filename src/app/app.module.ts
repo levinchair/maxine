@@ -16,7 +16,8 @@ import { ModalService } from './Service/modal-service.service';
 import { DomService } from './Service/dom-service.service';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {MatButtonModule} from '@angular/material/button';
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -97,7 +98,9 @@ import { ModalComponent } from './modal/modal.component';
     ChartsModule,
     Ng2SmartTableModule,
     MatRadioModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatButtonToggleModule,
+    MatButtonModule
   ],
   providers: [
     LocationService,

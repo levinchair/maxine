@@ -5,9 +5,9 @@ import { CentralService } from '../Service/central.service';
 export class ModalService {
 
   constructor(private domService: DomService) { }
-
   private modalElementId = 'modal-container';
   private overlayElementId = 'overlay';
+  modalView: String = "first";
 
   init(component: any, inputs: object, outputs: object) {
     let componentConfig = {

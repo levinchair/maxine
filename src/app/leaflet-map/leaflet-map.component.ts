@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CentralService } from '../Service/central.service';
 import inside from 'point-in-polygon';
-
+import { MatButtonModule } from '@angular/material/button';
 //Models
 import { JsonForm } from '../../model/jsonform.model';
 
@@ -15,7 +15,6 @@ import * as L1 from 'leaflet.glify';
   styleUrls: ['./leaflet-map.component.css']
 })
 export class LeafletMapComponent implements OnInit {
-
   features: any;
   shapeLayer : any;
   map: any;
@@ -90,7 +89,7 @@ export class LeafletMapComponent implements OnInit {
             opacity: 0.7,
             click:(e, feature : JsonForm) => {
               let popupContent = "<p>" +
-                "Parcel Pin : " + feature.properties.parcelpin + "</p>"; 
+                "Parcel Pin : " + feature.properties.parcelpin + "</p>";
                 // "Land Use   : " + feature.properties.SiteCat1 + "<br>" +
                 // "-> Sub-Category : " + feature.properties.SiteCat2 + "<br>" +
                 // "Address    : " + feature.properties.par_addr + " " + feature.properties.par_street +  " " + feature.properties.par_suffix + "<br>" +

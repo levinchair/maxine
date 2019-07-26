@@ -1,25 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { ModalService } from '../Service/modal-service.service';
 import { CentralService } from '../Service/central.service';
 import { DomService } from '../Service/dom-service.service';
+import { Landing as landingSource } from './landingPage';
+
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.css']
 })
 export class ModalComponent implements OnInit {
-
   viewData: any;
   settings: any;
+  landingPageSource: landingSource;
+  @ViewChild('display') display;
+  @ViewChild('choice1') choice1;
+  @ViewChild('choice2') choice2;
+  @ViewChild('choice3') choice3;
 
   constructor(private modalService : ModalService,
               private centralService : CentralService,
               private domService: DomService) { }
 
   ngOnInit() {
-    this.settings = this.setSettings(this.centralService.currentView);
-    this.viewData = this.domService.viewData.inputs.viewDataFromTable;
-    this.viewData = this.setData(this.centralService.currentView);
+    //To access the instructions for the modal
+    this.landingPageSource = new landingSource();
+    if((this.domService.viewData.inputs.viewDataFromTable.modal == "tables")){
+      this.settings = this.setSettings(this.centralService.currentView);
+      this.viewData = this.domService.viewData.inputs.viewDataFromTable;
+      this.viewData = this.setData(this.centralService.currentView);
+      this.modalService.modalView = this.domService.viewData.inputs.viewDataFromTable.modal;
+    }else{
+      //make this an else if to use other modal views
+    }
   }
   setData(view){
     switch(view){
@@ -49,6 +62,25 @@ export class ModalComponent implements OnInit {
   }
   public close() {
     this.modalService.destroy();
+  }
+  choice(val){
+    if(val == 1){
+      this.choice1.nativeElement.className = "menu highlighted";
+      this.choice2.nativeElement.className = "menu blank";
+      this.choice3.nativeElement.className = "menu blank";
+      this.display.nativeElement.innerHTML = this.landingPageSource.option1;
+    }
+    else if(val == 2){
+      this.choice1.nativeElement.className = "menu blank";
+      this.choice2.nativeElement.className = "menu highlighted";
+      this.choice3.nativeElement.className = "menu blank";
+      this.display.nativeElement.innerHTML = this.landingPageSource.option2;
+    }else if(val == 3){
+      this.choice1.nativeElement.className = "menu blank";
+      this.choice2.nativeElement.className = "menu blank";
+      this.choice3.nativeElement.className = "menu highlighted";
+      this.display.nativeElement.innerHTML = this.landingPageSource.option3;
+    }
   }
   //------------------------------------------------------------------------
   //All of the settings will be down here because they take up a lot of room

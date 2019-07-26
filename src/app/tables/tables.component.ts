@@ -30,6 +30,9 @@ export class TablesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    var viewDataFromTable = {
+      modal:"first"};
+    this.modalService.init(ModalComponent, {viewDataFromTable}, {});
     this.centralService.view1Data
       .subscribe( view => {
         this.view1Data = view;
@@ -84,6 +87,7 @@ export class TablesComponent implements OnInit {
   }
   initTableModal(){
     var viewDataFromTable = {
+      modal:"tables",
       view1Data: this.view1Data,
       view2Data: this.view2Data,
       view3Data: this.view3Data,
@@ -147,7 +151,7 @@ export class TablesComponent implements OnInit {
       },
       CR4: {
         title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value,2)+ "%";}
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
       }
     },
     pager : {
@@ -180,7 +184,7 @@ export class TablesComponent implements OnInit {
       },
       CR4: {
         title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value,2)+ "%";}
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
       }
     },
     pager : {
@@ -213,7 +217,7 @@ export class TablesComponent implements OnInit {
       },
       CR4: {
         title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value,2)+ "%";}
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
       }
     },
     pager : {
@@ -229,11 +233,11 @@ export class TablesComponent implements OnInit {
       },
       MarketCR4: {
         title: 'Market CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
       },
       MarketShare: {
         title: 'MarketShare',
-        valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
       },
       OwnerValue: {
         title: 'Owner Value'

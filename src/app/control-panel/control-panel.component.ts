@@ -17,8 +17,7 @@ export class ControlPanelComponent implements OnInit {
   cityFromService = this.centralService.getCity();
   selectedCity;
   private citiesSub: Subscription;
-  LandUse : string[] =["Commercial","Government","Industrial",
-                        "Institutional","Mixed","Residential","Utility","Null"];
+  
   onSelect(city: string) {
     this.selectedCity = city;
     this.centralService.setCity(city);

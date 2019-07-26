@@ -13,23 +13,27 @@
   right:3vw;
   z-index:3;
 }
-#lasso-calculate{
-  padding-top:10.39px;
-  padding-bottom:10.39px;
-  width:46px;
-}
 .map-controls{
   position:relative;
   float:right;
   top:4px;
-  right: 31vw;
+  right: 30.5vw;
   z-index:3;
 }
 button{
-  border-style:solid;
-  border-color:white;
-  border-width:1px;
   width:auto;
   float:left;
   font-size:14px;
+}
+.middle{
+  padding:0px;
+  min-width:48px;
+  background-color:#ffffff;
+  border:none;
+}
+mat-button-toggle-group{
+  border:none;
+}
+mat-button-toggle{
+  border-radius:8px;
 }

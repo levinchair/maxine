@@ -7,9 +7,9 @@
   id="search">
   Search
 </button>
-<div class="map-controls">
-  <button (click)='this.toggleLasso()' title="Toggle Lasso"><img src="../assets/icons-24px/png/002-map-location.png" height="24" width="24" ></button><br>
-  <button (click)='this.getLassoPlots()' height="24" width="24" title="Calculate values based on Lasso Selection" id="lasso-calculate">Go</button><br>
-  <button (click)='this.removeLassoPolygons()'><img src="../assets/icons-24px/png/008-trash.png" height="24" width="24" title="Remove all Lasso areas"></button><br>
-  <button (click)='this.setBaseLayer()'><img src="../assets/icons-24px/png/028-planet-earth.png" height="24" width="24" title="Toggle satellite view"></button>
-</div>
+<mat-button-toggle-group multiple class="map-controls">
+  <mat-button-toggle (click)='this.setBaseLayer()'><img src="../assets/icons-24px/png/028-planet-earth.png" height="24" width="24" title="Toggle satellite view"></mat-button-toggle>
+  <mat-button-toggle (click)='this.toggleLasso()' title="Toggle Lasso"><img src="../assets/icons-24px/png/002-map-location.png" height="24" width="24" ></mat-button-toggle><br>
+  <button class="middle" mat-stroked-button color="primary" (click)='this.getLassoPlots()' height="24" width="24" title="Calculate values based on Lasso Selection" id="lasso-calculate">Go</button><br>
+  <button class="middle" mat-stroked-button color="warn" (click)='this.removeLassoPolygons()'><img src="../assets/icons-24px/png/008-trash.png" height="24" width="24" title="Remove all Lasso areas"></button><br>
+</mat-button-toggle-group>
