@@ -10,7 +10,9 @@ body{
 .hidden{
     display:none;
 }
-
+app-tables{
+  position:relative;
+}
 .show{
     display:block;
 }

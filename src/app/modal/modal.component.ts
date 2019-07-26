@@ -25,6 +25,7 @@ export class ModalComponent implements OnInit {
   ngOnInit() {
     //To access the instructions for the modal
     this.landingPageSource = new landingSource();
+    //For when we want to display Tables modal
     if((this.domService.viewData.inputs.viewDataFromTable.modal == "tables")){
       this.settings = this.setSettings(this.centralService.currentView);
       this.viewData = this.domService.viewData.inputs.viewDataFromTable;
@@ -82,6 +83,13 @@ export class ModalComponent implements OnInit {
       this.display.nativeElement.innerHTML = this.landingPageSource.option3;
     }
   }
+
+
+  ngAfterViewInit(){
+    this.display.nativeElement.innerHTML = this.landingPageSource.option1;
+  }
+
+
   //------------------------------------------------------------------------
   //All of the settings will be down here because they take up a lot of room
     view1settings = {

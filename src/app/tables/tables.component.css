@@ -13,12 +13,10 @@ span{
   padding-left:14px;
   padding-top:14px;
 }
-button{
+#modal-button{
   position:absolute;
-  margin-right:14px;
-  margin-top:-7px;
-  margin-top:10px;
-  padding-top:7px;
+  right:-100px;
+  top:0px;
 }
 mat-radio-button{
   padding-left:10px;

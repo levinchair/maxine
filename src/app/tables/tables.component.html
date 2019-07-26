@@ -5,7 +5,7 @@
   <mat-radio-button value="view4">View 4</mat-radio-button>
   <mat-radio-button value="concentration">Concentration</mat-radio-button>
 </mat-radio-group>
-<button mat-raised-button (click)="initTableModal()">
+<button mat-raised-button id="modal-button" (click)="initTableModal()">
   <img src="../assets/icons-24px/png/037-switch-to-full-screen-button.png"
     height="24" width="24" title="Display Table-Modal"></button>
 <ng2-smart-table [ngClass]="table1" [settings]="this.view1settings" [source] = "this.view1Data"></ng2-smart-table>
