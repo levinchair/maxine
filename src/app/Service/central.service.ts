@@ -18,6 +18,7 @@ export class CentralService {
   private _arrStr: String;
   private _currentLandUse: String = "Commercial";
   currentView = "view1";
+  geometryData = new Subject<any>();
   neighborhoods = new Subject<any>();
   view1Data = new Subject<any>();
   view2Data = new Subject<any>();
@@ -120,33 +121,24 @@ export class CentralService {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
     });
-    this.http.get(`http://localhost:3000/concentration/${this._currentLandUse}/${this._arrStr}/`)
+    this.http.get(`http://localhost:3000/concentration/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
     });
+    this.http.get(`http://localhost:3000/showgeometry/${this._arrStr}/`)
+    .subscribe( (view) => {
+      this.geometryData.next(view);
+    });
   }
 
   getGeometry(){
-     //removed <featureCollection> for compatability with leaflet
      if(this._hood !== undefined && this._city !== undefined){
-      return this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
-            .pipe( // rxJS pipe runs multiple RxJS operators
-        tap( // tap will allow me to peek into the response before subscribe
-          // for some reason i am forced to check this.
-          (data: any) => console.log("geo data: "),
-          error => alert("Error: " + error)
-        )
-        );
+        this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
+        .subscribe(view => this.geometryData.next(view));
     }else if(this._hood === undefined && this._city !== undefined){
-        return this.http.get(`http://localhost:3000/showgeometry/${this._city}/`)
-            .pipe( // rxJS pipe runs multiple RxJS operators
-        tap( // tap will allow me to peek into the response before subscribe
-          // for some reason i am forced to check this.
-          (data: any) => console.log("geo data: "),
-          error => alert("Error: " + error)
-        )
-        );
+        this.http.get(`http://localhost:3000/showgeometry/${this._city}/`)
+        .subscribe(view => this.geometryData.next(view));
     }
   }
 
@@ -166,7 +158,7 @@ export class CentralService {
          });
    }
    getOwnerConcentration(){
-       this.http.get(`http://localhost:3000/concentration/${this._currentLandUse}/${this._city}/${this._hood}`)
+       this.http.get(`http://localhost:3000/concentration/${this._city}/${this._hood}`)
        .subscribe( (view) => {
          //console.log("view: " + JSON.stringify(view));
          this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed

@@ -41,8 +41,8 @@ export class TablesComponent implements OnInit {
     this.centralService.view2Data
       .subscribe( view => {
         this.view2Data = view;
-        console.log("view3");
-        console.log(JSON.stringify(view));
+        // console.log("view3");
+        // console.log(JSON.stringify(view));
       });
     this.centralService.view3Data
         .subscribe( view => {
@@ -242,7 +242,7 @@ export class TablesComponent implements OnInit {
       OwnerValue: {
         title: 'Owner Value'
       },
-      landUse: {
+      landuse: {
         title: 'Land Use'
       }
     },
