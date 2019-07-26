@@ -16,13 +16,14 @@ router.get("/concentration/:param?/:hood?", (req, res, next) => {
   
   this.query = utils.createQuery(req.params.param, req.params.hood); //this is the initial match query
 
+  //var checkVacant = { $in: ["$properties.SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]]}
   var catfilter = { //filter for SiteCat to appropriate value
     $switch: {
       branches: [
         {case: {$in: ["$properties.SiteCat1", VALID_LANDUSE.slice(0,5)]}, then: "$properties.total_com_"},
         {case: {$eq: ["$properties.SiteCat1", RESIDENTIAL]}, then: "$properties.Units2"},
-        //{case: {$or: [{$eq: ["$properties.SiteCat1", "Utility"]},{$in: ["$properties.SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]]}]}, then: "$properties.total_acre"}
-      ], // we need a new category for vacant somehow.. not sure how to add this into the document
+        //{case: checkVacant, then: "$properties.total_acre"}
+      ], 
       default: "$properties.total_acre"
     }
   }
@@ -34,7 +35,12 @@ router.get("/concentration/:param?/:hood?", (req, res, next) => {
       indivs: {
           $push: {
               Owner_name: "$properties.deeded_own2",
-              SiteCat1: "$properties.SiteCat1",
+              SiteCat1: 
+                        //{$cond: [checkVacant, "Vacant", 
+                        "$properties.SiteCat1"
+                        //]}
+                        ,
+              //SiteCat2: "$properties.SiteCat2",
               value: catfilter
           }
       }
@@ -60,8 +66,8 @@ router.get("/concentration/:param?/:hood?", (req, res, next) => {
         OwnerName: "$indivs.OwnerName",
         OwnerValue: "$indivs.OwnerValue",
         landuse: "$indivs.landuse",
-        MarketShare: {$divide: ['$indivs.OwnerValue', "$totvalue"]},          
-        CR4: {$divide: ['$numerator', "$totvalue"]}
+        MarketShare: {$cond: [{$eq: ["$totvalue", 0]}, 0, {$divide: ['$indivs.OwnerValue', "$totvalue"]}]},          
+        CR4: {$cond: [{$eq: ["$totvalue", 0]}, 0, {$divide: ['$numerator', "$totvalue"]}]}
       }}
     ],
     otherParcels: [
