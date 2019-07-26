@@ -196,7 +196,7 @@ export class ModalComponent implements OnInit {
         OwnerValue: {
           title: 'Owner Value'
         },
-        landUse: {
+        landuse: {
           title: 'Land Use'
         }
       },

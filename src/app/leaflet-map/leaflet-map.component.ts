@@ -42,6 +42,17 @@ export class LeafletMapComponent implements OnInit {
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
 
+    //for parcelpin data. Will be fired everytime there is an update to the data
+    this.centralService.geometryData 
+    .subscribe( view => {
+      this.recentData = view;
+      this.geoJsonLayer = L.geoJSON();
+      this.geoJsonLayer.addData(view);
+      var latLngBounds = this.geoJsonLayer.getBounds();
+      this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
+      this.setShapeLayer(view);
+    });
+
     //init layers
     this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
       maxZoom: 20,
@@ -68,70 +79,13 @@ export class LeafletMapComponent implements OnInit {
   }
 
   updateAllData(){
-    this.centralService.getGeometry().subscribe(
-        data  => {
-          this.recentData = data;
-          //deletes the layer if already initialized
-          if(this.shapeLayer !== undefined) this.shapeLayer.remove();
-          console.log(this.shapeLayer);
-          // //removes layer from map
-          // this.geoJsonLayer.removeFrom(this.map);
-          // //re-initializes layer
-          this.geoJsonLayer = L.geoJSON();
-          // //console.log("SIZE = " + JSON.stringify(data).length);
-          this.geoJsonLayer.addData(data);
-          //gets the maximum view size for map
-          var latLngBounds = this.geoJsonLayer.getBounds();
-          this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
-          // alert(JSON.stringify(data));
-          this.shapeLayer = L1.shapes({
-            data: data,
-            map: this.map,
-            opacity: 0.7,
-            click:(e, feature : JsonForm) => {
-              let popupContent = "<p>" +
-                "Parcel Pin : " + feature.properties.parcelpin + "</p>"; 
-                // "Land Use   : " + feature.properties.SiteCat1 + "<br>" +
-                // "-> Sub-Category : " + feature.properties.SiteCat2 + "<br>" +
-                // "Address    : " + feature.properties.par_addr + " " + feature.properties.par_street +  " " + feature.properties.par_suffix + "<br>" +
-                // "->         : " + feature.properties.par_city + " " + feature.properties.par_zip + "<br>" +
-                // "Total SqFt : " + feature.properties.total_squa + "<br>" +
-                // "Owner      : " + feature.properties.list + "</p>";
-              //do something when a shape is clicked
-              L.popup().setLatLng(e.latlng)
-                .setContent(popupContent).openOn(this.map);
-            },
-            border: true,
-            color: (index : Number, feature : JsonForm) => {
-              //this will take a feature and map its sitecat zone to a color
-              var zoneType : String = feature.properties.SiteCat1;
-              switch(zoneType){
-                case "Residential":
-                  return L1.color.fromHex("E5BE77");
-                case "Commercial":
-                  return L1.color.fromHex("FF4C4C");
-                case "Industrial":
-                  return L1.color.fromHex("BE69F2");
-                case "Mixed":
-                  return L1.color.fromHex("fd8f45");
-                case "Government":
-                  return L1.color.fromHex("7A7ACB");
-                case "Institutional":
-                  return L1.color.fromHex("3D3DCB");
-                case "Utility":
-                  return L1.color.fromHex("BEBEBE");
-                default:
-                  return L1.color.fromHex("505050");
-              }
-            }
-          });
-        }
-      );
+    this.centralService.getGeometry(); // updates geometryData      
     this.centralService.getViews(); // inital subscribe of the data
   }
   //add check initialized/undefined flags
   getLassoPlots(){
     //sets latlng_area to an array of Points objs, need them as touples
+    if(this.selectfeature === undefined) alert("Please use lasso to select an area");
     this.latlng_area = this.selectfeature.getAreaLatLng();
     this.lassoData = [];
     let tempArray = [];
@@ -139,7 +93,7 @@ export class LeafletMapComponent implements OnInit {
       let temp = [this.latlng_area[q].lng,this.latlng_area[q].lat]
       tempArray.push(temp);
     }
-    console.log("temparray: " + tempArray);
+    console.log("temparray: " + JSON.stringify(tempArray));
     let feature = [];
     let allPoints = 0;
     // console.log(JSON.stringify(this.recentData));
@@ -164,17 +118,55 @@ export class LeafletMapComponent implements OnInit {
     // console.log(JSON.stringify(this.lassoData));
 
     this.centralService.setParcelArray(this.lassoData);
-    this.centralService.getbyParcelpins(); // this will initiate a http request
-    let tempView1Data = [];
-    // for(int k = 0; k < this.lassoData.length;k++){
-    //   // tempView1Data.push(e -> {"_id":{
-    //   //   this.lassoData[k].properties.SiteCat1},
-    //   //   "Scale":this.lassoData[k.],"AssessedValue":,"No_parcels":,"percOfLand":,"percOfAssessedVal":null
-    //   // });
-    // }
-    //this.centralService.changeView1(tempView1Data);
+    this.centralService.getbyParcelpins(); // this will initiate a http request for any parcelpins
+    
   }
+  setShapeLayer(parcels){
 
+    if(this.shapeLayer !== undefined) this.shapeLayer.remove();
+
+    this.shapeLayer = L1.shapes({
+      data: parcels,
+      map: this.map,
+      opacity: 0.7,
+      click:(e, feature : JsonForm) => {
+        let popupContent = "<p>" +
+          "Parcel Pin : " + feature.properties.parcelpin + "</p>"; 
+          // "Land Use   : " + feature.properties.SiteCat1 + "<br>" +
+          // "-> Sub-Category : " + feature.properties.SiteCat2 + "<br>" +
+          // "Address    : " + feature.properties.par_addr + " " + feature.properties.par_street +  " " + feature.properties.par_suffix + "<br>" +
+          // "->         : " + feature.properties.par_city + " " + feature.properties.par_zip + "<br>" +
+          // "Total SqFt : " + feature.properties.total_squa + "<br>" +
+          // "Owner      : " + feature.properties.list + "</p>";
+        //do something when a shape is clicked
+        L.popup().setLatLng(e.latlng)
+          .setContent(popupContent).openOn(this.map);
+      },
+      border: true,
+      color: (index : Number, feature : JsonForm) => {
+        //this will take a feature and map its sitecat zone to a color
+        var zoneType : String = feature.properties.SiteCat1;
+        switch(zoneType){
+          case "Residential":
+            return L1.color.fromHex("E5BE77");
+          case "Commercial":
+            return L1.color.fromHex("FF4C4C");
+          case "Industrial":
+            return L1.color.fromHex("BE69F2");
+          case "Mixed":
+            return L1.color.fromHex("fd8f45");
+          case "Government":
+            return L1.color.fromHex("7A7ACB");
+          case "Institutional":
+            return L1.color.fromHex("3D3DCB");
+          case "Utility":
+            return L1.color.fromHex("BEBEBE");
+          default:
+            return L1.color.fromHex("505050");
+        }
+      }
+    });
+  }
   setBaseLayer(){
     /* Toggles between satellite view and street view */
     if(this.sat){
