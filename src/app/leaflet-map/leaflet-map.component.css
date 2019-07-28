@@ -1,39 +1,43 @@
 #map{
-  height:85%;
-  width:40vw;
-  float: left;
+  height:100%;
   box-sizing: border-box;
   background: whitesmoke;
   z-index:1;
+  cursor:grab;
 }
 #search{
   position:absolute;
+  background-color: #ffffff;
   font-size:18px;
-  top:20px;
-  right:3vw;
+  top:16px;
+  right:44px;
   z-index:3;
 }
+
 .map-controls{
-  position:relative;
+  position:absolute;
   float:right;
-  top:4px;
-  right: 30.5vw;
+  bottom:5vh;
+  right: 30vw;
   z-index:3;
 }
 button{
-  width:auto;
-  float:left;
   font-size:14px;
 }
-.middle{
+#getLasso, #destroyLasso{
   padding:0px;
+  width:48px;
   min-width:48px;
   background-color:#ffffff;
   border:none;
+  margin-left:1px;
+}
+#getLasso{
+  border-radius:0px;
+}
+#destroyLasso{
+  border-radius: 0% 5% 5% 0%;
 }
 mat-button-toggle-group{
   border:none;
-}
-mat-button-toggle{
-  border-radius:8px;
 }

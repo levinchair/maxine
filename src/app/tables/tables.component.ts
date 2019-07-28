@@ -3,6 +3,8 @@ import { CentralService } from '../Service/central.service';
 import { ModalService } from '../Service/modal-service.service';
 import { ModalComponent } from '../modal/modal.component';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
+import {CurrencyPipe} from '@angular/common';
+
 // import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -26,7 +28,8 @@ export class TablesComponent implements OnInit {
   private table5 : String = "hidden";
   constructor(
     private centralService: CentralService,
-    private modalService : ModalService
+    private modalService : ModalService,
+    private cp: CurrencyPipe
   ) { }
 
   ngOnInit() {
@@ -108,7 +111,7 @@ export class TablesComponent implements OnInit {
       },
       AssessedValue: {
         title: 'Total Value',
-        valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       No_parcels: {
         title: '# Parcels'
@@ -137,7 +140,7 @@ export class TablesComponent implements OnInit {
       },
       AssessedValue: {
         title: 'Total Value',
-        valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       No_Parcels: {
         title: '# Parcels'
@@ -147,7 +150,7 @@ export class TablesComponent implements OnInit {
       },
       AssessedValPerUnit: {
         title: 'Value/Unit',
-        valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       CR4: {
         title: 'CR4',
@@ -169,7 +172,7 @@ export class TablesComponent implements OnInit {
       },
       AssessedValue: {
         title: 'Total Value',
-        valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       sq_feet: {
         title: 'Sq Feet'
@@ -180,7 +183,7 @@ export class TablesComponent implements OnInit {
       },
       AssessedValPerSqFeet: {
         title: 'Total Value/Sq Foot',
-        valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       CR4: {
         title: 'CR4',
@@ -202,10 +205,11 @@ export class TablesComponent implements OnInit {
       },
       AssessedValue: {
         title: 'Total Value',
-        valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       sq_feet: {
-        title: 'Sq Feet'
+        title: 'Sq Feet',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
       },
       percSq_feet: {
         title: '% Sq Feet',
@@ -213,7 +217,7 @@ export class TablesComponent implements OnInit {
       },
       AssessedValPerSqFeet: {
         title: 'Value/Sq Foot',
-        valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       CR4: {
         title: 'CR4',
@@ -240,7 +244,8 @@ export class TablesComponent implements OnInit {
         valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
       },
       OwnerValue: {
-        title: 'Owner Value'
+        title: 'Owner Value',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       landuse: {
         title: 'Land Use'

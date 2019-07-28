@@ -18,6 +18,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatButtonModule} from '@angular/material/button';
+import {CurrencyPipe} from '@angular/common';
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -112,7 +113,8 @@ import { ModalComponent } from './modal/modal.component';
 	  GeometryService,
     GoogleMapsAPIWrapper,
     ModalService,
-    DomService
+    DomService,
+    CurrencyPipe
   ],
   entryComponents:[
     ModalComponent

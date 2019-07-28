@@ -3,6 +3,7 @@ import { ModalService } from '../Service/modal-service.service';
 import { CentralService } from '../Service/central.service';
 import { DomService } from '../Service/dom-service.service';
 import { Landing as landingSource } from './landingPage';
+import {CurrencyPipe} from '@angular/common';
 
 @Component({
   selector: 'app-modal',
@@ -20,19 +21,21 @@ export class ModalComponent implements OnInit {
 
   constructor(private modalService : ModalService,
               private centralService : CentralService,
-              private domService: DomService) { }
+              private domService: DomService,
+              private cp: CurrencyPipe) { }
 
   ngOnInit() {
     //To access the instructions for the modal
     this.landingPageSource = new landingSource();
     //For when we want to display Tables modal
-    if((this.domService.viewData.inputs.viewDataFromTable.modal == "tables")){
+    if(this.domService.viewData.inputs.viewDataFromTable.modal == "tables"){
       this.settings = this.setSettings(this.centralService.currentView);
       this.viewData = this.domService.viewData.inputs.viewDataFromTable;
       this.viewData = this.setData(this.centralService.currentView);
       this.modalService.modalView = this.domService.viewData.inputs.viewDataFromTable.modal;
-    }else{
+    }else if(this.domService.viewData.inputs.viewDataFromTable.modal == "first"){
       //make this an else if to use other modal views
+      this.modalService.modalView = this.domService.viewData.inputs.viewDataFromTable.modal;
     }
   }
   setData(view){
@@ -89,7 +92,6 @@ export class ModalComponent implements OnInit {
     this.display.nativeElement.innerHTML = this.landingPageSource.option1;
   }
 
-
   //------------------------------------------------------------------------
   //All of the settings will be down here because they take up a lot of room
     view1settings = {
@@ -103,17 +105,18 @@ export class ModalComponent implements OnInit {
         },
         AssessedValue: {
           title: 'Total Value',
-          valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         No_parcels: {
           title: '# Parcels'
         },
         percOfLand: {
           title: '% Land',
-          valuePrepareFunction: (value) => {value= value*100; return this.changeFix(value,1);}
+          valuePrepareFunction: (value) => { return this.changeFix(value*100,1)+ "%";}
         },
-        percOfAsseessedVal: {
-          title: '% Value'
+        percOfAssessedVal: {
+          title: '% Value',
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,2)+ "%";}
         },
         Scale: {
           title: 'Scale'
@@ -131,7 +134,7 @@ export class ModalComponent implements OnInit {
         },
         AssessedValue: {
           title: 'Total Value',
-          valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         No_Parcels: {
           title: '# Parcels'
@@ -141,11 +144,11 @@ export class ModalComponent implements OnInit {
         },
         AssessedValPerUnit: {
           title: 'Value/Unit',
-          valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         CR4: {
           title: 'CR4',
-          valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
         }
       },
       pager : {
@@ -163,22 +166,22 @@ export class ModalComponent implements OnInit {
         },
         AssessedValue: {
           title: 'Total Value',
-          valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         sq_feet: {
           title: 'Sq Feet'
         },
         percSq_feet: {
           title: '% Sq Feet',
-          valuePrepareFunction: (value) => {return this.changeFix(value,1);}
+          valuePrepareFunction: (value) => {return this.changeFix(value,1)+ "%";}
         },
         AssessedValPerSqFeet: {
           title: 'Total Value/Sq Foot',
-          valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         CR4: {
           title: 'CR4',
-          valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
         }
       },
       pager : {
@@ -196,22 +199,23 @@ export class ModalComponent implements OnInit {
         },
         AssessedValue: {
           title: 'Total Value',
-          valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         sq_feet: {
-          title: 'Sq Feet'
+          title: 'Sq Feet',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
         },
         percSq_feet: {
           title: '% Sq Feet',
-          valuePrepareFunction: (value) => {return this.changeFix(value,1);}
+          valuePrepareFunction: (value) => {return this.changeFix(value,1) + "%";}
         },
         AssessedValPerSqFeet: {
           title: 'Value/Sq Foot',
-          valuePrepareFunction: (value) => {return this.changeFix(value,0);}
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         CR4: {
           title: 'CR4',
-          valuePrepareFunction: (value) => {return this.changeFix(value,2);}
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
         }
       },
       pager : {
@@ -227,14 +231,15 @@ export class ModalComponent implements OnInit {
         },
         MarketCR4: {
           title: 'Market CR4',
-          valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
         },
         MarketShare: {
           title: 'MarketShare',
-          valuePrepareFunction: (value) => {return this.changeFix(value*100,2) + "%";}
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
         },
         OwnerValue: {
-          title: 'Owner Value'
+          title: 'Owner Value',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         landuse: {
           title: 'Land Use'
@@ -244,4 +249,5 @@ export class ModalComponent implements OnInit {
         perPage: 6
       }
     };
+
 }

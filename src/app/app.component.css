@@ -1,20 +1,19 @@
-body{
-    position: absolute;
-    height: 100%;
-    width:100%;
+.main-body{
+  display:flex;
+  align-items: stretch;
+  min-height:85%;
+  max-height:85%;
 }
-
-.data-table {
-    padding-left: 10%;
+app-charts{
+  min-width:30%;
+  height:100%;
+  min-height:100%;
 }
-.hidden{
-    display:none;
+app-leaflet-map{
+  min-width:40%;
 }
 app-tables{
-  position:relative;
-}
-.show{
-    display:block;
+  min-width:30%;
 }
 #modal-container {
     position: fixed;
@@ -22,6 +21,7 @@ app-tables{
     left: 50%;
     width: 50%;
     max-height:70%;
+    height:640px;
     background: white;
     padding:20px;
     margin-left: -25%;
@@ -38,4 +38,10 @@ app-tables{
     background:  rgba(0,0,0,0.8);
     width:  100%;
     height: 100%;
+}
+.hidden{
+    display:none;
+}
+.show{
+    display:block;
 }

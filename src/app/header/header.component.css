@@ -33,3 +33,14 @@ mat-icon.search {
   position:absolute;
   left:350px;
 }
+#help-button{
+  position:absolute;
+  cursor:pointer;
+  right:6px;
+  top:16px;
+  border-radius: 24px;
+  padding:2px;
+  background-color:#ffffff;
+  height:28px;
+  width:28px;
+}

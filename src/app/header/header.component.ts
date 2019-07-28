@@ -1,7 +1,9 @@
 import { LocationService } from '../Service/location.service';
-import { Component, OnInit, ElementRef, ViewChild, Input, NgZone, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input,Inject, NgZone, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CentralService } from '../Service/central.service';
+import { ModalService } from '../Service/modal-service.service';
+import { ModalComponent } from '../modal/modal.component';
 /// <reference types="@types/googlemaps" />
 import { MapsAPILoader } from '@agm/core';
 import { Location } from '../../model/location.model';
@@ -28,7 +30,8 @@ export class HeaderComponent implements OnInit {
   constructor( private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
     private locationService: LocationService,
-    private centralService: CentralService) { }
+    private centralService: CentralService,
+    private modalService : ModalService) { }
 
   ngOnInit() {
     this.searchControl = new FormControl();
@@ -55,5 +58,10 @@ export class HeaderComponent implements OnInit {
           this.locationService.setFlag(false);
       });
     });
+    }
+    helpModal(){
+      var viewDataFromTable = {
+        modal:"first"};
+      this.modalService.init(ModalComponent, {viewDataFromTable}, {});
     }
   }
