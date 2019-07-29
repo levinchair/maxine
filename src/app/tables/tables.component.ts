@@ -19,6 +19,7 @@ export class TablesComponent implements OnInit {
   view3Data: any;
   view4Data: any;
   concentrationData: any;
+  landUseConcentrationData: any;
   @Output() change: EventEmitter<MatRadioChange>;
   @Input() checked: Boolean;
   private table1 : String = "show";
@@ -26,6 +27,8 @@ export class TablesComponent implements OnInit {
   private table3 : String = "hidden";
   private table4 : String = "hidden";
   private table5 : String = "hidden";
+  private table6 : String = "hidden";
+
   constructor(
     private centralService: CentralService,
     private modalService : ModalService,
@@ -59,25 +62,32 @@ export class TablesComponent implements OnInit {
       .subscribe( view => {
         this.concentrationData = view;
       });
+    this.centralService.landUseConcentrationData
+      .subscribe( view => {
+        this.landUseConcentrationData = view;
+      });
   }
 
   changeView(e){
     this.centralService.currentView = e.value;
     if(e.value == 'view1'){
       this.table1 = "show";this.table2 = "hidden";this.table3 = "hidden";
-      this.table4 = "hidden";this.table5="hidden";
+      this.table4 = "hidden";this.table5="hidden";this.table6 = "hidden";
     }else if(e.value == 'view2'){
       this.table1 = "hidden";this.table2 = "show";this.table3 = "hidden";
-      this.table4 = "hidden";this.table5="hidden";
+      this.table4 = "hidden";this.table5="hidden";this.table6 = "hidden";
     }else if(e.value == 'view3'){
       this.table1 = "hidden";this.table2 = "hidden";this.table3 = "show";
-      this.table4 = "hidden";this.table5="hidden";
+      this.table4 = "hidden";this.table5="hidden";this.table6 = "hidden";
     }else if(e.value == 'view4'){
       this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
-      this.table4 = "show";this.table5="hidden";
+      this.table4 = "show";this.table5="hidden";this.table6 = "hidden";
     }else if(e.value == 'concentration'){
       this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
-      this.table4 = "hidden";this.table5="show";
+      this.table4 = "hidden";this.table5="show";this.table6 = "hidden";
+    }else if(e.value == 'concentrationByLandUse'){
+      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
+      this.table4 = "hidden";this.table5="hidden";this.table6 = "show";
     }
   }
   changeFix(value, precision){
@@ -249,6 +259,29 @@ export class TablesComponent implements OnInit {
       },
       landuse: {
         title: 'Land Use'
+      }
+    },
+    pager : {
+      perPage: 6
+    }
+  };
+  view6settings = {
+    actions:false,
+    noDataMessage: "Choose a City and Neighborhood",
+    columns: {
+      landuse: {
+        title: 'Land Use'
+      },
+      MarketCR4: {
+        title: 'Market CR4',
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
+      },
+      landuseTot: {
+        title: 'Total Value',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
+      },
+      null:{
+        title: "fillerrrrrrrrr",
       }
     },
     pager : {

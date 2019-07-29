@@ -25,6 +25,7 @@ export class CentralService {
   view3Data = new Subject<any>();
   view4Data = new Subject<any>();
   concentrationData = new Subject<any>();
+  landUseConcentrationData = new Subject<any>();
   view1parcelData = new Subject<any>();
   constructor(private http: HttpClient) { }
 
@@ -89,7 +90,14 @@ export class CentralService {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view);
     });
+    this.http.get(`http://localhost:3000/concentrationbylanduse/${this._city}/${this._hood}`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.landUseConcentrationData.next(view);
+    });
+    //sorry I don't know how to code consistently this one is in a function
     this.getOwnerConcentration();
+
   }
   //Ignore this for now(-_-)working on a better way
   getView(view){
@@ -125,6 +133,11 @@ export class CentralService {
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+    });
+    this.http.get(`http://localhost:3000/concentrationbylanduse/$${this._arrStr}/`)
+    .subscribe( (view) => {
+      //console.log("view: " + JSON.stringify(view));
+      this.landUseConcentrationData.next(view);
     });
     this.http.get(`http://localhost:3000/showgeometry/${this._arrStr}/`)
     .subscribe( (view) => {

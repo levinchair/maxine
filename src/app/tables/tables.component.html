@@ -3,7 +3,9 @@
   <mat-radio-button value="view2">View 2</mat-radio-button>
   <mat-radio-button value="view3">View 3</mat-radio-button>
   <mat-radio-button value="view4">View 4</mat-radio-button>
-  <mat-radio-button value="concentration">Concentration</mat-radio-button>
+  <mat-radio-button value="concentration">Owner Concentration</mat-radio-button>
+  <mat-radio-button value="concentrationByLandUse">Land Use Concentration</mat-radio-button>
+
 </mat-radio-group>
 <button mat-raised-button id="modal-button" (click)="initTableModal()">
   <img src="../assets/icons-24px/png/037-switch-to-full-screen-button.png"
@@ -13,3 +15,4 @@
 <ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source] = "this.view3Data"></ng2-smart-table>
 <ng2-smart-table [ngClass]="table4" [settings]="this.view4settings" [source] = "this.view4Data"></ng2-smart-table>
 <ng2-smart-table [ngClass]="table5" [settings]="this.view5settings" [source] = "this.concentrationData"></ng2-smart-table>
+<ng2-smart-table [ngClass]="table6" [settings]="this.view6settings" [source] = "this.landUseConcentrationData"></ng2-smart-table>
