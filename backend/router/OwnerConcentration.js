@@ -144,9 +144,14 @@ router.get("/concentration/:param?/:hood?", (req, res, next) => {
       //cal data using filter, map, reduce
       for( var SiteCat of VALID_LANDUSE){
         dataMod = data.filter( owner => owner.landuse === SiteCat);
-        cr4 = dataMod[0].MarketCR4;
-        dataMod = dataMod.map( owner => owner.OwnerValue);
-        dataMod = dataMod.reduce( (total, owner) => total + owner);
+        if(dataMod === undefined || dataMod.length == 0) {
+          cr4 = 0;
+          dataMod = 0;
+        }else {
+          cr4 = dataMod[0].MarketCR4;
+          dataMod = dataMod.map( owner => owner.OwnerValue);
+          dataMod = dataMod.reduce( (total, owner) => total + owner);
+        }
         landuseSum.push({
           landuse: SiteCat,
           MarketCR4: cr4,
