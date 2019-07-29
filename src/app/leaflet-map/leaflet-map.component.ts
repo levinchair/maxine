@@ -128,13 +128,12 @@ export class LeafletMapComponent implements OnInit {
       opacity: 0.7,
       click:(e, feature : JsonForm) => {
         let popupContent = "<p>" +
-          "Parcel Pin : " + feature.properties.parcelpin + "</p>";
-          // "Land Use   : " + feature.properties.SiteCat1 + "<br>" +
-          // "-> Sub-Category : " + feature.properties.SiteCat2 + "<br>" +
-          // "Address    : " + feature.properties.par_addr + " " + feature.properties.par_street +  " " + feature.properties.par_suffix + "<br>" +
-          // "->         : " + feature.properties.par_city + " " + feature.properties.par_zip + "<br>" +
-          // "Total SqFt : " + feature.properties.total_squa + "<br>" +
-          // "Owner      : " + feature.properties.list + "</p>";
+          "<b>Parcel Pin</b> : " + feature.properties.parcelpin + "<br>" + 
+          "<b>Land Use</b>   : " + feature.properties.SiteCat1 + "<br>" +
+          "<b>-> Sub-Category</b> : " + feature.properties.SiteCat2 + "<br>" +
+          "<b>Address</b>    : " + feature.properties.par_addr_a + "<br>" +
+          "<b>Total SqFt</b> : " + feature.properties.total_squa + "<br>" +
+          "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
         //do something when a shape is clicked
         L.popup().setLatLng(e.latlng)
           .setContent(popupContent).openOn(this.map);
