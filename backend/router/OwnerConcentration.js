@@ -130,10 +130,10 @@ router.get("/concentration/:param?/:hood?", (req, res, next) => {
   .catch(err => next(err));
  });
 
- router.get("/concentrationbylanduse/:param?/:hood?", (req,res,next) => {
+ router.get("/concentrationbylanduse/:param2?/:hood2?", (req,res,next) => {
 
   //make a request to our own server. This will allow us to make changes to the data
-  request(`http://localhost:3000/concentration/${req.params.param}/${req.params.hood}`, {json: true}, 
+  request(`http://localhost:3000/concentration/${req.params.param2}/${req.params.hood2}`, {json: true}, 
     (error, response) => { //callback
       if(error) return next(error);
 
@@ -160,7 +160,7 @@ router.get("/concentration/:param?/:hood?", (req, res, next) => {
         });
       }
 
-      console.log(landuseSum);
+      //console.log("landuseSum:       " + landuseSum);
       res.json(landuseSum);
     })
   

@@ -19,7 +19,7 @@ export class CentralService {
   private _currentLandUse: String = "Commercial";
   currentView = "view1";
   geometryData = new Subject<any>();
-  neighborhoods = new Subject<any>();
+  neighborhoods = new Subject<string[]>();
   view1Data = new Subject<any>();
   view2Data = new Subject<any>();
   view3Data = new Subject<any>();
@@ -90,14 +90,9 @@ export class CentralService {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view);
     });
-    this.http.get(`http://localhost:3000/concentrationbylanduse/${this._city}/${this._hood}`)
-    .subscribe( (view) => {
-      //console.log("view: " + JSON.stringify(view));
-      this.landUseConcentrationData.next(view);
-    });
-    //sorry I don't know how to code consistently this one is in a function
-    this.getOwnerConcentration();
 
+    this.getConcentrationValues(this._city, this._hood);
+    
   }
   //Ignore this for now(-_-)working on a better way
   getView(view){
@@ -129,23 +124,13 @@ export class CentralService {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
     });
-    this.http.get(`http://localhost:3000/concentration/${this._arrStr}/`)
-    .subscribe( (view) => {
-      //console.log("view: " + JSON.stringify(view));
-      this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
-    });
-    this.http.get(`http://localhost:3000/concentrationbylanduse/$${this._arrStr}/`)
-    .subscribe( (view) => {
-      //console.log("view: " + JSON.stringify(view));
-      this.landUseConcentrationData.next(view);
-    });
+    this.getConcentrationValues(this._arrStr,undefined);
     this.http.get(`http://localhost:3000/showgeometry/${this._arrStr}/`)
-    .subscribe( (view) => {
-      this.geometryData.next(view);
-    });
+    .subscribe(view => this.geometryData.next(view));
   }
 
   getGeometry(){
+    console.log(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`);
      if(this._hood !== undefined && this._city !== undefined){
         this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
         .subscribe(view => this.geometryData.next(view));
@@ -166,15 +151,29 @@ export class CentralService {
 
    getNeighbourhood() {
        this.http.get<string[]>(`http://localhost:3000/showhood/${this._city}`)
-         .subscribe( (hoods) => {
+         .subscribe( (hoods: string[]) => {
+           hoods = hoods.map(hood => { // change null to All
+             if(hood === null){
+               return 'All' 
+             }else {
+               return hood
+             }
+           });
            this.neighborhoods.next(hoods);
          });
    }
-   getOwnerConcentration(){
-       this.http.get(`http://localhost:3000/concentration/${this._city}/${this._hood}`)
+
+   private getConcentrationValues(city_or_arr, hood){
+       // for some reason this request needs to be made before concentrationbylanduse
+       this.http.get(`http://localhost:3000/concentration/${city_or_arr}/${hood}`)
        .subscribe( (view) => {
          //console.log("view: " + JSON.stringify(view));
          this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+       });
+       this.http.get(`http://localhost:3000/concentrationbylanduse/${city_or_arr}/${hood}`)
+       .subscribe( (view) => {
+         //console.log("view: " + JSON.stringify(view));
+         this.landUseConcentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
        });
    }
 }

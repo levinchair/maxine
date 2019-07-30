@@ -14,6 +14,7 @@ router.get("/showhood/:city",(req,res,next)=>{
        // res.send('error occured')
         res.status(err.status >= 100 && err.status < 600 ? err.code : 500).send(err.message);
       } else {
+        result = result.filter(x => x !== 'NULL');
         console.log(result);
         res.json(result);
         /* res.write(result);

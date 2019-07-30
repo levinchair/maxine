@@ -20,12 +20,16 @@ function createQuery(param, hood){
       query = {
         "properties.par_city": paramParsed
       }
-      if(hood !== undefined){
+      
+      if(!isAllHood(hood)){
         Object.defineProperty(query, "properties.SPA_NAME", { value : hood, enumerable : true });       
       }
     }
     return query;
   }
 
+function isAllHood(x){
+  return (x === undefined || x === 'undefined' || x === 'All' || x === 'Null')
+}
 
   module.exports = { createQuery };
