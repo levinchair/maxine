@@ -7,25 +7,28 @@ ng2-smart-table{
   border-width:0 0 0 0;
   border-color:#3f51b5;
 }
-table{
-  line-height:1em;
+mat-form-field{
+  margin-top:5px;
+  background-color: #ffffff;
+  padding-top:5px;
+  padding-left:28px;padding-right:50px;
+  border-radius: 4px;
 }
-span{
-  font-size:1.5em;
-  float:left;
-  margin:0;
-  padding-left:14px;
-  padding-top:14px;
+#table-header{
+  display:flex;
+  width:100%;
+  align-items: baseline;
+  justify-content: center;
+  background-color: #91bad6;
+  padding-bottom:5px;
 }
 #modal-button{
-  position:relative;
-  right:0px;
-  top:0px;
-}
-mat-radio-button{
-  padding-left:10px;
-  padding-right:10px;
-  margin-top:10px;
+  position:absolute;
+  margin-top:18px;
+  margin-left:25vw;
+  padding-left: 0px;padding-right:0px;
+  min-width: 42px;
+  min-height: 42px;
 }
 .hidden{
   display:none;

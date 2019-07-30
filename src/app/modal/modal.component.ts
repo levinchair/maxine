@@ -14,7 +14,6 @@ export class ModalComponent implements OnInit {
   viewData: any;
   settings: any;
   landingPageSource: landingSource;
-  @ViewChild('display') display;
   @ViewChild('choice1') choice1;
   @ViewChild('choice2') choice2;
   @ViewChild('choice3') choice3;
@@ -45,6 +44,7 @@ export class ModalComponent implements OnInit {
       case 'view3': return this.viewData.view3Data; break;
       case 'view4': return this.viewData.view4Data; break;
       case 'concentration': return this.viewData.concentrationData; break;
+      case 'landUseConcentrationData': return this.viewData.landUseConcentrationData; break;
     }
   }
   setSettings(view){
@@ -54,6 +54,8 @@ export class ModalComponent implements OnInit {
       case 'view3': return this.view3settings; break;
       case 'view4': return this.view4settings; break;
       case 'concentration': return this.view5settings; break;
+      case 'landUseConcentrationData': return this.view6settings; break;
+
     }
   }
   changeFix(value, precision){
@@ -72,24 +74,24 @@ export class ModalComponent implements OnInit {
       this.choice1.nativeElement.className = "menu highlighted";
       this.choice2.nativeElement.className = "menu blank";
       this.choice3.nativeElement.className = "menu blank";
-      this.display.nativeElement.innerHTML = this.landingPageSource.option1;
+      document.getElementById("display").innerHTML = this.landingPageSource.option1;
     }
     else if(val == 2){
       this.choice1.nativeElement.className = "menu blank";
       this.choice2.nativeElement.className = "menu highlighted";
       this.choice3.nativeElement.className = "menu blank";
-      this.display.nativeElement.innerHTML = this.landingPageSource.option2;
+      document.getElementById("display").innerHTML = this.landingPageSource.option2;
     }else if(val == 3){
       this.choice1.nativeElement.className = "menu blank";
       this.choice2.nativeElement.className = "menu blank";
       this.choice3.nativeElement.className = "menu highlighted";
-      this.display.nativeElement.innerHTML = this.landingPageSource.option3;
+      document.getElementById("display").innerHTML = this.landingPageSource.option3;
     }
   }
 
 
   ngAfterViewInit(){
-    this.display.nativeElement.innerHTML = this.landingPageSource.option1;
+    document.getElementById("display").innerHTML = this.landingPageSource.option1;
   }
 
   //------------------------------------------------------------------------
@@ -169,7 +171,8 @@ export class ModalComponent implements OnInit {
           valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
         },
         sq_feet: {
-          title: 'Sq Feet'
+          title: 'Sq Feet',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
         },
         percSq_feet: {
           title: '% Sq Feet',
@@ -246,8 +249,27 @@ export class ModalComponent implements OnInit {
         }
       },
       pager : {
+        perPage: 5
+      }
+    };
+    view6settings = {
+      actions:false,
+      noDataMessage: "Choose a City and Neighborhood",
+      columns: {
+        landuse: {
+          title: 'Land Use'
+        },
+        MarketCR4: {
+          title: 'Market CR4',
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
+        },
+        landuseTot: {
+          title: 'Total Value',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
+        }
+      },
+      pager : {
         perPage: 6
       }
     };
-
 }

@@ -1,15 +1,17 @@
-<mat-radio-group (change)="changeView($event)" aria-label="Select an option">
-  <mat-radio-button checked value="view1">View 1</mat-radio-button>
-  <mat-radio-button value="view2">View 2</mat-radio-button>
-  <mat-radio-button value="view3">View 3</mat-radio-button>
-  <mat-radio-button value="view4">View 4</mat-radio-button>
-  <mat-radio-button value="concentration">Owner Concentration</mat-radio-button>
-  <mat-radio-button value="concentrationByLandUse">Land Use Concentration</mat-radio-button>
-
-</mat-radio-group>
-<button mat-raised-button id="modal-button" (click)="initTableModal()">
-  <img src="../assets/icons-24px/png/037-switch-to-full-screen-button.png"
-    height="24" width="24" title="Display Table-Modal"></button>
+<div id="table-header">
+  <mat-form-field>
+    <mat-label>Data View</mat-label>
+    <mat-select [(ngModel)]="this.centralService.currentView" (ngModelChange)="changeView($event)" placeholder="View 1">
+      <mat-option *ngFor="let view of views" [value]="view.value">
+        {{view.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button id="modal-button" (click)="initTableModal()">
+    <img src="../assets/icons-24px/png/037-switch-to-full-screen-button.png"
+      height="24" width="24" title="Display Table-Modal">
+  </button>
+</div>
 <ng2-smart-table [ngClass]="table1" [settings]="this.view1settings" [source] = "this.view1Data"></ng2-smart-table>
 <ng2-smart-table [ngClass]="table2" [settings]="this.view2settings" [source] = "this.view2Data"></ng2-smart-table>
 <ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source] = "this.view3Data"></ng2-smart-table>

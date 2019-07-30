@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
   public latitude = 41.4995;
   public longitude = -81.69541;
   @Input() public search;
-
+  @ViewChild('matExpansionPanel') matExpansionPanelRef;
   @ViewChild('search')
   public searchElementRef: ElementRef;
 
@@ -58,6 +58,12 @@ export class HeaderComponent implements OnInit {
           this.locationService.setFlag(false);
       });
     });
+    }
+    updateAllData(){
+      this.centralService.getGeometry();
+      this.centralService.getViews(); // inital subscribe of the data
+      //Closes dropdown menu if opened
+      this.matExpansionPanelRef.close();
     }
     helpModal(){
       var viewDataFromTable = {

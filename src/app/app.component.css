@@ -1,6 +1,7 @@
 .main-body{
-  display:inline-flex;
-  align-items: normal;
+  display:flex;
+  align-items: stretch;
+  width:100%;
   min-height:85%;
   max-height:85%;
 }

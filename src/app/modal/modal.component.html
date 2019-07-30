@@ -7,11 +7,11 @@
 </div>
 <div class='landingPage-container'*ngIf="this.modalService.modalView =='first'">
   <div id="header">
-    <b>Welcome to Terra Mapping!</b><br><br>
+    <span style="font-size:20px">Welcome to Terra Mapping!</span><br><br>
     There are three ways to search our database
   </div>
   <div #choice1 (mouseover)='choice(1)' class="menu highlighted" id='choice1'><b>1.</b> Search by City and Neighborhood</div>
   <div #choice2 (mouseover)='choice(2)' class="menu blank" id='choice2'><b>2.</b> The Lasso tool </div>
   <div #choice3 (mouseover)='choice(3)' class="menu blank" id='choice3'><b>3.</b>Using the search bar </div>
-  <div #display id="display"></div>
+  <div id="display">--</div>
 </div>

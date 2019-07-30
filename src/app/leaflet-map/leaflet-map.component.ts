@@ -75,10 +75,6 @@ export class LeafletMapComponent implements OnInit {
 
   }
 
-  updateAllData(){
-    this.centralService.getGeometry();
-    this.centralService.getViews(); // inital subscribe of the data
-  }
   //add check initialized/undefined flags
   getLassoPlots(){
     //sets latlng_area to an array of Points objs, need them as touples
@@ -128,7 +124,7 @@ export class LeafletMapComponent implements OnInit {
       opacity: 0.7,
       click:(e, feature : JsonForm) => {
         let popupContent = "<p>" +
-          "<b>Parcel Pin</b> : " + feature.properties.parcelpin + "<br>" + 
+          "<b>Parcel Pin</b> : " + feature.properties.parcelpin + "<br>" +
           "<b>Land Use</b>   : " + feature.properties.SiteCat1 + "<br>" +
           "<b>-> Sub-Category</b> : " + feature.properties.SiteCat2 + "<br>" +
           "<b>Address</b>    : " + feature.properties.par_addr_a + "<br>" +

@@ -1,11 +1,14 @@
 header {
   padding: 0%;
+  background-color: #528aae;
 }
 mat-expansion-panel{
-  position:relative;
+  position:absolute;
   width:100%;
   float:left;
   border-radius:0px;
+  top:64px;
+  z-index: 4;
   background-color: #3f51b5;
 }
 mat-expansion-panel-header span{
@@ -14,6 +17,10 @@ mat-expansion-panel-header span{
 }
 header {
   width:100%;
+}
+.mat-toolbar{
+  background-color: #528aae;
+  color:white;
 }
 mat-toolbar {
   height: 5%;
@@ -28,6 +35,22 @@ mat-toolbar {
 }
 mat-icon.search {
   padding-right: 1%;
+}
+#search{
+  position:absolute;
+  background-color: #ffffff;
+  font-size:18px;
+  top:16px;
+  right:44px;
+  z-index:3;
+}
+#mat-expansion-panel-area{
+  position:relative;
+  width:100%;
+  float:left;
+  border-radius:0px;
+  height:48px;
+  background-color: #ffffff;
 }
 #header-Hood{
   position:absolute;

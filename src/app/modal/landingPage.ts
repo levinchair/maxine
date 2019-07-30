@@ -11,7 +11,7 @@ export class Landing {
                 "<li>Click the search button in the top right.</li></ol>";
 
    option2 = "<b>Lasso Tool</b><br>"+
-             "<ul><li>The Lasso tool allows a user to draw one or many areas onto the map for searching.</li>" +
+             "<ul><li>The Lasso tool allows a user to draw one or many areas onto the map for selection.</li>" +
                 "<li>A city or neighborhood needs to be selected first, see <em>1.Search by City and Neighborhood</em for instructions then continue.</li>" +
                 "<li>Toggle the Lasso tool [<img src='../assets/icons-24px/png/002-map-location.png' height='19' width='19'>] to begin selecting the desired area.</li>" +
                 "<li>Click the Go button to search the lasso area or click the Delete button [<img src='../assets/icons-24px/png/008-trash.png' height='16' width='16' title='Remove all Lasso areas'>] to start over and select a new area.</li>" +

@@ -23,6 +23,7 @@
   background-color: #528AAE;
   border-top-left-radius: 5px;
   border-top-right-radius:5px;
+  color:white;
 }
 #choice1{grid-area:m1;border-bottom-left-radius:5px}
 #choice2{grid-area:m2;border-top-left-radius:5px;border-bottom-left-radius:5px}

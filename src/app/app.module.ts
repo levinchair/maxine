@@ -1,4 +1,4 @@
-  import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { GeojsonDataService } from './Service/geojson-data.service';
 import { CitiesService } from './Service/cities.service';
 import { GeometryService } from './Service/geometry.service';
@@ -17,8 +17,8 @@ import { DomService } from './Service/dom-service.service';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {MatButtonModule} from '@angular/material/button';
-import {CurrencyPipe} from '@angular/common';
+import { MatButtonModule} from '@angular/material/button';
+import { CurrencyPipe} from '@angular/common';
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,13 +38,13 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MapComponent } from './map/map.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ControlPanelComponent } from './control-panel/control-panel.component';
 import { NeighborhoodComponent } from './neighborhood/neighborhood.component';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { ToggleableDirective } from './control-panel/toggleable.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { ChartsComponent } from './charts/charts.component';
 import { TablesComponent } from './tables/tables.component';
@@ -70,6 +70,7 @@ import { ModalComponent } from './modal/modal.component';
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDf4tl3dmehWlQPMVkud7Z1IjwbVTZATQU',
       libraries: ['places']

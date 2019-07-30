@@ -5,20 +5,12 @@
   z-index:1;
   cursor:grab;
 }
-#search{
-  position:absolute;
-  background-color: #ffffff;
-  font-size:18px;
-  top:16px;
-  right:44px;
-  z-index:3;
-}
 
 .map-controls{
   position:absolute;
   float:right;
-  bottom:5vh;
-  right: 30vw;
+  top:126px;
+  right: 31vw;
   z-index:3;
 }
 button{
