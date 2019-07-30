@@ -76,7 +76,7 @@ router.get("/view1/:param?/:hood?", (req, res, next) => {
     {$group: sum2},
     {$project: proj2}
   ]
-  db.aggregate(pipeline).exec(
+  db.aggregate(pipeline).allowDiskUse(true).exec(
     function(err, result){ //callback
       if(err) return next("Error at aggregation: " + err);
       console.log(result);

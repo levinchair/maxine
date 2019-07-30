@@ -39,7 +39,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
     .then(async (data)=>{
                 console.log(JSON.stringify(data));
                 totalSqFeet=data.map(function(v){return v.totalsqfeet;});
-                console.log("total SquareFeet Area : "+totalSqFeet);
+                // console.log("total SquareFeet Area : "+totalSqFeet);
                 //Calculate # of square feet, % of square feet, Assessed value, % assessed value
                  await db.aggregate([
                     {"$match": this.query},
@@ -62,7 +62,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                         
                             return v._id;
                         })
-                        console.log("Site Categories : "+SiteCat);
+                        // console.log("Site Categories : "+SiteCat);
                         //Calculate CR4 ratio
 
                         var totalcom_sq_feet;
@@ -76,12 +76,12 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
 
                                 cat=SiteCat[i];
                                 Object.defineProperty(_view3[i], "cat", {value: SiteCat[i], enumerable: true});
-                                console.log("I am in for "+SiteCat[i]);
+                                // console.log("I am in for "+SiteCat[i]);
 
 
                                 //calculate total  # total_com_ (square feet) under each SiteCat2 Category
                                 Object.defineProperty(this.query, "properties.SiteCat2" , {value: SiteCat[i], enumerable: true, configurable: true});
-                                console.log("query after cat2 added: " + JSON.stringify(this.query));
+                                // console.log("query after cat2 added: " + JSON.stringify(this.query));
                                 await db.aggregate([
                                     {"$match": this.query},
                                     {"$group": {
@@ -94,12 +94,12 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                                         
                                     return v.com_sq_feet;
                                     });
-                                    console.log("Total com_sq_feet: "+totalcom_sq_feet);
+                                    // console.log("Total com_sq_feet: "+totalcom_sq_feet);
                             
                                 
                                 })  
                                 .catch((err)=>{
-                                    console.log("error occurred at aggregation 2 : "+err);  
+                                    // console.log("error occurred at aggregation 2 : "+err);  
                                 })
 
                             
@@ -121,7 +121,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                                             return v.com_sq_feet;
                                             });
                                             
-                                            console.log("com_sq_feet: "+com_sq_feetPerCat+" cat= "+cat);
+                                            // console.log("com_sq_feet: "+com_sq_feetPerCat+" cat= "+cat);
                                             //res.send(parcelsPerUnit);
                                 
                         
@@ -132,7 +132,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                                             {
                                                     totalCom_sq_feetPerCat+=com_sq_feetPerCat[rs];
                                             }
-                                            //console.log("total Sum of parcelsPerUnit: "+totalCom_sq_feetPerCat+" for cat "+cat);
+                                            // //console.log("total Sum of parcelsPerUnit: "+totalCom_sq_feetPerCat+" for cat "+cat);
                                             //cocentratic ratio of sum  # total_com_ (square feet)  of top 4 owners to total  # total_com_ (square feet) under Commertial categary
                                             cr4=totalCom_sq_feetPerCat/totalcom_sq_feet;
                                             if(_view3[i]._id==SiteCat[i])  _view3[i].CR4=cr4;
@@ -143,18 +143,18 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                                 })
                                 .catch((err)=>{
                     
-                                            console.log("error occurred at aggregation 3 : "+err);
+                                            // console.log("error occurred at aggregation 3 : "+err);
                                 })                
                         }
                 })
                 .catch((err)=>{
-                        console.log("error occurred at Aggregation 1 : "+err);
+                        // console.log("error occurred at Aggregation 1 : "+err);
                 })
-                console.log("this.view3: ",JSON.stringify(_view3,undefined,2));
+                // console.log("this.view3: ",JSON.stringify(_view3,undefined,2));
                 res.json(_view3);
     })
     .catch((err)=>{
-        console.log("error ocuured : "+err);
+        // console.log("error ocuured : "+err);
     })
 
  
