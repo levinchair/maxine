@@ -6,6 +6,14 @@ import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
 //models
 import { view1 } from '../../model/view1.model';
 
+export interface Attributes {
+  value: string;
+  attrValue: string;
+}
+export interface Views {
+  value: string;
+  viewValue: string;
+}
 @Component({
   selector: 'app-charts',
   templateUrl: './charts.component.html',
@@ -16,10 +24,10 @@ export class ChartsComponent implements OnInit {
   @Input() value: string;
   @Output() change: EventEmitter<MatRadioChange>;
   @ViewChild('chartA') private chartRef;
-  selected:string ="AssessedValue";
   chart: any;
   view1Data: any;
   chartType: string;
+  title = "Total Value";
   labels = [];
   colors = [];
   chartData = [];
@@ -41,7 +49,7 @@ export class ChartsComponent implements OnInit {
     this.centralService.view1Data
       .subscribe( view => {
         this.view1Data = view;
-        this.updateChart1(this.selected);
+        this.updateChart1(this.centralService.currentAttr);
       });
   }
 
@@ -52,7 +60,7 @@ export class ChartsComponent implements OnInit {
         labels: this.labels, // your labels array
         datasets: [
           {
-            label:"Bar Chart",
+            label:"",
             data: this.chartData, // your data array
             backgroundColor: this.colors,
             borderColor: '#FFFFFF',
@@ -65,8 +73,8 @@ export class ChartsComponent implements OnInit {
       },
       options: {
         title: {
-          display: true,
-          text: 'Displaying Parcel Data',
+          display: false,
+          text: this.title,
           fontSize: 16
         },
         legend:{
@@ -118,10 +126,24 @@ export class ChartsComponent implements OnInit {
   }
 
   chart1Change(e){
-    this.selected = e;
     //console.log(e + this.view1Data[0][e]);
     this.updateChart1(e);
   }
+
+  attributes: Attributes[] = [
+    {value:'AssessedValue',attrValue:'Total Value'},
+    {value:'No_parcels',attrValue:'# Parcels'},
+    {value:'percOfLand',attrValue:'% Land'},
+    {value:'percOfAssessedVal',attrValue:'% Value'}
+  ];
+  views: Views[] = [
+    {value:'view1',viewValue:'View 1'}
+    // {value:'view2',viewValue:'View 2'},
+    // {value:'view3',viewValue:'View 3'},
+    // {value:'view4',viewValue:'View 4'},
+    // {value:'concentration',viewValue:'Owner Concentration'},
+    // {value:'landUseConcentrationData',viewValue:'Land Use Concentration'}
+  ];
   // View1: [
   //   {"_id":{"cat":"Mixed"},
   //    "Scale":170037,"AssessedValue":1002200,"No_parcels":31,"percOfLand":3.170551611874675,

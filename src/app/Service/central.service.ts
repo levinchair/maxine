@@ -18,6 +18,7 @@ export class CentralService {
   private _arrStr: String;
   private _currentLandUse: String = "Commercial";
   currentView = "view1";
+  currentAttr = "AssessedValue";
   geometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
   view1Data = new Subject<any>();
@@ -92,7 +93,7 @@ export class CentralService {
     });
 
     this.getConcentrationValues(this._city, this._hood);
-    
+
   }
   //Ignore this for now(-_-)working on a better way
   getView(view){
@@ -154,7 +155,7 @@ export class CentralService {
          .subscribe( (hoods: string[]) => {
            hoods = hoods.map(hood => { // change null to All
              if(hood === null){
-               return 'All' 
+               return 'All'
              }else {
                return hood
              }
