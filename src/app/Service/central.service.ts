@@ -107,22 +107,22 @@ export class CentralService {
     this.http.get(`http://localhost:3000/view1/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view1Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+      this.view1Data.next(view); 
     });
     this.http.get(`http://localhost:3000/view2/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view2Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+      this.view2Data.next(view); 
     });
     this.http.get(`http://localhost:3000/view3/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view3Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+      this.view3Data.next(view); 
     });
     this.http.get(`http://localhost:3000/view4/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view4Data.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+      this.view4Data.next(view); 
     });
     this.getConcentrationValues(this._arrStr,undefined);
     this.http.get(`http://localhost:3000/showgeometry/${this._arrStr}/`)
@@ -165,15 +165,16 @@ export class CentralService {
 
    private getConcentrationValues(city_or_arr, hood){
        // for some reason this request needs to be made before concentrationbylanduse
+  
        this.http.get(`http://localhost:3000/concentration/${city_or_arr}/${hood}`)
        .subscribe( (view) => {
          //console.log("view: " + JSON.stringify(view));
-         this.concentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
-       });
-       this.http.get(`http://localhost:3000/concentrationbylanduse/${city_or_arr}/${hood}`)
-       .subscribe( (view) => {
-         //console.log("view: " + JSON.stringify(view));
-         this.landUseConcentrationData.next(view); // this will set view1Data, which will multicast it to all oberservers that are subscribed
+         this.http.get(`http://localhost:3000/concentrationbylanduse/${city_or_arr}/${hood}`)
+         .subscribe( (view) => { // trying to find another fix...
+           //console.log("view: " + JSON.stringify(view));
+           this.landUseConcentrationData.next(view);  
+         });
+         this.concentrationData.next(view); 
        });
    }
 }

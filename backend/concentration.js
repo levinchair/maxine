@@ -70,7 +70,7 @@ const processOwnerConcentration =  async(param, hood) => {
             OwnerName: "$_id",
             OwnerValue: "$tot_OwnerValue",
             landuse: "$landuse",
-            MarketShare: {$divide: ["$tot_OwnerValue", "$tot_value"]}
+            MarketShare: {$divide: ['$tot_OwnerValue', "$tot_value"]}
         }}
         ],
     }
@@ -107,6 +107,7 @@ const processOwnerConcentration =  async(param, hood) => {
     try {
         for (const SiteCat of VALID_LANDUSE){
             console.log(SiteCat);
+            if(SiteCat === "Industrial") continue;
             Object.defineProperty(this.query, "properties.SiteCat1", { value : SiteCat, enumerable : true, writable: true });       
             console.log(this.query);
             //it would be nice if someone could figure out how to run these promises in parallel using Promise.all
@@ -116,8 +117,8 @@ const processOwnerConcentration =  async(param, hood) => {
     }catch(err){
         throw err;
     }
-    return payload;
-    
+    return payload;   
+
 }
 
 module.exports = {
