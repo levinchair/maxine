@@ -70,7 +70,7 @@ const processOwnerConcentration =  async(param, hood) => {
             OwnerName: "$_id",
             OwnerValue: "$tot_OwnerValue",
             landuse: "$landuse",
-            MarketShare: {$cond: [{$eq: ["$tot_value", 0]}, 0, {$divide: ['$numerator', "$tot_value"]}]}
+            MarketShare: {$cond: [{$eq: ["$tot_value", 0]}, 0, {$divide: ['$tot_OwnerValue', "$tot_value"]}]}
         }}
         ],
     }
