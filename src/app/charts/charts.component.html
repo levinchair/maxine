@@ -1,14 +1,23 @@
-<!-- <h3>Displaying Parcel Data: {{selected}}</h3> -->
+<div id="charts-header">
+  <mat-form-field>
+    <mat-label>Data View</mat-label>
+    <mat-select [(ngModel)]="this.centralService.currentView" placeholder="View 1">
+      <mat-option *ngFor="let view of views" [value]="view.value">
+        {{view.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Attributes</mat-label>
+    <mat-select [(ngModel)]="this.centralService.currentAttr" (ngModelChange)="updateChart1($event)" placeholder="Total Value">
+      <mat-option *ngFor="let attr of attributes" [value]="attr.value">
+        {{attr.attrValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 <div class="chart-container">
   <canvas #chartA>{{ chart }}</canvas>
   <div class="chart-radio">
-    <!-- <input type="radio" name="" value=""> -->
-    <!-- <p>Select Chart Data</p>
-    <mat-radio-group (change)="changeView($event)" aria-label="Select an option">
-      <mat-radio-button checked value="view1">1</mat-radio-button>
-      <mat-radio-button value="view2">2</mat-radio-button>
-      <mat-radio-button value="view3">3</mat-radio-button>
-      <mat-radio-button value="view4">4</mat-radio-button>
-    </mat-radio-group> -->
   </div>
 </div>

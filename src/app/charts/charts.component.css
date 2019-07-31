@@ -1,14 +1,23 @@
 .chart-container{
-  padding-right:10px;padding-left:10px;
+  padding:15px;
   position:relative !important;
-  height:85vh;
-  min-height:85vh;
+  height:76vh;
+  min-height:76vh;
 }
-.chart-radio{
-  display:block;
+mat-form-field{
+  margin-top:5px;
+  background-color: #ffffff;
+  padding-top:5px;
+  border-radius: 4px;
+  padding-left:10px;padding-right:10px;
+  flex-grow:1;
+  max-width:40%;
 }
-mat-radio-button{
-  padding-left:10px;
-  padding-right:10px;
-  margin-top:10px;
+#charts-header{
+  display:flex;
+  width:100%;
+  align-items: baseline;
+  justify-content: space-evenly;
+  background-color: #91bad6;
+  padding-bottom:5px;
 }
