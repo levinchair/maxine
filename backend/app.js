@@ -12,6 +12,7 @@ var router6= require("./router/view3");
 var router7= require("./router/view4");
 var router8= require("./router/OwnerConcentration");
 var app = express();
+var fs = require('fs');
 
 mongoose.Promise = global.Promise;
 /*
@@ -41,6 +42,11 @@ app.use("/",router5);
 app.use("/",router6); 
 app.use("/",router7);
 app.use("/",router8);
+
+//runs a script to generate prerendered files for cleveland. trying to make it ron server startup.
+
+
+//var scriptSuccess = require("./scripts/prerendercities.js");
 
 /*app.listen(3000,function(){
     console.log("Listning on 3000");

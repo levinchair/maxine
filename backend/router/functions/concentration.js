@@ -1,5 +1,5 @@
-var utils = require("./router/utils");
-var db = require("./model/db.js");
+var utils = require("../utils.js");
+var db = require("../../model/db.js").parcelDataModel;
 
 const VALID_LANDUSE = ["Industrial", "Government", "Institutional", "Commercial", "Mixed", "Other", "Utility", "Residential"];
 const [RESIDENTIAL] = VALID_LANDUSE.slice(-1);
