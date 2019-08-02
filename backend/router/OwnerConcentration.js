@@ -1,20 +1,19 @@
 var express= require('express')
 var router= express.Router();
-var db = require("../model/db.js");
+var db = require("../model/db.js").parcelDataModel;
 var utils = require('./utils');
 var request = require("request");
-var concentration = require('../concentration');
 
 
 router.get("/concentration/:param?/:hood?", (req, res, next) => {
-  concentration.processOwnerConcentration(req.params.param, req.params.hood)
+  utils.processOwnerConcentration(req.params.param, req.params.hood)
   .then((payload) => res.send(payload))
   .catch(err => next(err));
 });
 
  router.get("/concentrationbylanduse/:param2?/:hood2?", (req,res,next) => {
 
-    concentration.processOwnerConcentration(req.params.param2, req.params.hood2).then(
+    utils.processOwnerConcentration(req.params.param2, req.params.hood2).then(
     (payload) => { //callback
 
       var data = payload;
@@ -22,7 +21,7 @@ router.get("/concentration/:param?/:hood?", (req, res, next) => {
       var cr4;
       var dataMod;
       //cal data using filter, map, reduce
-      for( var SiteCat of concentration.VALID_LANDUSE){
+      for( var SiteCat of utils.VALID_LANDUSE){
         dataMod = data.filter( owner => owner.landuse === SiteCat);
         if(dataMod === undefined || dataMod.length == 0) {
           cr4 = 0;

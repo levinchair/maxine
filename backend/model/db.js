@@ -6,7 +6,12 @@ if(err) throw err;
 console.log("Connected to database 1");
 });
 var schema = mongoose.Schema;
-var quotesDataSchema = new schema({},{collection:'cuyahoga_test'});
+var parcelDataSchema = new schema({},{collection:'cuyahoga_test'});
+
+let citydataSchema = new schema({view: String, city: String, data: Array}, {collection: 'cuyahoga_cities'});
+
+
+
 /*
 {collection:'cuyahoga'});
 var quotesDataSchema = new schema({
@@ -16,5 +21,9 @@ var quotesDataSchema = new schema({
 },
 {collection:'cuyahoga'});*/
 
-
-module.exports = mongoose.model('cuyahoga_test',quotesDataSchema);
+let parcelDataModel =  mongoose.model('cuyahoga_test',parcelDataSchema);
+let cityDataModel = mongoose.model('cuyahoga_cities', citydataSchema);
+module.exports = {
+    parcelDataModel,
+    cityDataModel
+}

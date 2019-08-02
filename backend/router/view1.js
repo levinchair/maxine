@@ -1,6 +1,6 @@
 var express= require('express')
 var router= express.Router()
-var db = require("../model/db.js");
+var db = require("../model/db.js").parcelDataModel;
 var utils = require("./utils");
 
 router.get("/view1/:param?/:hood?", (req, res, next) => {

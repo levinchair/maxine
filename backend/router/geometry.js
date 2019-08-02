@@ -1,7 +1,7 @@
 var express= require('express')
 var utils = require('./utils');
 var router= express.Router()
-var db = require("../model/db.js");
+var db = require("../model/db.js").parcelDataModel;
 
 
 //--------------------------------------------------Show  geometric features  for selected neighbourhood--------------------------------------

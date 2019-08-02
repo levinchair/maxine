@@ -1,7 +1,7 @@
 var express= require('express')
 var upperCase = require('upper-case')
 var router= express.Router()
-var db = require("../model/db.js");
+var db = require("../model/db.js").parcelDataModel;
 
 //--------------------------------------------------Show distinct neighbourhood  from selected cities--------------------------------------
 router.get("/showhood/:city",(req,res,next)=>{
