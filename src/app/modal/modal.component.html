@@ -1,8 +1,8 @@
 <div *ngIf="this.modalService.modalView == 'tables'" class="tables-container">
     <button id="close-button" (click)="close()">X</button>
   <span>{{this.centralService.currentView | titlecase}}</span>
-  <span>City:{{this.centralService.getCity()  | titlecase}}</span>
-  <span>Neighborhood:{{this.centralService.getHood() | titlecase}}</span>
+  <span>City:&nbsp;{{this.centralService.getCity()  | titlecase}}</span>
+  <span>Neighborhood:&nbsp;{{this.centralService.getHood() | titlecase}}</span>
   <ng2-smart-table [settings]="this.settings" [source]="this.viewData"></ng2-smart-table>
 </div>
 <div class='landingPage-container'*ngIf="this.modalService.modalView =='first'">

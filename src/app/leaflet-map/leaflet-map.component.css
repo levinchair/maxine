@@ -6,16 +6,6 @@
   cursor:grab;
 }
 
-.map-controls{
-  position:absolute;
-  float:right;
-  top:126px;
-  right: 31vw;
-  z-index:3;
-}
-button{
-  font-size:14px;
-}
 #getLasso, #destroyLasso{
   padding:0px;
   width:48px;
@@ -30,6 +20,50 @@ button{
 #destroyLasso{
   border-radius: 0% 5% 5% 0%;
 }
+#map-legend{
+  font-size:12px;
+  position:absolute;
+  bottom:30px;
+  right: 31vw;
+  z-index:3;
+  background-color: whitesmoke;
+}
+#tall-line{
+  min-height:155px;
+  min-width:2px;
+  background-color: #ffffff;
+  z-index:4;
+  position:absolute;
+  top:0px;
+  right:15px;
+}
+.map-controls{
+  position:absolute;
+  float:right;
+  border: 2px solid rgba(0,0,0,0.2);
+  top:126px;
+  right: 31vw;
+  z-index:3;
+}
+.legend-block{
+  padding:0px 19px 0px 3px;
+  color:whitesmoke;
+  border-style: solid;
+  border-width:1px;
+  color:black;
+}
+button{
+  font-size:14px;
+}
 mat-button-toggle-group{
   border:none;
 }
+.Commercial{background-color:#FF4C4C99;border-color:#FF4C4C;}
+.Industrial{background-color: #BE69F299;border-color:#BE69F2;}
+.Residential{background-color: #E5BE7799;;border-color:#E5BE77;}
+.Mixed{background-color: #fd8f4599;border-color:#fd8f45;}
+.Government{background-color: #7A7ACB99;border-color:#7A7ACB;}
+.Institutional{background-color: #3D3DCB99;border-color:#3D3DCB;}
+.Utility{background-color: #F1F1F199;border-color:#F1F1F1;}
+.Null{background-color: #BEBEBE99;border-color:#BEBEBE;}
+.Vacant{background-color: #50505099;border-color:#505050;color:whitesmoke;}

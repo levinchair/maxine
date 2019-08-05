@@ -35,7 +35,7 @@ export class ChartsComponent implements OnInit {
   CATCOLORS = new Map([["Residential","#E5BE77"],["Commercial","#FF4C4C"],
                       ["Industrial","#BE69F2"],["Mixed","#fd8f45"],
                       ["Government","#7A7ACB"],["Institutional","#3D3DCB"],
-                      ["Utility","#BEBEBE"],[null,"#F1F1F1"]]);
+                      ["Utility","#F1F1F1"],[null,"#BEBEBE"]]);
 
   PARCELCATEGORIES = [["AssessedValue","Assessed Value"],
                       ["No_parcels","Number of Parcels"],

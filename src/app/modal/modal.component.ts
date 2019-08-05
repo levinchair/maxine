@@ -118,10 +118,11 @@ export class ModalComponent implements OnInit {
         },
         percOfAssessedVal: {
           title: '% Value',
-          valuePrepareFunction: (value) => {return this.changeFix(value*100,2)+ "%";}
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
         },
         Scale: {
-          title: 'Scale'
+          title: 'Scale',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
         }
         }
     };
