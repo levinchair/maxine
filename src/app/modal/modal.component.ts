@@ -13,7 +13,6 @@ import {CurrencyPipe} from '@angular/common';
 export class ModalComponent implements OnInit {
   viewData: any;
   settings: any;
-  landingPageSource: landingSource;
   @ViewChild('choice1') choice1;
   @ViewChild('choice2') choice2;
   @ViewChild('choice3') choice3;
@@ -24,17 +23,19 @@ export class ModalComponent implements OnInit {
               private cp: CurrencyPipe) { }
 
   ngOnInit() {
-    //To access the instructions for the modal
-    this.landingPageSource = new landingSource();
     //For when we want to display Tables modal
     if(this.domService.viewData.inputs.viewDataFromTable.modal == "tables"){
       this.settings = this.setSettings(this.centralService.currentView);
       this.viewData = this.domService.viewData.inputs.viewDataFromTable;
       this.viewData = this.setData(this.centralService.currentView);
       this.modalService.modalView = this.domService.viewData.inputs.viewDataFromTable.modal;
+      document.getElementById("modal-tables").className = "tables-container show";
+      document.getElementById("modal-landingPage").className = "landingPage-container hidden";
     }else if(this.domService.viewData.inputs.viewDataFromTable.modal == "first"){
-      //make this an else if to use other modal views
+      //make this an else if() to use other modal views
       this.modalService.modalView = this.domService.viewData.inputs.viewDataFromTable.modal;
+      document.getElementById("modal-tables").className = "tables-container hidden";
+      document.getElementById("modal-landingPage").className = "landingPage-container show";
     }
   }
   setData(view){
@@ -55,7 +56,6 @@ export class ModalComponent implements OnInit {
       case 'view4': return this.view4settings; break;
       case 'concentration': return this.view5settings; break;
       case 'landUseConcentrationData': return this.view6settings; break;
-
     }
   }
   changeFix(value, precision){
@@ -70,28 +70,25 @@ export class ModalComponent implements OnInit {
     this.modalService.destroy();
   }
   choice(val){
+    //This is super janky, but it works for now so lets not optimize yet
     if(val == 1){
-      this.choice1.nativeElement.className = "menu highlighted";
-      this.choice2.nativeElement.className = "menu blank";
-      this.choice3.nativeElement.className = "menu blank";
-      document.getElementById("display").innerHTML = this.landingPageSource.option1;
+      this.choice1.nativeElement.className = "menu highlighted";document.getElementById("option1").className = "show";
+      this.choice2.nativeElement.className = "menu blank";document.getElementById("option2").className = "hidden";
+      this.choice3.nativeElement.className = "menu blank";document.getElementById("option3").className = "hidden";
     }
     else if(val == 2){
-      this.choice1.nativeElement.className = "menu blank";
-      this.choice2.nativeElement.className = "menu highlighted";
-      this.choice3.nativeElement.className = "menu blank";
-      document.getElementById("display").innerHTML = this.landingPageSource.option2;
+      this.choice1.nativeElement.className = "menu blank";document.getElementById("option1").className = "hidden";
+      this.choice2.nativeElement.className = "menu highlighted";document.getElementById("option2").className = "show";
+      this.choice3.nativeElement.className = "menu blank";document.getElementById("option3").className = "hidden";
     }else if(val == 3){
-      this.choice1.nativeElement.className = "menu blank";
-      this.choice2.nativeElement.className = "menu blank";
-      this.choice3.nativeElement.className = "menu highlighted";
-      document.getElementById("display").innerHTML = this.landingPageSource.option3;
+      this.choice1.nativeElement.className = "menu blank";document.getElementById("option1").className = "hidden";
+      this.choice2.nativeElement.className = "menu blank";document.getElementById("option2").className = "hidden";
+      this.choice3.nativeElement.className = "menu highlighted";document.getElementById("option3").className = "show";
     }
   }
 
-
   ngAfterViewInit(){
-    document.getElementById("display").innerHTML = this.landingPageSource.option1;
+
   }
 
   //------------------------------------------------------------------------

@@ -3,19 +3,22 @@
   box-sizing: border-box;
   background: whitesmoke;
   z-index:1;
-  cursor:grab;
+  cursor:crosshair;
 }
-
+#sattelite-button{
+  border-right: 1px solid #ccc;
+}
 #getLasso, #destroyLasso{
   padding:0px;
   width:48px;
   min-width:48px;
   background-color:#ffffff;
   border:none;
-  margin-left:1px;
 }
 #getLasso{
   border-radius:0px;
+  border-left:1px solid #ccc;
+  border-right:1px solid #ccc;
 }
 #destroyLasso{
   border-radius: 0% 5% 5% 0%;
@@ -24,7 +27,7 @@
   font-size:12px;
   position:absolute;
   bottom:30px;
-  right: 31vw;
+  right: 30.5vw;
   z-index:3;
   background-color: whitesmoke;
 }
@@ -41,8 +44,8 @@
   position:absolute;
   float:right;
   border: 2px solid rgba(0,0,0,0.2);
-  top:126px;
-  right: 31vw;
+  top:122px;
+  right: 30.5vw;
   z-index:3;
 }
 .legend-block{
