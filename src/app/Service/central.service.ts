@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,  HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, catchError, retry } from 'rxjs/operators';
 import {MatSortModule} from '@angular/material/sort';
 //Models
 import { featureCollection } from  "../../model/featurecollection.model";
@@ -39,7 +39,7 @@ export class CentralService {
      //alert("hood geo: " + this._hood);
   }
   setParcelArray(arr: Array<JsonForm>){
-    if(Object.keys(arr).length === 0 || !Array.isArray(arr)){
+    if(arr === undefined || arr.length == 0 || !Array.isArray(arr)){
       this._arr = [];
     }else {
       for(var i =0; i < arr.length; i++){ // needs to be an array of only parcelpins
@@ -131,7 +131,7 @@ export class CentralService {
   }
 
   getGeometry(){
-    console.log(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`);
+    //console.log(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`);
      if(this._hood !== undefined && this._city !== undefined){
         this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
         .subscribe(view => this.geometryData.next(view));
@@ -144,9 +144,8 @@ export class CentralService {
   getCities() {
     return this.http.get<string[]>('http://localhost:3000/showcities/')
       .pipe(
-        tap(
-          data => console.log("From getCity in Cities Service: " + JSON.stringify(data))
-        )
+        // tap(data => console.log("From getCity in Cities Service: " + JSON.stringify(data))),
+        catchError(this.handleError)
       );
    }
 
@@ -168,14 +167,30 @@ export class CentralService {
        // for some reason this request needs to be made before concentrationbylanduse
   
        this.http.get(`http://localhost:3000/concentration/${city_or_arr}/${hood}`)
-       .subscribe( (view) => {
-         //console.log("view: " + JSON.stringify(view));
-         this.http.get(`http://localhost:3000/concentrationbylanduse/${city_or_arr}/${hood}`)
-         .subscribe( (view) => { // trying to find another fix...
-           //console.log("view: " + JSON.stringify(view));
-           this.landUseConcentrationData.next(view);  
-         });
-         this.concentrationData.next(view); 
-       });
+       .subscribe( 
+        (view) => {
+          this.http.get(`http://localhost:3000/concentrationbylanduse/${city_or_arr}/${hood}`)
+          .pipe(catchError(this.handleError))
+          .subscribe( 
+            (view) => { // trying to find another fix...
+              this.landUseConcentrationData.next(view);  
+            });
+          this.concentrationData.next(view); 
+        },
+        error => this.handleError(error));
+   }
+
+   private handleError(error: HttpErrorResponse){
+    if(error.error instanceof ErrorEvent){
+      console.log('An error has occurred:  ', error.error.message);
+    }else { 
+      //the backend returned an unsuccessful response code
+      // the response body may contain clues to what went wrong
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: `,error.error);
+    }
+    // return an abservable with a user-friendly error message
+    return throwError('Something bad happened, try again later.')
    }
 }

@@ -41,14 +41,15 @@ export class LeafletMapComponent implements OnInit {
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
     //for parcelpin data. Will be fired everytime there is an update to the data
-    this.centralService.geometryData.subscribe( view => {
-      this.recentData = view;
-      this.geoJsonLayer = L.geoJSON();
-      this.geoJsonLayer.addData(view);
-      var latLngBounds = this.geoJsonLayer.getBounds();
-      this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
-      this.setShapeLayer(view);
-    });
+    this.centralService.geometryData.subscribe( 
+      view => {
+        this.recentData = view;
+        this.geoJsonLayer = L.geoJSON();
+        this.geoJsonLayer.addData(view);
+        var latLngBounds = this.geoJsonLayer.getBounds();
+        this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
+        this.setShapeLayer(view);
+      });
 
     //init layers
     this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
@@ -87,6 +88,10 @@ export class LeafletMapComponent implements OnInit {
       tempArray.push(temp);
     }
     console.log("temparray: " + JSON.stringify(tempArray));
+    if(tempArray === null || tempArray.length == 0) {
+      alert("Please use lasso to select an area, or Press Search to show all parcel in this area");
+      throw new Error("temp array is empty");
+    }
     let feature = [];
     let allPoints = 0;
     // console.log(JSON.stringify(this.recentData));
