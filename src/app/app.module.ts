@@ -34,6 +34,8 @@ import { MatTableModule } from '@angular/material/table';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import {MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -49,6 +51,7 @@ import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { ChartsComponent } from './charts/charts.component';
 import { TablesComponent } from './tables/tables.component';
 import { ModalComponent } from './modal/modal.component';
+import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 
 
 
@@ -65,7 +68,8 @@ import { ModalComponent } from './modal/modal.component';
     LeafletMapComponent,
     ChartsComponent,
     TablesComponent,
-    ModalComponent
+    ModalComponent,
+    ProgressSpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +87,7 @@ import { ModalComponent } from './modal/modal.component';
     FlexLayoutModule,
     // NgbModule.forRoot()
     // Angular materials
+    MatDialogModule,
     MatToolbarModule,
     MatIconModule,
     MatInputModule,
@@ -102,7 +107,8 @@ import { ModalComponent } from './modal/modal.component';
     MatRadioModule,
     MatCheckboxModule,
     MatButtonToggleModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     LocationService,
@@ -118,7 +124,8 @@ import { ModalComponent } from './modal/modal.component';
     CurrencyPipe
   ],
   entryComponents:[
-    ModalComponent
+    ModalComponent,
+    ProgressSpinnerComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CentralService } from '../Service/central.service';
 import inside from 'point-in-polygon';
-import { MatButtonModule } from '@angular/material/button';
+import {MatDialog, MatDialogRef} from '@angular/material';
+
 //Models
 import { JsonForm } from '../../model/jsonform.model';
 
 import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
+
+//spinner component
+import { ProgressSpinnerComponent } from "../progress-spinner/progress-spinner.component"
 
 @Component({
   selector: 'app-leaflet-map',
@@ -33,24 +37,19 @@ export class LeafletMapComponent implements OnInit {
   streets: any;
   lassoToggle:boolean = false;
 
+
   constructor(
-    private centralService : CentralService
+    private centralService : CentralService,
+  private dialog: MatDialog
   ) { }
 
   ngOnInit() {
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
     //for parcelpin data. Will be fired everytime there is an update to the data
-    this.centralService.geometryData.subscribe( 
-      view => {
-        this.recentData = view;
-        this.geoJsonLayer = L.geoJSON();
-        this.geoJsonLayer.addData(view);
-        var latLngBounds = this.geoJsonLayer.getBounds();
-        this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
-        this.setShapeLayer(view);
-      });
+    this.sub();
 
+      
     //init layers
     this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
       maxZoom: 20,
@@ -66,7 +65,7 @@ export class LeafletMapComponent implements OnInit {
     	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     	subdomains: 'abcd',
     	maxZoom: 19,
-      zIndex: 3});
+      zIndex: 3}).addTo(this.map);
     //Initialize geoJsonLayer
     this.geoJsonLayer = L.geoJSON();
 
@@ -74,6 +73,19 @@ export class LeafletMapComponent implements OnInit {
     this.sat = true;
     this.setBaseLayer();
 
+  }
+  sub(){
+
+      
+     this.centralService.geometryData.subscribe( 
+      view => {
+        this.recentData = view;
+        this.geoJsonLayer = L.geoJSON();
+        this.geoJsonLayer.addData(view);
+        var latLngBounds = this.geoJsonLayer.getBounds();
+        this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
+        this.setShapeLayer(view);
+      });
   }
 
   //add check initialized/undefined flags
@@ -114,9 +126,9 @@ export class LeafletMapComponent implements OnInit {
     }
     // console.log("Length:" + this.lassoData.length);
     // console.log(JSON.stringify(this.lassoData));
-
+    this.centralService.showSpinner.next(true)
     this.centralService.setParcelArray(this.lassoData);
-    this.centralService.getbyParcelpins(); // this will initiate a http request for any parcelpins
+    this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
 
   }
   setShapeLayer(parcels){
@@ -180,6 +192,10 @@ export class LeafletMapComponent implements OnInit {
   removeLassoPolygons(){
     this.selectfeature.removeAllArea();
     this.centralService.setParcelArray([]);
+    //reset views after being deleted
+    this.centralService.showSpinner.next(true);
+    this.centralService.getGeometry();
+    this.centralService.getViews();
   }
 
   toggleLasso(){

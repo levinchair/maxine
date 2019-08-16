@@ -28,7 +28,11 @@ export class CentralService {
   concentrationData = new Subject<any>();
   landUseConcentrationData = new Subject<any>();
   view1parcelData = new Subject<any>();
+  //used by other components to turn on loading spinner
+  public showSpinner = new Subject<boolean>();
+
   constructor(private http: HttpClient) { }
+
 
   setCity(city: string){
 		this._city = city;
@@ -127,17 +131,27 @@ export class CentralService {
     });
     this.getConcentrationValues(this._arrStr,undefined);
     this.http.get(`http://localhost:3000/showgeometry/${this._arrStr}/`)
-    .subscribe(view => this.geometryData.next(view));
+    .subscribe(view => {
+          this.geometryData.next(view);
+          //spinner will be turned off after geometry is loaded
+          this.showSpinner.next(false);
+    });
   }
 
   getGeometry(){
     //console.log(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`);
      if(this._hood !== undefined && this._city !== undefined){
         this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
-        .subscribe(view => this.geometryData.next(view));
+        .subscribe(view => {
+          this.geometryData.next(view);
+          this.showSpinner.next(false);
+        });
     }else if(this._hood === undefined && this._city !== undefined){
         this.http.get(`http://localhost:3000/showgeometry/${this._city}/`)
-        .subscribe(view => this.geometryData.next(view));
+        .subscribe(view => {
+          this.geometryData.next(view)
+          this.showSpinner.next(false);
+        });
     }
   }
 
@@ -164,8 +178,6 @@ export class CentralService {
    }
 
    private getConcentrationValues(city_or_arr, hood){
-       // for some reason this request needs to be made before concentrationbylanduse
-  
        this.http.get(`http://localhost:3000/concentration/${city_or_arr}/${hood}`)
        .subscribe( 
         (view) => {
