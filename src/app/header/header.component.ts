@@ -4,15 +4,10 @@ import { FormControl } from '@angular/forms';
 import { CentralService } from '../Service/central.service';
 import { ModalService } from '../Service/modal-service.service';
 import { ModalComponent } from '../modal/modal.component';
-/// <reference types="@types/googlemaps" />
 import { MapsAPILoader } from '@agm/core';
 import { Location } from '../../model/location.model';
 declare const google: any;
 
-//material
-import {MatDialog, MatDialogRef} from '@angular/material';
-//spinner component
-import { ProgressSpinnerComponent } from "../progress-spinner/progress-spinner.component"
 
 
 @Component({
@@ -32,14 +27,11 @@ export class HeaderComponent implements OnInit {
   @ViewChild('matExpansionPanel') matExpansionPanelRef;
   @ViewChild('search')
   public searchElementRef: ElementRef;
-  private dialogRef: MatDialogRef<ProgressSpinnerComponent>;
 
   constructor( private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone,
     private locationService: LocationService,
     private centralService: CentralService,
-    private modalService : ModalService,
-    private dialog: MatDialog) { }
+    private modalService : ModalService) { }
 
   ngOnInit() {
     this.searchControl = new FormControl();
@@ -66,21 +58,9 @@ export class HeaderComponent implements OnInit {
           this.locationService.setFlag(false);
       });
     });
+ 
     }
     updateAllData(){
-      this.centralService.showSpinner.subscribe( bol => {
-        if(bol === true){
-          this.dialogRef = this.dialog.open(ProgressSpinnerComponent, 
-              {
-                panelClass: 'transparent',
-                disableClose: true 
-              });
-        } else {
-          if(this.dialogRef !== undefined){
-            this.dialogRef.close();
-          }
-        }
-      });
       this.centralService.showSpinner.next(true);
       this.centralService.getGeometry();
       this.centralService.getViews(); // inital subscribe of the data
