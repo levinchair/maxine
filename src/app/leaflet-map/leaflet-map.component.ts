@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CentralService } from '../Service/central.service';
 import inside from 'point-in-polygon';
-import {MatDialog, MatDialogRef} from '@angular/material';
 
 //Models
 import { JsonForm } from '../../model/jsonform.model';
@@ -11,7 +10,6 @@ import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictl
 import * as L1 from 'leaflet.glify';
 
 //spinner component
-import { ProgressSpinnerComponent } from "../progress-spinner/progress-spinner.component"
 
 @Component({
   selector: 'app-leaflet-map',
@@ -40,7 +38,6 @@ export class LeafletMapComponent implements OnInit {
 
   constructor(
     private centralService : CentralService,
-  private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -75,8 +72,6 @@ export class LeafletMapComponent implements OnInit {
 
   }
   sub(){
-
-      
      this.centralService.geometryData.subscribe( 
       view => {
         this.recentData = view;
