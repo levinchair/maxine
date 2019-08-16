@@ -43,10 +43,10 @@ export class LeafletMapComponent implements OnInit {
   ngOnInit() {
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
+    
     //for parcelpin data. Will be fired everytime there is an update to the data
     this.sub();
 
-      
     //init layers
     this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
       maxZoom: 20,
@@ -86,8 +86,12 @@ export class LeafletMapComponent implements OnInit {
   //add check initialized/undefined flags
   getLassoPlots(){
     //sets latlng_area to an array of Points objs, need them as touples
-    if(this.selectfeature === undefined) alert("Please use lasso to select an area");
-    this.latlng_area = this.selectfeature.getAreaLatLng();
+    if(this.selectfeature === undefined) {
+      alert("Please use lasso to select an area");
+      this.latlng_area = []
+    }else {
+      this.latlng_area = this.selectfeature.getAreaLatLng();
+    }
     this.lassoData = [];
     let tempArray = [];
     for(let q = 0; q < this.latlng_area.length; q++){
@@ -96,7 +100,6 @@ export class LeafletMapComponent implements OnInit {
     }
     console.log("temparray: " + JSON.stringify(tempArray));
     if(tempArray === null || tempArray.length == 0) {
-      alert("Please use lasso to select an area, or Press Search to show all parcel in this area");
       throw new Error("temp array is empty");
     }
     let feature = [];
@@ -120,10 +123,15 @@ export class LeafletMapComponent implements OnInit {
       }
     }
     // console.log("Length:" + this.lassoData.length);
-    // console.log(JSON.stringify(this.lassoData));
-    this.centralService.showSpinner.next(true)
-    this.centralService.setParcelArray(this.lassoData);
-    this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
+    //console.log(JSON.stringify(this.lassoData.length));
+    
+    if (!this.lassoData || this.lassoData.length == 0) {
+      throw new Error("No points were selected");
+    } else {
+      this.centralService.showSpinner.next(true)
+      this.centralService.setParcelArray(this.lassoData);
+      this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
+    }
 
   }
   setShapeLayer(parcels){
@@ -185,7 +193,7 @@ export class LeafletMapComponent implements OnInit {
   }
 
   removeLassoPolygons(){
-    this.selectfeature.removeAllArea();
+    if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
     this.centralService.setParcelArray([]);
     //reset views after being deleted
     this.centralService.showSpinner.next(true);

@@ -68,11 +68,6 @@ export class HeaderComponent implements OnInit {
     });
     }
     updateAllData(){
-      // let dialogRef: MatDialogRef<ProgressSpinnerComponent> = this.dialog.open(ProgressSpinnerComponent, 
-      //   {
-      //     panelClass: 'transparent',
-      //     disableClose: false 
-      //   });
       this.centralService.showSpinner.subscribe( bol => {
         if(bol === true){
           this.dialogRef = this.dialog.open(ProgressSpinnerComponent, 
@@ -91,7 +86,6 @@ export class HeaderComponent implements OnInit {
       this.centralService.getViews(); // inital subscribe of the data
       //Closes dropdown menu if opened
       this.matExpansionPanelRef.close();
-      //  dialogRef.close();
     }
     helpModal(){
       var viewDataFromTable = {
