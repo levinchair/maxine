@@ -1,11 +1,25 @@
-<div id="map"></div>
+<div id="map">
+  <mat-radio-group  
+      class="map-radio-group"
+      [(ngModel)]="currentSiteCat"
+      (ngModelChange)="changed()">
+      <mat-radio-button 
+        *ngFor="let sitecat of landuse" 
+        [ngStyle]="{'background-color': getColors(sitecat), 'color' : sitecat === null ? 'whitesmoke':' black'}"
+        [value]="sitecat">
+        {{sitecat}}
+        <span *ngIf="sitecat === null" >Null or Vacant</span>
+      </mat-radio-button>
+  </mat-radio-group>
+</div>
 <mat-button-toggle-group multiple class="map-controls">
   <mat-button-toggle id="sattelite-button" (click)='this.setBaseLayer()'><img src="../assets/icons-24px/png/028-planet-earth.png" height="24" width="24" title="Toggle satellite view"></mat-button-toggle>
   <mat-button-toggle id="toggle-lasso"(click)='this.toggleLasso()' title="Toggle Lasso"><img src="../assets/icons-24px/png/043-lasso.png" height="24" width="24" ></mat-button-toggle><br>
   <button id="getLasso" mat-stroked-button color="primary" (click)='this.getLassoPlots()' height="24" width="24" title="Calculate values based on Lasso Selection" >Go</button><br>
   <button id="destroyLasso" mat-stroked-button color="warn" (click)='this.removeLassoPolygons()'><img src="../assets/icons-24px/png/008-trash.png" height="24" width="24" title="Remove all Lasso areas"></button><br>
 </mat-button-toggle-group>
-<div id='map-legend'>
+
+<!-- <div id='map-legend'>
   <div class="Commercial legend-block">Commercial</div>
   <div class="Government legend-block">Government</div>
   <div class="Industrial legend-block">Industrial</div>
@@ -15,5 +29,4 @@
   <div class="Residential legend-block">Residential</div>
   <div class="Utility legend-block">Utility</div>
   <div class="Vacant legend-block">Vacant</div>
-  <!-- <span id="tall-line"></span> -->
-</div>
+</div> -->

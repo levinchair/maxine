@@ -9,7 +9,6 @@ import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
 
-//spinner component
 
 @Component({
   selector: 'app-leaflet-map',
@@ -34,13 +33,20 @@ export class LeafletMapComponent implements OnInit {
   maplabels:any;
   streets: any;
   lassoToggle:boolean = false;
-
+  feature : JsonForm;
+  landuse: String[];
+  currentSiteCat: String;
+  
 
   constructor(
     private centralService : CentralService,
-  ) { }
+  ) { 
+  }
 
   ngOnInit() {
+
+    this.landuse = this.centralService.getLanduse();
+
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
     
@@ -69,8 +75,23 @@ export class LeafletMapComponent implements OnInit {
     //set layer to the map
     this.sat = true;
     this.setBaseLayer();
-
   }
+  changed(){
+    /** Fired when there is a change in the selection of the radio button */
+    console.log(this.currentSiteCat);
+    
+    if(this.shapeLayer !== undefined){
+        this.shapeLayer.settings.color = (index: Number, feature: JsonForm) => {
+          if(this.currentSiteCat === feature.properties.SiteCat1){
+            return L1.color.fromHex(this.getColors(this.currentSiteCat));
+          } else {
+            return L1.color.grey;
+          }
+      }
+      this.shapeLayer.setup().render();
+    }
+  }
+  
   sub(){
      this.centralService.geometryData.subscribe( 
       view => {
@@ -82,7 +103,76 @@ export class LeafletMapComponent implements OnInit {
         this.setShapeLayer(view);
       });
   }
+  setShapeLayer(parcels){
+    if(this.shapeLayer !== undefined) this.shapeLayer.remove();
 
+    this.shapeLayer = L1.shapes({
+      data: parcels,
+      map: this.map,
+      opacity: 0.7,
+      click:(e, feature : JsonForm) => {
+        this.feature = feature;
+        let popupContent = "<p>" +
+          "<b>Parcel Pin</b> : " + feature.properties.parcelpin + "<br>" +
+          "<b>Land Use</b>   : " + feature.properties.SiteCat1 + "<br>" +
+          "<b>-> Sub-Category</b> : " + feature.properties.SiteCat2 + "<br>" +
+          "<b>Address</b>    : " + feature.properties.par_addr_a + "<br>" +
+          "<b>Total SqFt</b> : " + feature.properties.total_squa + "<br>" +
+          "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
+        //do something when a shape is clicked
+        L.popup().setLatLng(e.latlng)
+          .setContent(popupContent).openOn(this.map);
+
+        this.shapeLayer.settings.color = (index, feature : JsonForm) => {
+            if(this.feature.properties.parcelpin === feature.properties.parcelpin){
+              return L1.color.fromHex(this.getColors(this.feature.properties.SiteCat1));
+            } else{
+              return L1.color.grey; 
+            }
+        }
+        this.shapeLayer.setup().render(); //slow because of resetVertices
+      },
+      border: true,
+      color: (index : Number, feature : JsonForm) => {
+        //this will take a feature and map its sitecat zone to a color
+        var zoneType : String = feature.properties.SiteCat1;
+        return L1.color.fromHex(this.getColors(zoneType));
+      }
+    });
+  }
+  getColors(zoneType){
+    //console.log(zoneType);
+    switch(zoneType){
+      case "Residential":
+        return "#E5BE77";
+      case "Commercial":
+        return "#FF4C4C";
+      case "Industrial":
+        return "#BE69F2";
+      case "Mixed":
+        return "#fd8f45";
+      case "Government":
+        return "#7A7ACB";
+      case "Institutional":
+        return "#3D3DCB";
+      case "Utility":
+        return "#F1F1F199";
+      default:
+        return "#40404099";
+    }
+  }
+  setBaseLayer(){
+    /* Toggles between satellite view and street view */
+    if(this.sat){
+      this.sat = false;
+      this.streets.addTo(this.map);
+      this.googleSat.removeFrom(this.map);
+    }else{
+      this.sat = true;
+      this.googleSat.addTo(this.map);
+      this.streets.removeFrom(this.map);
+    }
+  }
   //add check initialized/undefined flags
   getLassoPlots(){
     //sets latlng_area to an array of Points objs, need them as touples
@@ -134,64 +224,6 @@ export class LeafletMapComponent implements OnInit {
     }
 
   }
-  setShapeLayer(parcels){
-
-    if(this.shapeLayer !== undefined) this.shapeLayer.remove();
-
-    this.shapeLayer = L1.shapes({
-      data: parcels,
-      map: this.map,
-      opacity: 0.7,
-      click:(e, feature : JsonForm) => {
-        let popupContent = "<p>" +
-          "<b>Parcel Pin</b> : " + feature.properties.parcelpin + "<br>" +
-          "<b>Land Use</b>   : " + feature.properties.SiteCat1 + "<br>" +
-          "<b>-> Sub-Category</b> : " + feature.properties.SiteCat2 + "<br>" +
-          "<b>Address</b>    : " + feature.properties.par_addr_a + "<br>" +
-          "<b>Total SqFt</b> : " + feature.properties.total_squa + "<br>" +
-          "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
-        //do something when a shape is clicked
-        L.popup().setLatLng(e.latlng)
-          .setContent(popupContent).openOn(this.map);
-      },
-      border: true,
-      color: (index : Number, feature : JsonForm) => {
-        //this will take a feature and map its sitecat zone to a color
-        var zoneType : String = feature.properties.SiteCat1;
-        switch(zoneType){
-          case "Residential":
-            return L1.color.fromHex("E5BE77");
-          case "Commercial":
-            return L1.color.fromHex("FF4C4C");
-          case "Industrial":
-            return L1.color.fromHex("BE69F2");
-          case "Mixed":
-            return L1.color.fromHex("fd8f45");
-          case "Government":
-            return L1.color.fromHex("7A7ACB");
-          case "Institutional":
-            return L1.color.fromHex("3D3DCB");
-          case "Utility":
-            return L1.color.fromHex("BEBEBE");
-          default:
-            return L1.color.fromHex("505050");
-        }
-      }
-    });
-  }
-  setBaseLayer(){
-    /* Toggles between satellite view and street view */
-    if(this.sat){
-      this.sat = false;
-      this.streets.addTo(this.map);
-      this.googleSat.removeFrom(this.map);
-    }else{
-      this.sat = true;
-      this.googleSat.addTo(this.map);
-      this.streets.removeFrom(this.map);
-    }
-  }
-
   removeLassoPolygons(){
     if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
     this.centralService.setParcelArray([]);
@@ -199,6 +231,7 @@ export class LeafletMapComponent implements OnInit {
     this.centralService.showSpinner.next(true);
     this.centralService.getGeometry();
     this.centralService.getViews();
+    // this.shapeLayer.setup().render();
   }
 
   toggleLasso(){
