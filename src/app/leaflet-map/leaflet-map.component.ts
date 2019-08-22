@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CentralService } from '../Service/central.service';
 import inside from 'point-in-polygon';
-
 //Models
 import { JsonForm } from '../../model/jsonform.model';
-
 import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
-
-//spinner component
+import { NeighborhoodBoundaries } from '../../assets/data/cle_neighborhoods';
 
 @Component({
   selector: 'app-leaflet-map',
@@ -22,6 +19,7 @@ export class LeafletMapComponent implements OnInit {
   map: any;
   geoJsonLayer;
   layerGroup: any;
+  neighborhoodBoundaries = [];
   html_city: String;
   html_neighborhood: String;
   latlng_area:any;
@@ -34,7 +32,7 @@ export class LeafletMapComponent implements OnInit {
   maplabels:any;
   streets: any;
   lassoToggle:boolean = false;
-
+  marker:any;
 
   constructor(
     private centralService : CentralService,
@@ -43,10 +41,8 @@ export class LeafletMapComponent implements OnInit {
   ngOnInit() {
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
-    
     //for parcelpin data. Will be fired everytime there is an update to the data
     this.sub();
-
     //init layers
     this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
       maxZoom: 20,
@@ -65,14 +61,29 @@ export class LeafletMapComponent implements OnInit {
       zIndex: 3}).addTo(this.map);
     //Initialize geoJsonLayer
     this.geoJsonLayer = L.geoJSON();
-
     //set layer to the map
     this.sat = true;
     this.setBaseLayer();
-
+    //Neighborhood layers
+    var hBoundaries = new NeighborhoodBoundaries();
+    console.log(hBoundaries.data);
+    for(var k = 0; k < hBoundaries.data.records.length; k++){
+      var tempPolygon = hBoundaries.data.records[k].fields.geo_shape.coordinates[0];
+      for(var i = 0; i < tempPolygon.length; i++){
+        var tempVal = tempPolygon[i][1];
+        tempPolygon[i][1] = tempPolygon[i][0];
+        tempPolygon[i][0] = tempVal;
+      }
+      this.neighborhoodBoundaries.push(
+        [ hBoundaries.data.records[k].fields.city,
+          hBoundaries.data.records[k].fields.name,
+          tempPolygon
+        ]);
+    }
   }
+
   sub(){
-     this.centralService.geometryData.subscribe( 
+     this.centralService.geometryData.subscribe(
       view => {
         this.recentData = view;
         this.geoJsonLayer = L.geoJSON();
@@ -81,6 +92,34 @@ export class LeafletMapComponent implements OnInit {
         this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
         this.setShapeLayer(view);
       });
+      this.centralService.geocoderData.subscribe(
+        data => {
+          //Given search bar address lng/lat [Number,Number]
+          //Create Neighborhood Layers and run Point in Polygon
+          var hood = this.neighborhoodBoundaries;
+          for(var i = 0; i < hood.length;i++){
+          //  console.log(hood[i]);
+            if(inside(data,hood[i][2]) % 2 == 1){
+              //console.log(hood[i][0] + " " + hood[i][1]);
+              //Found neighborhood
+              this.centralService.setCity(hood[i][0]);
+              this.centralService.setHood(hood[i][1]);
+              this.centralService.getGeometry();
+              this.centralService.getViews();
+              break;
+            }
+          }
+          if(i == hood.length){
+            //No neighborhood found Let user know
+            console.log("Address not within current database");
+          }
+          if(this.marker === undefined){
+            this.marker = L.marker(data).addTo(this.map);
+          }else{
+            this.marker.setLatLng(data);
+          }
+        }
+      )
   }
 
   //add check initialized/undefined flags
@@ -124,7 +163,7 @@ export class LeafletMapComponent implements OnInit {
     }
     // console.log("Length:" + this.lassoData.length);
     //console.log(JSON.stringify(this.lassoData.length));
-    
+
     if (!this.lassoData || this.lassoData.length == 0) {
       throw new Error("No points were selected");
     } else {

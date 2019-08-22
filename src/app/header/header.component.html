@@ -1,18 +1,15 @@
 <header>
   <mat-toolbar>
     <span>Terra Mapping &nbsp;&nbsp;&nbsp;&nbsp; </span>
-    <mat-icon class="search">search</mat-icon>
-    <form class="example-form">
-      <mat-form-field class="example-full-width">
-        <input type="text" matInput
-        placeholder="Place"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="off"
-        #search
-        [formAction]="searchControl">
-      </mat-form-field>
-    </form>
+    <mgl-map
+    [style]=""
+    [interactive]="false">
+    <mgl-control
+      mglGeocoder
+      (result) = 'searchEvent($event)'
+      [bbox] = "bounds"
+    ></mgl-control>
+  </mgl-map>
     <button
       title="Search on map"
       (click)='updateAllData()'

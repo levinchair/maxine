@@ -19,6 +19,7 @@ export class CentralService {
   private _currentLandUse: String = "Commercial";
   currentView = "view1";
   currentAttr = "AssessedValue";
+  geocoderData = new Subject<any>();
   geometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
   view1Data = new Subject<any>();
@@ -53,6 +54,9 @@ export class CentralService {
     this._arrStr = JSON.stringify(this._arr);
     // console.log(this._arr);
     //console.log(this._arrStr);
+  }
+  setGeocoderData(data){
+    this.geocoderData.next(data);
   }
   getCity(){
     return this._city;
@@ -112,22 +116,22 @@ export class CentralService {
     this.http.get(`http://localhost:3000/view1/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view1Data.next(view); 
+      this.view1Data.next(view);
     });
     this.http.get(`http://localhost:3000/view2/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view2Data.next(view); 
+      this.view2Data.next(view);
     });
     this.http.get(`http://localhost:3000/view3/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view3Data.next(view); 
+      this.view3Data.next(view);
     });
     this.http.get(`http://localhost:3000/view4/${this._arrStr}/`)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
-      this.view4Data.next(view); 
+      this.view4Data.next(view);
     });
     this.getConcentrationValues(this._arrStr,undefined);
     this.http.get(`http://localhost:3000/showgeometry/${this._arrStr}/`)
@@ -179,15 +183,15 @@ export class CentralService {
 
    private getConcentrationValues(city_or_arr, hood){
        this.http.get(`http://localhost:3000/concentration/${city_or_arr}/${hood}`)
-       .subscribe( 
+       .subscribe(
         (view) => {
           this.http.get(`http://localhost:3000/concentrationbylanduse/${city_or_arr}/${hood}`)
           .pipe(catchError(this.handleError))
-          .subscribe( 
+          .subscribe(
             (view) => { // trying to find another fix...
-              this.landUseConcentrationData.next(view);  
+              this.landUseConcentrationData.next(view);
             });
-          this.concentrationData.next(view); 
+          this.concentrationData.next(view);
         },
         error => this.handleError(error));
    }
@@ -195,7 +199,7 @@ export class CentralService {
    private handleError(error: HttpErrorResponse){
     if(error.error instanceof ErrorEvent){
       console.log('An error has occurred:  ', error.error.message);
-    }else { 
+    }else {
       //the backend returned an unsuccessful response code
       // the response body may contain clues to what went wrong
       console.error(

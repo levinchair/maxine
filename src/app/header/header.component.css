@@ -2,6 +2,40 @@ header {
   padding: 0%;
   background-color: #528aae;
 }
+mgl-map{
+  z-index:5;
+  position:absolute;
+  top:8px;
+  left:160px;
+  height:0px;
+  width:0px;
+}
+/* Mapbox Search Bar CSS DO NOT CHANGE */
+.geocoder-pin-right{
+  display:none;
+}
+.mapboxgl-ctrl-geocoder{
+  position:absolute;
+}
+.mapboxgl-map{
+  overflow:visible !important;
+  z-index:6;
+}
+.suggestions-wrapper{
+  width:500px !important;
+}
+.suggestions{
+  width:500px !important;
+}
+input{
+  font-size:16px;
+  width:500px;
+}
+.mapboxgl-canvas-container canvas{
+  width:0px !important;
+  height:0px !important;
+}
+/* --------------- */
 mat-expansion-panel{
   position:absolute;
   width:100%;
