@@ -16,7 +16,8 @@ export class CentralService {
   private _hood = "Downtown";
   private _arr : Array<String> = [];
   private _arrStr: String;
-  private _currentLandUse: String = "Commercial";
+  private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
+                    "Mixed", "Utility", null];
   currentView = "view1";
   currentAttr = "AssessedValue";
   geocoderData = new Subject<any>();
@@ -34,6 +35,9 @@ export class CentralService {
 
   constructor(private http: HttpClient) { }
 
+  getLanduse(){
+    return this.LANDUSE;
+  }
 
   setCity(city: string){
 		this._city = city;

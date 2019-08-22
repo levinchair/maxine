@@ -23,14 +23,6 @@
 #destroyLasso{
   border-radius: 0% 5% 5% 0%;
 }
-#map-legend{
-  font-size:12px;
-  position:absolute;
-  bottom:30px;
-  right: 30.5vw;
-  z-index:3;
-  background-color: whitesmoke;
-}
 #tall-line{
   min-height:155px;
   min-width:2px;
@@ -48,6 +40,21 @@
   right: 30.5vw;
   z-index:3;
 }
+.map-radio-group {
+  padding:0px 19px 0px 3px;
+  border-color: #505050;
+  top:80px;
+  position:absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 10000;
+}
+button{
+  font-size:14px;
+}
+mat-button-toggle-group{
+  border:none;
+}
 .legend-block{
   padding:0px 19px 0px 3px;
   color:whitesmoke;
@@ -55,11 +62,13 @@
   border-width:1px;
   color:black;
 }
-button{
-  font-size:14px;
-}
-mat-button-toggle-group{
-  border:none;
+#map-legend{
+  font-size:12px;
+  position:absolute;
+  bottom:30px;
+  right: 30.5vw;
+  z-index:3;
+  background-color: whitesmoke;
 }
 .Commercial{background-color:#FF4C4C99;border-color:#FF4C4C;}
 .Industrial{background-color: #BE69F299;border-color:#BE69F2;}
