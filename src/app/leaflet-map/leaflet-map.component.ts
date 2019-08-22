@@ -177,8 +177,7 @@ export class LeafletMapComponent implements OnInit {
       border: true,
       color: (index : Number, feature : JsonForm) => {
         //this will take a feature and map its sitecat zone to a color
-        var zoneType : String = feature.properties.SiteCat1;
-        return L1.color.fromHex(this.getColors(zoneType));
+        return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
       }
     });
   }
@@ -222,15 +221,19 @@ export class LeafletMapComponent implements OnInit {
     //sets latlng_area to an array of Points objs, need them as touples
     if(this.selectfeature === undefined) {
       alert("Please use lasso to select an area");
-      this.latlng_area = []
+      this.latlng_area = [];
     }else {
-      this.latlng_area = this.selectfeature.getAreaLatLng();
+      this.latlng_area = this.selectfeature.getAllAreaLatLng();
     }
     this.lassoData = [];
     let tempArray = [];
-    for(let q = 0; q < this.latlng_area.length; q++){
-      let temp = [this.latlng_area[q].lng,this.latlng_area[q].lat]
-      tempArray.push(temp);
+    // console.log(this.latlng_area.length);
+    for(let area of this.latlng_area){
+        console.log(area);
+        for(let q = 0; q < area.length; q++){
+          let temp = [area[q].lng,area[q].lat]
+          tempArray.push(temp);
+        }
     }
     console.log("temparray: " + JSON.stringify(tempArray));
     if(tempArray === null || tempArray.length == 0) {
