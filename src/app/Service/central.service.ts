@@ -35,10 +35,6 @@ export class CentralService {
 
   constructor(private http: HttpClient) { }
 
-  getLanduse(){
-    return this.LANDUSE;
-  }
-
   setCity(city: string){
 		this._city = city;
 		//alert("city geo: " +this._city);
@@ -72,6 +68,10 @@ export class CentralService {
   }
   getParcelArray(){
     return this._arr;
+  }
+  
+  getLanduse(){
+    return this.LANDUSE;
   }
 
   changeView1(newData){

@@ -35,12 +35,11 @@ export class LeafletMapComponent implements OnInit {
   feature : JsonForm;
   landuse: String[];
   currentSiteCat: String;
-
   marker:any;
+
   constructor(
     private centralService : CentralService,
-  ) {
-  }
+  ){}
 
   ngOnInit() {
 
