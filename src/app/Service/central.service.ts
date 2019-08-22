@@ -17,7 +17,7 @@ export class CentralService {
   private _arr : Array<String> = [];
   private _arrStr: String;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
-                    "Mixed", "Utility", null];
+                    "Mixed", "Utility", null, "All"];
   currentView = "view1";
   currentAttr = "AssessedValue";
   geocoderData = new Subject<any>();

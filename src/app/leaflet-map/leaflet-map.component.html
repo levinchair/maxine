@@ -1,17 +1,16 @@
-<div id="map">
-  <mat-radio-group  
-      class="map-radio-group"
-      [(ngModel)]="currentSiteCat"
-      (ngModelChange)="changed()">
-      <mat-radio-button 
-        *ngFor="let sitecat of landuse" 
-        [ngStyle]="{'background-color': getColors(sitecat), 'color' : sitecat === null ? 'whitesmoke':' black'}"
-        [value]="sitecat">
-        {{sitecat}}
-        <span *ngIf="sitecat === null" >Null or Vacant</span>
-      </mat-radio-button>
-  </mat-radio-group>
-</div>
+<div id="map"></div>
+<mat-radio-group  
+class="map-radio-group"
+[(ngModel)]="currentSiteCat"
+(ngModelChange)="changed()">
+<mat-radio-button 
+  *ngFor="let sitecat of landuse" 
+  [ngStyle]="{'background-color': getColors(sitecat), 'color' : sitecat === null ? 'whitesmoke':' black'}"
+  [value]="sitecat">
+  {{sitecat}}
+  <span *ngIf="sitecat === null" >Null or Vacant</span>
+</mat-radio-button>
+</mat-radio-group>
 <mat-button-toggle-group multiple class="map-controls">
   <mat-button-toggle id="sattelite-button" (click)='this.setBaseLayer()'><img src="../assets/icons-24px/png/028-planet-earth.png" height="24" width="24" title="Toggle satellite view"></mat-button-toggle>
   <mat-button-toggle id="toggle-lasso"(click)='this.toggleLasso()' title="Toggle Lasso"><img src="../assets/icons-24px/png/043-lasso.png" height="24" width="24" ></mat-button-toggle><br>

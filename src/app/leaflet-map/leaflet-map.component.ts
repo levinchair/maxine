@@ -89,17 +89,19 @@ export class LeafletMapComponent implements OnInit {
   }
   changed(){
     /** Fired when there is a change in the selection of the radio button */
-    console.log(this.currentSiteCat);
+    // console.log(this.currentSiteCat);
 
     if(this.shapeLayer !== undefined){
         this.shapeLayer.settings.color = (index: Number, feature: JsonForm) => {
           if(this.currentSiteCat === feature.properties.SiteCat1){
             return L1.color.fromHex(this.getColors(this.currentSiteCat));
+          } else if(this.currentSiteCat === "All"){
+            return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
           } else {
             return L1.color.grey;
           }
-      }
-      this.shapeLayer.setup().render();
+        }
+        this.shapeLayer.setup().render();
     }
   }
 
@@ -119,10 +121,11 @@ export class LeafletMapComponent implements OnInit {
           //Create Neighborhood Layers and run Point in Polygon
           var hood = this.neighborhoodBoundaries;
           for(var i = 0; i < hood.length;i++){
-          //  console.log(hood[i]);
-            if(inside(data,hood[i][2]) % 2 == 1){
+            // console.log(inside(data,hood[i][2]));
+            if(inside(data,hood[i][2])){
               //console.log(hood[i][0] + " " + hood[i][1]);
               //Found neighborhood
+              this.centralService.showSpinner.next(true);
               this.centralService.setCity(hood[i][0]);
               this.centralService.setHood(hood[i][1]);
               this.centralService.getGeometry();
@@ -196,6 +199,8 @@ export class LeafletMapComponent implements OnInit {
         return "#3D3DCB";
       case "Utility":
         return "#F1F1F199";
+      case "All":
+        return "#0"
       default:
         return "#40404099";
     }

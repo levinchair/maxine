@@ -1,6 +1,6 @@
 // this is a sandbox to try out aggregation pipelines for speed and reliability. 
 // ctyname is the County name in XWALK.
-// tabblk2010 is the Censu Block. The smallest unit of data in the dataset
+// tabblk2010 is the Census Block. The smallest unit of data in the dataset
 //ctycsubname is hte name of the citiy that we ar referring to
 // test tabblk2010: 390351011011001
 // to calculate Inflow/Outflow

@@ -42,12 +42,13 @@
 }
 .map-radio-group {
   padding:0px 19px 0px 3px;
+  font-size: 12px;
   border-color: #505050;
-  top:80px;
+  top:200px;
   position:absolute;
   display: flex;
   flex-direction: column;
-  z-index: 10000;
+  z-index: 3;
 }
 button{
   font-size:14px;
