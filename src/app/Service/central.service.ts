@@ -20,6 +20,8 @@ export class CentralService {
                     "Mixed", "Utility", null, "All"];
   currentView = "view1";
   currentAttr = "AssessedValue";
+  search      = "";
+  currentSiteCat: String;
   geocoderData = new Subject<any>();
   geometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
@@ -69,13 +71,9 @@ export class CentralService {
   getParcelArray(){
     return this._arr;
   }
-  
+
   getLanduse(){
     return this.LANDUSE;
-  }
-
-  changeView1(newData){
-    this.view1Data.next(newData);
   }
 
   getViews(){
@@ -106,15 +104,6 @@ export class CentralService {
 
     this.getConcentrationValues(this._city, this._hood);
 
-  }
-  //Ignore this for now(-_-)working on a better way
-  getView(view){
-    switch (view){
-      case 'view1': return this.view1Data; break;
-      case 'view2': return this.view2Data; break;
-      case 'view3': return this.view3Data; break;
-      case 'view4': return this.view4Data; break;
-    }
   }
   getbyParcelpins(){
     this.http.get(`http://localhost:3000/view1/${this._arrStr}/`)

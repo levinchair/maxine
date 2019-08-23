@@ -70,6 +70,12 @@ mat-toolbar {
 mat-icon.search {
   padding-right: 1%;
 }
+.search-results{
+  position:absolute;
+  color:whitesmoke;
+  font-size:16px;
+  left:670px;
+}
 #search{
   position:absolute;
   background-color: #ffffff;
