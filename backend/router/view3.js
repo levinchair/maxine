@@ -22,6 +22,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
      if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
      
      this.query = utils.createQuery(req.params.param, req.params.hood);    
+     Object.defineProperty(this.query, "properties.SiteCat1" , {value: "Commercial", enumerable: true});
     
     var totalSqFeet;
     var SiteCat;
@@ -35,7 +36,6 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
             "_id":0,
             "totalsqfeet":1}} ])
     .exec()  
-        
     .then(async (data)=>{
                 console.log(JSON.stringify(data));
                 totalSqFeet=data.map(function(v){return v.totalsqfeet;});
