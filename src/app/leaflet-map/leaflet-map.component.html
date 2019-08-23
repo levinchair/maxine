@@ -1,8 +1,9 @@
 <div id="map"></div>
 <mat-radio-group
 class="map-radio-group"
-[(ngModel)]="this.centralService.currentSiteCat"
-(ngModelChange)="changed()">
+[(ngModel)]="this.currentSiteCat"
+(ngModelChange)="this.centralService.currentSiteCat.next($event)"
+>
 <mat-radio-button
   *ngFor="let sitecat of landuse"
   [ngStyle]="{'background-color': getColors(sitecat), 'color' : sitecat === null ? 'whitesmoke':' black'}"

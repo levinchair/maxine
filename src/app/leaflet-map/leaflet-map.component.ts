@@ -35,6 +35,7 @@ export class LeafletMapComponent implements OnInit {
   feature : JsonForm;
   landuse: String[];
   marker:any;
+  currentSiteCat:String;
 
   constructor(
     private centralService : CentralService,
@@ -91,9 +92,9 @@ export class LeafletMapComponent implements OnInit {
     // console.log(this.centralService.currentSiteCat);
     if(this.shapeLayer !== undefined){
         this.shapeLayer.settings.color = (index: Number, feature: JsonForm) => {
-          if(this.centralService.currentSiteCat === feature.properties.SiteCat1){
-            return L1.color.fromHex(this.getColors(this.centralService.currentSiteCat));
-          } else if(this.centralService.currentSiteCat === "All"){
+          if(this.currentSiteCat === feature.properties.SiteCat1){
+            return L1.color.fromHex(this.getColors(this.currentSiteCat));
+          } else if(this.currentSiteCat === "All"){
             return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
           } else {
             return L1.color.grey;
@@ -143,7 +144,11 @@ export class LeafletMapComponent implements OnInit {
           }
         }
       );
-      
+      this.centralService.currentSiteCat.subscribe(
+        siteCat1 => {
+          this.currentSiteCat = siteCat1;
+          this.changed();
+        });
   }
   setShapeLayer(parcels){
     if(this.shapeLayer !== undefined) this.shapeLayer.remove();

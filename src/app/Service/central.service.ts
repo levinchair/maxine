@@ -21,7 +21,7 @@ export class CentralService {
   currentView = "view1";
   currentAttr = "AssessedValue";
   search      = "";
-  currentSiteCat: String;
+  currentSiteCat = new Subject<any>();
   geocoderData = new Subject<any>();
   geometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
