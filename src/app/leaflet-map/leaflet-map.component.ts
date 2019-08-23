@@ -34,8 +34,8 @@ export class LeafletMapComponent implements OnInit {
   lassoToggle:boolean = false;
   feature : JsonForm;
   landuse: String[];
-  currentSiteCat: String;
   marker:any;
+  currentSiteCat:String;
 
   constructor(
     private centralService : CentralService,
@@ -89,8 +89,7 @@ export class LeafletMapComponent implements OnInit {
   }
   changed(){
     /** Fired when there is a change in the selection of the radio button */
-    // console.log(this.currentSiteCat);
-
+    // console.log(this.centralService.currentSiteCat);
     if(this.shapeLayer !== undefined){
         this.shapeLayer.settings.color = (index: Number, feature: JsonForm) => {
           if(this.currentSiteCat === feature.properties.SiteCat1){
@@ -126,6 +125,7 @@ export class LeafletMapComponent implements OnInit {
               //console.log(hood[i][0] + " " + hood[i][1]);
               //Found neighborhood
               this.centralService.showSpinner.next(true);
+              this.centralService.search = "";
               this.centralService.setCity(hood[i][0]);
               this.centralService.setHood(hood[i][1]);
               this.centralService.getGeometry();
@@ -135,7 +135,7 @@ export class LeafletMapComponent implements OnInit {
           }
           if(i == hood.length){
             //No neighborhood found Let user know
-            console.log("Address not within current database");
+            this.centralService.search = "Address not within our Database";
           }
           if(this.marker === undefined){
             this.marker = L.marker(data).addTo(this.map);
@@ -143,7 +143,12 @@ export class LeafletMapComponent implements OnInit {
             this.marker.setLatLng(data);
           }
         }
-      )
+      );
+      this.centralService.currentSiteCat.subscribe(
+        siteCat1 => {
+          this.currentSiteCat = siteCat1;
+          this.changed();
+        });
   }
   setShapeLayer(parcels){
     if(this.shapeLayer !== undefined) this.shapeLayer.remove();

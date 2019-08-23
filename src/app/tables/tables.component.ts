@@ -112,6 +112,9 @@ export class TablesComponent implements OnInit {
       landUseConcentrationData: this.landUseConcentrationData};
     this.modalService.init(ModalComponent, {viewDataFromTable}, {});
   }
+  print(content){
+    console.log(content);
+  }
   views: Views[] = [
     {value:'view1',viewValue:'View 1'},
     {value:'view2',viewValue:'View 2'},
