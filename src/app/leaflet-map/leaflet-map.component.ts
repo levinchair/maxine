@@ -167,9 +167,6 @@ export class LeafletMapComponent implements OnInit {
           "<b>Total SqFt</b> : " + feature.properties.total_squa + "<br>" +
           "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
         //do something when a shape is clicked
-        L.popup().setLatLng(e.latlng)
-          .setContent(popupContent).openOn(this.map);
-
         this.shapeLayer.settings.color = (index, feature : JsonForm) => {
             if(this.feature.properties.parcelpin === feature.properties.parcelpin){
               return L1.color.fromHex(this.getColors(this.feature.properties.SiteCat1));
@@ -177,7 +174,11 @@ export class LeafletMapComponent implements OnInit {
               return L1.color.grey;
             }
         }
-        this.shapeLayer.setup().render(); //slow because of resetVertices
+        if(!this.lassoToggle){
+          L.popup().setLatLng(e.latlng)
+          .setContent(popupContent).openOn(this.map);
+          this.shapeLayer.setup().render(); //slow because of resetVertices
+        }
       },
       border: true,
       color: (index : Number, feature : JsonForm) => {
@@ -229,6 +230,7 @@ export class LeafletMapComponent implements OnInit {
       this.latlng_area = [];
     }else {
       this.latlng_area = this.selectfeature.getAllAreaLatLng();
+      console.log(this.selectfeature.getFeaturesSelected());
     }
     this.lassoData = [];
     let tempArray = [];
