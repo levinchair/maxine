@@ -22,10 +22,10 @@ export class AppComponent {
   ngOnInit(){
     this.centralService.showSpinner.subscribe( bol => {
       if(bol){
-        this.dialogRef = this.dialog.open(ProgressSpinnerComponent, 
+        this.dialogRef = this.dialog.open(ProgressSpinnerComponent,
             {
               panelClass: 'transparent',
-              disableClose: true 
+              disableClose: true
             });
       } else {
         if(this.dialogRef !== undefined){
@@ -37,4 +37,5 @@ export class AppComponent {
   removeModal(){
     this.modalService.destroy();
   }
+  s
 }

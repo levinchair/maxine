@@ -9,17 +9,11 @@
     </li>
   </div>
   <app-neighborhood></app-neighborhood>
-  <!-- DO NOT DELETE BELOW, THIS WILL BE USEFUL LATER -->
-  <!-- <div class="options">
-    <h3>Land Use</h3>
-      <mat-checkbox class="" [(ngModel)]="Commercial">Commercial</mat-checkbox>
-      <mat-checkbox class="" [(ngModel)]="Government">Government</mat-checkbox><br>
-      <mat-checkbox class="" [(ngModel)]="Industrial">Industrial</mat-checkbox>
-      <mat-checkbox class="" [(ngModel)]="Institutional">Institutional</mat-checkbox><br>
-      <mat-checkbox class="" [(ngModel)]="Mixed">Mixed</mat-checkbox>
-      <mat-checkbox class="" [(ngModel)]="Residential">Residential</mat-checkbox><br>
-      <mat-checkbox class="" [(ngModel)]="Utility">Utility</mat-checkbox>
-      <mat-checkbox class="" [(ngModel)]="Null">Null</mat-checkbox><br>
-      This Only works for Tables Right Now!
-  </div> -->
+  <button id="base" (click)="this.centralService.setAreas([])">Base Case</button>
+  <button id="half1" (click)="this.centralService.setAreas(['chart'])">[Map,Table]</button>
+  <button id="half2" (click)="this.centralService.setAreas(['map'])">[Chart,Table]</button>
+  <button id="half3" (click)="this.centralService.setAreas(['table'])">[Chart,Map]</button>
+  <button id="full1" (click)="this.centralService.setAreas(['chart','map'])">[Table]</button>
+  <button id="full2" (click)="this.centralService.setAreas(['chart','table'])">[Map]</button>
+  <button id="full3" (click)="this.centralService.setAreas(['table','map'])">[Chart]</button>
 </div>

@@ -21,6 +21,7 @@ export class CentralService {
   currentView = "view1";
   currentAttr = "AssessedValue";
   search      = "";
+  areas = [];
   currentSiteCat = new Subject<any>();
   geocoderData = new Subject<any>();
   geometryData = new Subject<any>();
@@ -60,6 +61,10 @@ export class CentralService {
   setGeocoderData(data){
     this.geocoderData.next(data);
   }
+  setAreas(e:Array<String>){
+    this.areas = e;
+
+  }
   getCity(){
     return this._city;
     //console.log(this._city);
@@ -76,6 +81,28 @@ export class CentralService {
     return this.LANDUSE;
   }
 
+  resizeAreas(domE:String){
+    //areas is an array of length 0-2 contains area to remove
+    if(this.areas.length == 1){
+      //Remove one area "map","chart","tables"
+        if(this.areas[0] == domE){
+          return{'base':false,'half':false,'full':false,'hidden':true};
+        }else{
+          return{'base':false,'half':true,'full':false,'hidden':false};
+        }
+    }else if(this.areas.length == 2){
+      //Make one of the areas full screen
+      if(this.areas[0] == domE || this.areas[1] == domE){
+        return{'base':false,'half':false,'full':false,'hidden':true};
+      }else{
+        return{'base':false,'half':false,'full':true,'hidden':false};
+      }
+    }else{
+      //Base case
+      return {'base':true,'half':false,'full':false,'hidden':false};
+    }
+  }
+  //------ Get data from Database -----------//
   getViews(){
     //Set view1 data
     this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)

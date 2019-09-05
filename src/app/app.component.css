@@ -3,19 +3,31 @@
   align-items: stretch;
   width:100%;
   min-height:88%;
+  background-color: #91bad6;
+
 }
 app-charts{
-  min-width:30%;
   height:100%;
-  min-height:100%;
+  background-color: #ffffff;
 }
-app-leaflet-map{
-  min-width:40%;
+app-charts.base{
+  width:30%;
+}
+app-leaflet-map.base{
+  width:40%;
 }
 app-tables{
-  min-width:30%;
-  max-width:30%;
   background-color: #91bad6;
+  height:100%;
+}
+app-tables.base{
+  width:30%;
+}
+.half{
+  width:50%;
+}
+.full{
+  width:100%;
 }
 .header{
   height:10%;

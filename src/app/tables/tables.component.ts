@@ -5,6 +5,7 @@ import { ModalService } from '../Service/modal-service.service';
 import { ModalComponent } from '../modal/modal.component';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
 import {CurrencyPipe} from '@angular/common';
+import { HostListener } from "@angular/core";
 
 // import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 export interface Views {
@@ -23,6 +24,8 @@ export class TablesComponent implements OnInit {
   view2Data: any;
   view3Data: any;
   view4Data: any;
+  screenHeight:any;
+  screenWidth:any;
   concentrationData: any;
   landUseConcentrationData: any;
   private table1 : String = "show";
@@ -114,6 +117,15 @@ export class TablesComponent implements OnInit {
   }
   print(content){
     console.log(content);
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+     this.screenHeight = window.innerHeight;
+     this.screenWidth = window.innerWidth;
+  }
+  ngAfterViewInit(){
+      this.onResize();
+      console.log("H: " + this.screenHeight + " W: " + this.screenWidth + " " + Math.floor(this.screenHeight*0.5/38));
   }
   views: Views[] = [
     {value:'view1',viewValue:'View 1'},

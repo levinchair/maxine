@@ -23,21 +23,12 @@
 #destroyLasso{
   border-radius: 0% 5% 5% 0%;
 }
-#tall-line{
-  min-height:155px;
-  min-width:2px;
-  background-color: #ffffff;
-  z-index:4;
-  position:absolute;
-  top:0px;
-  right:15px;
-}
 .map-controls{
   position:absolute;
-  float:right;
+  display:flex;
   border: 2px solid rgba(0,0,0,0.2);
-  top:122px;
-  right: 30.5vw;
+  top:128px;
+  left:34vw;
   z-index:3;
 }
 .map-radio-group {
