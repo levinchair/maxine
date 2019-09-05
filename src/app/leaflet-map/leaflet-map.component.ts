@@ -32,6 +32,7 @@ export class LeafletMapComponent implements OnInit {
   maplabels:any;
   streets: any;
   lassoToggle:boolean = false;
+  selectionToggle: boolean = false;
   feature : JsonForm;
   landuse: String[];
   marker:any;
@@ -166,13 +167,17 @@ export class LeafletMapComponent implements OnInit {
           "<b>Address</b>    : " + feature.properties.par_addr_a + "<br>" +
           "<b>Total SqFt</b> : " + feature.properties.total_squa + "<br>" +
           "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
-        //do something when a shape is clicked
+        /** do something when a shape is clicked **/
         this.shapeLayer.settings.color = (index, feature : JsonForm) => {
             if(this.feature.properties.parcelpin === feature.properties.parcelpin){
               return L1.color.fromHex(this.getColors(this.feature.properties.SiteCat1));
             } else{
               return L1.color.grey;
             }
+        }
+        if(this.selectionToggle){
+          // add the parcel number to an array when clicked and selection tool is toggled
+          //this data will be used after pressing go
         }
         if(!this.lassoToggle){
           L.popup().setLatLng(e.latlng)
@@ -246,6 +251,7 @@ export class LeafletMapComponent implements OnInit {
     if(tempArray === null || tempArray.length == 0) {
       throw new Error("temp array is empty");
     }
+    //recent 
     let feature = [];
     let allPoints = 0;
     // console.log(JSON.stringify(this.recentData));
@@ -288,13 +294,28 @@ export class LeafletMapComponent implements OnInit {
     // this.shapeLayer.setup().render();
   }
 
-  toggleLasso(){
-    if(this.lassoToggle){
-      this.map.selectAreaFeature.disable();
-      this.lassoToggle = false;
-    }else{
-      this.selectfeature = this.map.selectAreaFeature.enable();
-      this.lassoToggle = true;
+  toggleTool(tool: String){
+    if(tool === "select"){ // then toggle selection tool
+      if(this.selectionToggle){
+        this.selectionToggle = false;
+      }else{
+        this.selectionToggle = true;
+      }
+
+      if(this.lassoToggle) {
+        this.lassoToggle = false;
+        this.map.selectAreaFeature.disable();
+      }
+      
+    } else if(tool === "lasso"){ // then toggle lasso tool
+      if(this.lassoToggle){
+        this.lassoToggle = false;
+        this.map.selectAreaFeature.disable();
+      }else{
+        this.selectionToggle = this.map.selectAreaFeature.enable();
+        this.lassoToggle = true;
+      }
+      if(this.selectionToggle) this.selectionToggle = false;
     }
   }
   //Works using https://stackoverflow.com/questions/328107/how-can-you-determine-a-point-is-between-two-other-points-on-a-line-segment
