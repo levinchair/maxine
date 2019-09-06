@@ -1,19 +1,50 @@
 <div class="control-panel-div">
-  <div class="cities">
-    <li *ngFor= "let city of cities"
-    (click)="onSelect(city)"
-    [class.selected] = "city === selectedCity">
-      <a routerLink="/showhood/{{city}}" >
-        {{ city | titlecase }}
-      </a>
-    </li>
+  <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-outline-primary" id="dropdownCity" ngbDropdownToggle>City: {{this.centralService._city | titlecase}}</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="force-scroll">
+        <button *ngFor="let city of cities"
+                  (click)="onSelect(city)"
+                  [class.selected] = "city === selectedCity"
+                  class="cityDropdownButton"
+                  ngbDropdownItem>
+                  {{ city | titlecase }}
+        </button>
+      </div>
   </div>
   <app-neighborhood></app-neighborhood>
-  <button id="base" (click)="this.centralService.setAreas([])">Base Case</button>
+  <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-outline-primary" id="dropdownLandUse" ngbDropdownToggle>Land Use: {{this.centralService._landUse | titlecase}}</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button *ngFor="let landUse of LANDUSE"
+                  (click)="selectLandUse(landUse)"
+                  [class.selected] = "landUse === selectedCity"
+                  class="landUseDropdownButton"
+                  ngbDropdownItem>
+                  {{ landUse | titlecase }}
+        </button>
+      </div>
+  </div>
+    <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+        [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+        Filters
+    </button>
+  <div id="collapseFilters" [ngbCollapse]="isCollapsed">
+    <div class="card">
+      <div class="card-body">
+        >>Filter options will go here<<
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-outline-primary goButton"
+          (click)='updateAllData()'>GO</button>
+  <button type="button" class="btn btn-outline-primary searchButton"><img style="padding-bottom:1px;"src="../assets/icons-24px/png/025-search.png" height="20" width="20"></button>
+
+
+  <!-- <button id="base" (click)="this.centralService.setAreas([])">Base Case</button>
   <button id="half1" (click)="this.centralService.setAreas(['chart'])">[Map,Table]</button>
   <button id="half2" (click)="this.centralService.setAreas(['map'])">[Chart,Table]</button>
   <button id="half3" (click)="this.centralService.setAreas(['table'])">[Chart,Map]</button>
   <button id="full1" (click)="this.centralService.setAreas(['chart','map'])">[Table]</button>
   <button id="full2" (click)="this.centralService.setAreas(['chart','table'])">[Map]</button>
-  <button id="full3" (click)="this.centralService.setAreas(['table','map'])">[Chart]</button>
+  <button id="full3" (click)="this.centralService.setAreas(['table','map'])">[Chart]</button> -->
 </div>

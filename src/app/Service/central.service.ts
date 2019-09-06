@@ -12,8 +12,9 @@ import { JsonForm } from '../../model/jsonform.model';
   providedIn: 'root'
 })
 export class CentralService {
-  private _city = "Cleveland";
-  private _hood = "Downtown";
+  private _city : string;
+  private _hood : string;
+  private _landUse : string;
   private _arr : Array<String> = [];
   private _arrStr: String;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
@@ -46,6 +47,9 @@ export class CentralService {
 	   this._hood = hood;
      //alert("hood geo: " + this._hood);
   }
+  setLandUse(landUse:string){
+    this._landUse = landUse;
+  }
   setParcelArray(arr: Array<JsonForm>){
     if(arr === undefined || arr.length == 0 || !Array.isArray(arr)){
       this._arr = [];
@@ -76,7 +80,9 @@ export class CentralService {
   getParcelArray(){
     return this._arr;
   }
-
+  get_landUse(){
+    return this._landUse;
+  }
   getLanduse(){
     return this.LANDUSE;
   }

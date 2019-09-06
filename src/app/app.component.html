@@ -1,5 +1,6 @@
 <div class="header">
-    <app-header></app-header>
+    <!-- <app-header></app-header> -->
+    <app-control-panel> loading...</app-control-panel>
 </div>
 <!-- <div class="container"
   fxLayout fxLayout.gt="small" fxLayoutAlign="left" fxLayoutGap="20px" fxLayoutGap.xs="0">
@@ -23,7 +24,7 @@
   <app-control-panel></app-control-panel>
 </div> -->
 <div class="main-body">
-  <app-charts [ngClass]="this.centralService.resizeAreas('chart')"></app-charts>
+  <!-- <app-charts [ngClass]="this.centralService.resizeAreas('chart')"></app-charts> -->
   <app-leaflet-map [ngClass]="this.centralService.resizeAreas('map')"></app-leaflet-map>
   <app-tables [ngClass]="this.centralService.resizeAreas('table')"></app-tables>
 </div>

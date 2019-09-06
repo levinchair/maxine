@@ -15,23 +15,34 @@ export class ControlPanelComponent implements OnInit {
 
   cities : string[];
   cityFromService = this.centralService.getCity();
-  selectedCity;
+  selectedCity:string;
+  selectedLandUse:string;
+  public isCollapsed = true;
   private citiesSub: Subscription;
-  
+  private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
+                    "Mixed", "Utility", "null", "All"];
+  ngOnInit() {
+     this.citiesSub = this.centralService.getCities()
+     .subscribe( (cities : string[]) => {
+       cities.splice(0,1);
+       this.cities = cities;
+       //console.log(this.cities);
+     });
+   }
   onSelect(city: string) {
     this.selectedCity = city;
     this.centralService.setCity(city);
     this.centralService.getNeighbourhood();
+    this.centralService.setHood("All");
+  }
+  selectLandUse(landUse:string){
+    this.selectedLandUse = landUse;
+    this.centralService.setLandUse(landUse);
+  }
+  updateAllData(){
+    this.centralService.showSpinner.next(true);
+    this.centralService.getGeometry();
+    this.centralService.getViews(); // inital subscribe of the data
   }
 
- ngOnInit() {
-    this.citiesSub = this.centralService.getCities()
-    .subscribe( (cities : string[]) => {
-      this.cities = cities;
-      //console.log(this.cities);
-    });
-  }
-  ngAfterViewChecked() {
-
-  }
 }

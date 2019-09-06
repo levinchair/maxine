@@ -5,8 +5,6 @@ interface options{                 //assume feature.
   owner?:String,                 //deeded_own2:String
   scale_units?:[Number,Number],  //total_com_ , units2 (only for residential)
   taxLanduse?:[String],          //tax_luc_de:String
-  city:String,                  //par_city:String
-  neighborhood:String,          //SPA_NAME:String
   lassoArea?:[[Number,Number]],  //geometry.coordinates:[Number,Number]
   sitecat1?:String,              //Sitecat1:String
   sitecat2?:String               //Sitecat2:String

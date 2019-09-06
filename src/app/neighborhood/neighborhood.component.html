@@ -1,7 +1,12 @@
-<div class="neighborhoods">
-  <li *ngFor= "let hood of neighborhood"
-      (click)="onSelect(hood)"
-      [class.selected]="hood === selectedHood">
-      <a>{{hood | titlecase}}</a>
-  </li>
+<div ngbDropdown class="d-inline-block">
+    <button class="btn btn-outline-primary" id="dropdownHood" ngbDropdownToggle>Neighborhood: {{this.centralService._hood | titlecase}}</button>
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="force-scroll">
+      <button *ngFor= "let hood of neighborhood"
+              (click)="onSelect(hood)"
+              [class.selected]="hood === selectedHood"
+              class="hoodDropdownButton"
+                ngbDropdownItem>
+                {{ hood | titlecase }}
+      </button>
+    </div>
 </div>
