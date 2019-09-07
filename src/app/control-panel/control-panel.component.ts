@@ -44,5 +44,14 @@ export class ControlPanelComponent implements OnInit {
     this.centralService.getGeometry();
     this.centralService.getViews(); // inital subscribe of the data
   }
-
+  menuTooltips = {
+    city:"You can select a city here, or draw your selection in the map below using the " +
+     "<img src='../assets/icons-24px/png/025-search.png' height='20' width='20'> icon, or " +
+     "<img src='../assets/icons-24px/png/025-search.png' height='20' width='20'> icon",
+    neighborhood: "You can narrow to a pre-determined neighborhod here",
+    landUse: "You can select a specific real property market or submarket here",
+    filters: "Further filters can be found here",
+    search: "Click here to search via address",
+    go:"Click here to update results with new seearch criteria"
+  }
 }

@@ -34,6 +34,7 @@ height: 450px;
 .searchButton, .goButton{
   float:right;
 }
+
 /* .cities {
   position:relative;
   list-style: none;
