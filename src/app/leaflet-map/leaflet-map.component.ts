@@ -26,13 +26,14 @@ export class LeafletMapComponent implements OnInit {
   selectfeature:any;
   EPSILON = 0.00001;
   recentData:any;
-  lassoData : any[];
+  toolData : any[];
   sat: boolean;
   googleSat: any;
   maplabels:any;
   streets: any;
   lassoToggle:boolean = false;
   selectionToggle: boolean = false;
+  selectedParcels: String[] = [];
   feature : JsonForm;
   landuse: String[];
   marker:any;
@@ -169,8 +170,9 @@ export class LeafletMapComponent implements OnInit {
           "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
         /** do something when a shape is clicked **/
         this.shapeLayer.settings.color = (index, feature : JsonForm) => {
-            if(this.feature.properties.parcelpin === feature.properties.parcelpin){
-              return L1.color.fromHex(this.getColors(this.feature.properties.SiteCat1));
+            let pin = feature.properties.parcelpin;
+            if(this.feature.properties.parcelpin === pin || (this.selectedParcels.includes(pin))){
+              return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
             } else{
               return L1.color.grey;
             }
@@ -178,6 +180,8 @@ export class LeafletMapComponent implements OnInit {
         if(this.selectionToggle){
           // add the parcel number to an array when clicked and selection tool is toggled
           //this data will be used after pressing go
+          console.log(feature.properties.parcelpin);
+          this.selectedParcels.push(feature.properties.parcelpin);
         }
         if(!this.lassoToggle){
           L.popup().setLatLng(e.latlng)
@@ -229,57 +233,61 @@ export class LeafletMapComponent implements OnInit {
   }
   //add check initialized/undefined flags
   getLassoPlots(){
-    //sets latlng_area to an array of Points objs, need them as touples
-    if(this.selectfeature === undefined) {
-      alert("Please use lasso to select an area");
-      this.latlng_area = [];
-    }else {
-      this.latlng_area = this.selectfeature.getAllAreaLatLng();
-      console.log(this.selectfeature.getFeaturesSelected());
-    }
-    this.lassoData = [];
-    let tempArray = [];
-    // console.log(this.latlng_area.length);
-    for(let area of this.latlng_area){
-        console.log(area);
-        for(let q = 0; q < area.length; q++){
-          let temp = [area[q].lng,area[q].lat]
-          tempArray.push(temp);
+    let toolData = [];
+        //sets latlng_area to an array of Points objs, need them as touples
+    if(this.lassoToggle){
+          if(this.selectfeature === undefined) {
+          alert("Please use lasso to select an area");
+          this.latlng_area = [];
+          
+        }else {
+          this.latlng_area = this.selectfeature.getAllAreaLatLng();
+          console.log(this.selectfeature.getFeaturesSelected());
         }
-    }
-    console.log("temparray: " + JSON.stringify(tempArray));
-    if(tempArray === null || tempArray.length == 0) {
-      throw new Error("temp array is empty");
-    }
-    //recent 
-    let feature = [];
-    let allPoints = 0;
-    // console.log(JSON.stringify(this.recentData));
-    for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
-      feature = this.recentData.features[i].geometry.coordinates;
-      for(let j = 0; j < feature.length;j++){ //for each polygon in feature
-        for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
-          allPoints = 0;
-          for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
-            //console.log(JSON.stringify(feature[0][j][l]));
-            if(inside(feature[j][k][l],tempArray) % 2 == 1){
-              allPoints+=1;
-              if(!this.lassoData.includes(this.recentData.features[i]) && allPoints == feature[j][k].length){
-               this.lassoData.push(this.recentData.features[i]);
-             }
+        let tempArray = [];
+        // console.log(this.latlng_area.length);
+        for(let area of this.latlng_area){
+            console.log(area);
+            for(let q = 0; q < area.length; q++){
+              let temp = [area[q].lng,area[q].lat]
+              tempArray.push(temp);
+            }
+        }
+        console.log("temparray: " + JSON.stringify(tempArray));
+        if(tempArray === null || tempArray.length == 0) {
+          throw new Error("temp array is empty");
+        }
+        //recent 
+        let feature = [];
+        let allPoints = 0;
+        // console.log(JSON.stringify(this.recentData));
+        for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
+          feature = this.recentData.features[i].geometry.coordinates;
+          for(let j = 0; j < feature.length;j++){ //for each polygon in feature
+            for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
+              allPoints = 0;
+              for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
+                //console.log(JSON.stringify(feature[0][j][l]));
+                if(inside(feature[j][k][l],tempArray) % 2 == 1){
+                  allPoints+=1;
+                  if(!this.toolData.includes(this.recentData.features[i]) && allPoints == feature[j][k].length){
+                  this.toolData.push(this.recentData.features[i].properties.parcelpin);
+                  }
+                }
+              }
             }
           }
         }
-      }
-    }
-    // console.log("Length:" + this.lassoData.length);
-    //console.log(JSON.stringify(this.lassoData.length));
 
-    if (!this.lassoData || this.lassoData.length == 0) {
-      throw new Error("No points were selected");
+    } else if(this.selectionToggle){
+      console.log(this.selectedParcels);
+      toolData.push(...this.selectedParcels);
+    }
+    if (!toolData || toolData.length == 0) {
+      alert("No parcels were selected");
     } else {
       this.centralService.showSpinner.next(true)
-      this.centralService.setParcelArray(this.lassoData);
+      this.centralService.setParcelArray(toolData);
       this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
     }
 
@@ -287,11 +295,9 @@ export class LeafletMapComponent implements OnInit {
   removeLassoPolygons(){
     if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
     this.centralService.setParcelArray([]);
-    //reset views after being deleted
     this.centralService.showSpinner.next(true);
     this.centralService.getGeometry();
     this.centralService.getViews();
-    // this.shapeLayer.setup().render();
   }
 
   toggleTool(tool: String){
@@ -317,34 +323,5 @@ export class LeafletMapComponent implements OnInit {
       }
       if(this.selectionToggle) this.selectionToggle = false;
     }
-  }
-  //Works using https://stackoverflow.com/questions/328107/how-can-you-determine-a-point-is-between-two-other-points-on-a-line-segment
-  //Find slope formular y = mx + b, get point on line segement AB
-  //Check new point D is between A and B on line-segment AB
-  findIntercept(A,B,C){
-    // console.log("A lng :" + A.lng + " Lat:" + A.lat);
-    // console.log("B lng :" + B.lng + " Lat:" + B.lat);
-    // console.log("C lng :" + C.lng + " Lat:" + C.lat);
-    let slope = (B.lat - A.lat)/(B.lng - A.lng);
-    let xIntercept = A.lat - (slope*A.lng);
-    //console.log("y=" + slope + "x + " + xIntercept);
-    let D = {
-      lat:(slope*C.lng + xIntercept),
-      lng:C.lng
-    };
-    let crossproduct = (D.lat - A.lat) * (B.lng - A.lng) - (D.lng - A.lng) * (B.lat - A.lat);
-    //console.log("Crossproduct:" + crossproduct);
-    if(Math.abs(crossproduct) > this.EPSILON){
-      return false;
-    }
-    let dotproduct = (C.lng - A.lng) * (B.lng - A.lng) + (C.lat - A.lat)*(B.lat - A.lat);
-    if (dotproduct < 0){
-        return false
-    }
-    let squaredlengthba = (B.lng - A.lng)*(B.lng - A.lng) + (B.lat - A.lat)*(B.lat - A.lat);
-    if (dotproduct > squaredlengthba){
-        return false
-    }
-    return true
   }
 }

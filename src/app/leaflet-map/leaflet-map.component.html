@@ -12,13 +12,13 @@
   </mat-radio-button>
 </mat-radio-group>
 <mat-button-toggle-group multiple class="map-controls">
-  <mat-button-toggle id="sattelite-button" (click)='this.setBaseLayer()'><img src="../assets/icons-24px/png/028-planet-earth.png" height="24" width="24" title="Toggle satellite view"></mat-button-toggle>
+  <mat-button-toggle title="Toggle satellite" id="sattelite-button" (click)='this.setBaseLayer()'><img src="../assets/icons-24px/png/028-planet-earth.png" height="24" width="24" title="Toggle satellite view"></mat-button-toggle>
   <mat-button-toggle-group #tools>
-    <mat-button-toggle #sele (click)="this.toggleTool('select')" [checked]="this.selectionToggle ? true : false" >CLICK</mat-button-toggle><br>
-    <mat-button-toggle #lass (click)="this.toggleTool('lasso')" [checked]="this.lassoToggle ? true : false" ><img src="../assets/icons-24px/png/043-lasso.png" height="24" width="24" ></mat-button-toggle><br>
+    <mat-button-toggle title="Click on parcels" #sele (click)="this.toggleTool('select')" [checked]="this.selectionToggle ? true : false" >CLICK</mat-button-toggle><br>
+    <mat-button-toggle title="Circle parcels" #lass (click)="this.toggleTool('lasso')" [checked]="this.lassoToggle ? true : false" ><img src="../assets/icons-24px/png/043-lasso.png" height="24" width="24" ></mat-button-toggle><br>
   </mat-button-toggle-group>
   <button id="getLasso" mat-stroked-button color="primary" (click)='this.getLassoPlots()' height="24" width="24" title="Calculate values based on Lasso Selection" >Go</button><br>
-  <button id="destroyLasso" mat-stroked-button color="warn" (click)='this.removeLassoPolygons()'><img src="../assets/icons-24px/png/008-trash.png" height="24" width="24" title="Remove all Lasso areas"></button><br>
+  <button id="destroyLasso" mat-stroked-button color="warn" (click)='this.removeLassoPolygons()'><img src="../assets/icons-24px/png/008-trash.png" height="24" width="24" title="Remove and reset map"></button><br>
 </mat-button-toggle-group>
 
 <!-- <div id='map-legend'>

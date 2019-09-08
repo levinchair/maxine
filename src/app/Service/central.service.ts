@@ -50,17 +50,13 @@ export class CentralService {
   setLandUse(landUse:string){
     this._landUse = landUse;
   }
-  setParcelArray(arr: Array<JsonForm>){
+  setParcelArray(arr: Array<String>){
     if(arr === undefined || arr.length == 0 || !Array.isArray(arr)){
       this._arr = [];
     }else {
-      for(var i =0; i < arr.length; i++){ // needs to be an array of only parcelpins
-        this._arr.push(arr[i].properties.parcelpin);
-      }
+        this._arr.push(...arr);
     }
     this._arrStr = JSON.stringify(this._arr);
-    // console.log(this._arr);
-    //console.log(this._arrStr);
   }
   setGeocoderData(data){
     this.geocoderData.next(data);
