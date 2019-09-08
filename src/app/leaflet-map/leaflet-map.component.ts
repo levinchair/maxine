@@ -294,6 +294,7 @@ export class LeafletMapComponent implements OnInit {
   }
   removeLassoPolygons(){
     if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
+    this.selectedParcels = [];
     this.centralService.setParcelArray([]);
     this.centralService.showSpinner.next(true);
     this.centralService.getGeometry();
