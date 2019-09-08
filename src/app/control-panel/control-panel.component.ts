@@ -15,23 +15,43 @@ export class ControlPanelComponent implements OnInit {
 
   cities : string[];
   cityFromService = this.centralService.getCity();
-  selectedCity;
+  selectedCity:string;
+  selectedLandUse:string;
+  public isCollapsed = true;
   private citiesSub: Subscription;
-  
+  private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
+                    "Mixed", "Utility", "null", "All"];
+  ngOnInit() {
+     this.citiesSub = this.centralService.getCities()
+     .subscribe( (cities : string[]) => {
+       cities.splice(0,1);
+       this.cities = cities;
+       //console.log(this.cities);
+     });
+   }
   onSelect(city: string) {
     this.selectedCity = city;
     this.centralService.setCity(city);
     this.centralService.getNeighbourhood();
+    this.centralService.setHood("All");
   }
-
- ngOnInit() {
-    this.citiesSub = this.centralService.getCities()
-    .subscribe( (cities : string[]) => {
-      this.cities = cities;
-      //console.log(this.cities);
-    });
+  selectLandUse(landUse:string){
+    this.selectedLandUse = landUse;
+    this.centralService.setLandUse(landUse);
   }
-  ngAfterViewChecked() {
-
+  updateAllData(){
+    this.centralService.showSpinner.next(true);
+    this.centralService.getGeometry();
+    this.centralService.getViews(); // inital subscribe of the data
+  }
+  menuTooltips = {
+    city:"You can select a city here, or draw your selection in the map below using the " +
+     "<img src='../assets/icons-24px/png/025-search.png' height='20' width='20'> icon, or " +
+     "<img src='../assets/icons-24px/png/025-search.png' height='20' width='20'> icon",
+    neighborhood: "You can narrow to a pre-determined neighborhod here",
+    landUse: "You can select a specific real property market or submarket here",
+    filters: "Further filters can be found here",
+    search: "Click here to search via address",
+    go:"Click here to update results with new seearch criteria"
   }
 }

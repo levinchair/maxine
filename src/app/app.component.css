@@ -2,13 +2,13 @@
   display:flex;
   align-items: stretch;
   width:100%;
-  min-height:88%;
+  min-height:100%;
   background-color: #91bad6;
-
 }
 app-charts{
   height:100%;
   background-color: #ffffff;
+  flex-grow:1;
 }
 app-charts.base{
   width:30%;
@@ -19,18 +19,20 @@ app-leaflet-map.base{
 app-tables{
   background-color: #91bad6;
   height:100%;
+  flex-grow:1;
 }
 app-tables.base{
   width:30%;
+}
+app-leaflet-map{
+  flex-grow:2;
+  position:relative;
 }
 .half{
   width:50%;
 }
 .full{
   width:100%;
-}
-.header{
-  height:10%;
 }
 #modal-container {
     position: fixed;

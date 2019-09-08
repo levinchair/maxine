@@ -2,7 +2,23 @@ a {
     color: black;
     text-decoration: none;
 }
-.neighborhoods{
+button{
+  background-color: whitesmoke;
+  border-radius: 0px;
+}
+.force-scroll {
+overflow-y: scroll;
+height: 450px;
+}
+.hoodDropdownButton{
+  line-height: 1em;
+}
+.hoodDropdownButton:hover{
+  color: rgb(139, 99, 96);
+  background-color: #DDD;
+  left: .1em;
+}
+/* .neighborhoods{
   position:relative;
   list-style: none;
   max-height:inherit;
@@ -23,10 +39,10 @@ a {
   margin: 5px;
   list-style: none;
   /*background: rgb(255, 255, 255); */
-  box-shadow: 2px 2px 3px rgba(0.2);
-}
-a:hover{
+  /* box-shadow: 2px 2px 3px rgba(0.2);
+} */
+/* a:hover{
   color: rgb(139, 99, 96);
   background-color: #DDD;
   left: .1em;
-}
+} */
