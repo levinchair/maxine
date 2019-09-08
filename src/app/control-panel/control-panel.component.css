@@ -35,6 +35,9 @@ height: 450px;
   float:right;
 }
 
+.my-custom-class{
+  font:200%;
+}
 /* .cities {
   position:relative;
   list-style: none;

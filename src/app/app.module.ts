@@ -53,6 +53,7 @@ import { ChartsComponent } from './charts/charts.component';
 import { TablesComponent } from './tables/tables.component';
 import { ModalComponent } from './modal/modal.component';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 
@@ -70,7 +71,8 @@ import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.co
     ChartsComponent,
     TablesComponent,
     ModalComponent,
-    ProgressSpinnerComponent
+    ProgressSpinnerComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
