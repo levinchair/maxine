@@ -14,7 +14,7 @@ import { ProgressSpinnerComponent } from "./progress-spinner/progress-spinner.co
 })
 export class AppComponent {
   private dialogRef: MatDialogRef<ProgressSpinnerComponent>;
-
+  
   constructor(private modalService: ModalService,
               private centralService: CentralService,
               private dialog: MatDialog){}
@@ -37,5 +37,5 @@ export class AppComponent {
   removeModal(){
     this.modalService.destroy();
   }
-  s
+
 }

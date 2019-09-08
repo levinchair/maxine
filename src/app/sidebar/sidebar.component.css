@@ -1,0 +1,36 @@
+app-tables{
+  background-color: #91bad6;
+  height:100%;
+  display:none;
+}
+.mat-expansion-panel-body{
+  padding:0px !important;
+  border-radius: 0px;
+}
+mat-expansion-panel{
+  border-radius: 0px !important;
+  margin:0px !important;
+  border-width:0px 0px 1px 2px;
+  border-style: solid;
+  border-color: #528aae;
+  display:block;
+}
+mat-expansion-panel-header{
+  border-width: 0px 0px 1px 0px;
+  border-style: solid;
+  border-color: #528aae;
+}
+.mat-expanded{
+  background-color: #ffffff;
+}
+#expand{
+  border-width:2px 0px 2px 2px;
+  border-style:solid;
+  border-color:grey;
+  position:absolute;
+  width:auto;
+  padding:1px 0px 2px 0px;
+  left:-22px;
+  top:47.5vh;
+  z-index:4;
+}

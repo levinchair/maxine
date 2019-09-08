@@ -1,10 +1,14 @@
 .chart-container{
-  padding:15px;
   position:relative !important;
-  height:76vh;
-  min-height:76vh;
+  height:45vh;
+  padding:10px;
+  background-color:#91bad6;
 }
-mat-form-field{
+canvas{
+  padding:15px;
+  background-color: #ffffff;
+}
+/* mat-form-field{
   margin-top:5px;
   background-color: #ffffff;
   padding-top:5px;
@@ -18,6 +22,5 @@ mat-form-field{
   width:100%;
   align-items: baseline;
   justify-content: space-evenly;
-  background-color: #91bad6;
   padding-bottom:5px;
-}
+} */
