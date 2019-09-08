@@ -13,7 +13,6 @@ app-sidebar{
   max-width:33vw;
   flex-grow:1;
   position:relative;
-  right:-33vw;
 }
 
 #modal-container {
