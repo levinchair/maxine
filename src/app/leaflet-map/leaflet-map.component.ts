@@ -169,25 +169,47 @@ export class LeafletMapComponent implements OnInit {
           "<b>Total SqFt</b> : " + feature.properties.total_squa + "<br>" +
           "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
         /** do something when a shape is clicked **/
-        this.shapeLayer.settings.color = (index, feature : JsonForm) => {
-            let pin = feature.properties.parcelpin;
-            if(this.feature.properties.parcelpin === pin || (this.selectedParcels.includes(pin))){
-              return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
-            } else{
-              return L1.color.grey;
-            }
-        }
         if(this.selectionToggle){
           // add the parcel number to an array when clicked and selection tool is toggled
           //this data will be used after pressing go
-          console.log(feature.properties.parcelpin);
-          this.selectedParcels.push(feature.properties.parcelpin);
+          // console.log(feature.properties.parcelpin);
+          if(!this.selectedParcels.includes(feature.properties.parcelpin)){
+            this.selectedParcels.push(feature.properties.parcelpin);
+          } else {
+            this.selectedParcels = this.selectedParcels.filter((x) => x !== feature.properties.parcelpin);
+            console.log(this.selectedParcels);
+          }
         }
-        if(!this.lassoToggle){
+        this.shapeLayer.settings.color = (index, feature : JsonForm) => {
+            let pin = feature.properties.parcelpin;
+            if(!this.selectionToggle){
+              if(this.feature.properties.parcelpin === pin){
+                return L1.color.fromHex(this.getColors(this.feature.properties.SiteCat1));
+              } else {
+                return L1.color.grey;
+              }
+            } else {
+              if(this.selectedParcels.includes(pin)){
+                return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
+              } else {
+                return L1.color.grey;
+              }
+            }
+            // if(this.selectedParcels.includes(pin)){
+            //   return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
+            // } else if(this.feature.properties.parcelpin === pin){
+            //   if(!this.selectionToggle) return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
+            // }else{
+            //   return L1.color.grey;
+            // }
+        }
+        //console.log("value of lassotoggle: %s, value of selectionToggle: %s", this.lassoToggle, this.selectionToggle);
+        if(!this.lassoToggle && !this.selectionToggle){
           L.popup().setLatLng(e.latlng)
           .setContent(popupContent).openOn(this.map);
-          this.shapeLayer.setup().render(); //slow because of resetVertices
         }
+        this.shapeLayer.setup().render(); //slow because of resetVertices
+
       },
       border: true,
       color: (index : Number, feature : JsonForm) => {
