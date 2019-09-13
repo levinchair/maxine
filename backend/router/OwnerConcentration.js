@@ -4,6 +4,7 @@ var db = require("../model/db.js").parcelDataModel;
 var utils = require('./utils');
 var request = require("request");
 
+/** This is router for sending and recieving owner concentration */
 
 router.get("/concentration/:param?/:hood?", (req, res, next) => {
   utils.processOwnerConcentration(req.params.param, req.params.hood)

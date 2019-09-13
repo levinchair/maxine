@@ -40,7 +40,6 @@ import {MatDialogModule} from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { MapComponent } from './map/map.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ControlPanelComponent } from './control-panel/control-panel.component';
 import { NeighborhoodComponent } from './neighborhood/neighborhood.component';
@@ -63,7 +62,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   declarations: [
     AppComponent,
     HeaderComponent,
-    MapComponent,
     ControlPanelComponent,
     NeighborhoodComponent,
     ToggleableDirective,

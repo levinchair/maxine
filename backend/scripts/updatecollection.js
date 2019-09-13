@@ -49,13 +49,13 @@ var cuyahoga = mongoose.model("cuyahoga", parceldataSchema);
 var getStream = function () {
     var jsonData = filename,
         stream = fs.createReadStream(jsonData, {encoding: 'utf8'}),
-        parser = JSONStream.parse('*');
+        parser = JSONStream.parse('features.*'); // or use '*' if it is a json array
         return stream.pipe(parser);
 };
 
 getStream()
 .pipe(es.mapSync(function (data) {
-    console.log(data);    
+    //console.log(data);    
      cuyahoga.replaceOne({"properties.parcelpin" : data.properties.parcelpin}, data, {upsert : true}, 
      (err, res ) => { //callback
         if(err) console.log(err.errmsg);

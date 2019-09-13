@@ -256,7 +256,6 @@ export class LeafletMapComponent implements OnInit {
   //add check initialized/undefined flags
   getLassoPlots(){
     let toolData = [];
-        //sets latlng_area to an array of Points objs, need them as touples
     if(this.lassoToggle){
           if(this.selectfeature === undefined) {
           alert("Please use lasso to select an area");
@@ -292,8 +291,8 @@ export class LeafletMapComponent implements OnInit {
                 //console.log(JSON.stringify(feature[0][j][l]));
                 if(inside(feature[j][k][l],tempArray) % 2 == 1){
                   allPoints+=1;
-                  if(!this.toolData.includes(this.recentData.features[i]) && allPoints == feature[j][k].length){
-                  this.toolData.push(this.recentData.features[i].properties.parcelpin);
+                  if(!toolData.includes(this.recentData.features[i]) && allPoints == feature[j][k].length){
+                    toolData.push(this.recentData.features[i].properties.parcelpin);
                   }
                 }
               }
@@ -335,16 +334,18 @@ export class LeafletMapComponent implements OnInit {
         this.lassoToggle = false;
         this.map.selectAreaFeature.disable();
       }
-      
     } else if(tool === "lasso"){ // then toggle lasso tool
       if(this.lassoToggle){
         this.lassoToggle = false;
         this.map.selectAreaFeature.disable();
+        console.log(this.map.selectAreaFeature.disable());
       }else{
-        this.selectionToggle = this.map.selectAreaFeature.enable();
+        console.log(this.map.selectAreaFeature.enable());
+        this.selectfeature = this.map.selectAreaFeature.enable();
         this.lassoToggle = true;
       }
       if(this.selectionToggle) this.selectionToggle = false;
+      
     }
   }
 }
