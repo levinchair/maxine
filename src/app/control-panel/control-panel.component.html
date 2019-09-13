@@ -41,16 +41,37 @@
   <div id="collapseFilters" [ngbCollapse]="isCollapsed">
     <div class="card">
       <div class="card-body">
-        <div class="acres-container">
-          <p>Acres <input type="number" [(ngModel)]="minValue"><input type="number" [(ngModel)]="maxValue"></p>
-          <div class="custom-slider">
-            <ng5-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ng5-slider>
+        <div class="top-row">
+          <div class="acres-container">
+            <p>Acres <input type="number" [(ngModel)]="minValue"><input type="number" [(ngModel)]="maxValue"></p>
+            <div class="custom-slider">
+              <ng5-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ng5-slider>
+            </div>
+          </div>
+          <div ngbDropdown class="d-inline-block abatement-container">
+            Abatement
+            <img class="info-button" title="info-button" src="../assets/icons-24px/png/iconfinder_exclamation.png" height="20" width="20" title="info-button">
+            <br>
+              <button type="button" class="btn btn-outline-primary" id="dropdownAbatement" ngbDropdownToggle>Select</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="abatement-body">
+                <mat-checkbox class="abatement-checkbox"
+                  *ngFor="let abatement of abatementsList">
+                 {{abatement}}
+                 </mat-checkbox>
+              </div>
           </div>
         </div>
-        <div class="value-container">
-          <p>Value <input type="number" [(ngModel)]="minValue"><input type="number" [(ngModel)]="maxValue"></p>
-          <div class="custom-slider">
-            <ng5-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ng5-slider>
+        <div class="bottom-row">
+          <div class="value-container">
+            <p>Value <input type="number" [(ngModel)]="minValue"><input type="number" [(ngModel)]="maxValue"></p>
+            <div class="custom-slider">
+              <ng5-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ng5-slider>
+            </div>
+          </div>
+          <div ngbDropdown class="d-inline-block owner-container">
+            Owner
+            <br>
+              <button class="btn btn-outline-primary" id="dropdownOwner"></button>
           </div>
         </div>
       </div>

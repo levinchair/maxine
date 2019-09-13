@@ -18,6 +18,7 @@ export class ControlPanelComponent implements OnInit {
   cityFromService = this.centralService.getCity();
   selectedCity:string;
   selectedLandUse:string;
+  abatementsList = [];
   public isCollapsed = true;
   private citiesSub: Subscription;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
@@ -35,6 +36,9 @@ export class ControlPanelComponent implements OnInit {
        this.cities = cities;
        //console.log(this.cities);
      });
+     for(let i = 1; i < 27; i++){
+       this.abatementsList.push(i);
+     }
    }
   onSelect(city: string) {
     this.selectedCity = city;

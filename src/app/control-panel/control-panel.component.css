@@ -55,7 +55,35 @@ ng5-slider{
 p input{
   width:66px;
 }
+.bottom-row{
+  padding-top:15px;
+}
+.top-row,.bottom-row{
+  max-width:25vw;
+  display:flex;
+  justify-content:flex-start;
 
+}
+.owner-container, .abatement-container{
+  padding-left:15px;
+}
+.info-button{
+  margin: -1px 0px 0px -2px;
+  cursor:pointer;
+}
+#dropdownAbatement,#dropdownOwner{
+  width:100px;
+}
+#dropdownOwner{
+  height:38px;
+}
+.abatement-body{
+  padding:10px;
+  width:180px;
+}
+mat-checkbox{
+  padding-right:5px;
+}
 /*-------------- Custom Slider CSS -------------------------------------------*/
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-bar {
   background: #91bad6;
