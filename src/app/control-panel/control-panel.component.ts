@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CentralService } from '../Service/central.service';
+import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-control-panel',
@@ -21,6 +22,12 @@ export class ControlPanelComponent implements OnInit {
   private citiesSub: Subscription;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
                     "Mixed", "Utility", "null", "All"];
+   minValue: number = 25;
+   maxValue: number = 75;
+   options: Options = {
+     floor: 0,
+     ceil: 100
+   };
   ngOnInit() {
      this.citiesSub = this.centralService.getCities()
      .subscribe( (cities : string[]) => {

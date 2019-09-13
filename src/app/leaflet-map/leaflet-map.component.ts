@@ -74,7 +74,7 @@ export class LeafletMapComponent implements OnInit {
     this.setBaseLayer();
     //Neighborhood layers
     var hBoundaries = new NeighborhoodBoundaries();
-    console.log(hBoundaries.data);
+    // console.log(hBoundaries.data);
     for(var k = 0; k < hBoundaries.data.records.length; k++){
       var tempPolygon = hBoundaries.data.records[k].fields.geo_shape.coordinates[0];
       for(var i = 0; i < tempPolygon.length; i++){
@@ -260,7 +260,7 @@ export class LeafletMapComponent implements OnInit {
           if(this.selectfeature === undefined) {
           alert("Please use lasso to select an area");
           this.latlng_area = [];
-          
+
         }else {
           this.latlng_area = this.selectfeature.getAllAreaLatLng();
           console.log(this.selectfeature.getFeaturesSelected());
@@ -278,7 +278,7 @@ export class LeafletMapComponent implements OnInit {
         if(tempArray === null || tempArray.length == 0) {
           throw new Error("temp array is empty");
         }
-        //recent 
+        //recent
         let feature = [];
         let allPoints = 0;
         // console.log(JSON.stringify(this.recentData));
@@ -345,7 +345,7 @@ export class LeafletMapComponent implements OnInit {
         this.lassoToggle = true;
       }
       if(this.selectionToggle) this.selectionToggle = false;
-      
+
     }
   }
 }

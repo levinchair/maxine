@@ -3,8 +3,8 @@
       <button class="btn btn-outline-primary"
       id="dropdownCity" ngbDropdownToggle
       [ngbPopover]="popAContent"
-      triggers="mouseenter:mouseleave" [popoverTitle]="popATitle"
-      >City: {{this.centralService._city | titlecase}}</button>
+      triggers="mouseenter:mouseleave" [popoverTitle]="popATitle">
+      City: {{this.centralService._city | titlecase}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="force-scroll">
         <button *ngFor="let city of cities"
                   (click)="onSelect(city)"
@@ -41,7 +41,18 @@
   <div id="collapseFilters" [ngbCollapse]="isCollapsed">
     <div class="card">
       <div class="card-body">
-        >>Filter options will go here<<
+        <div class="acres-container">
+          <p>Acres <input type="number" [(ngModel)]="minValue"><input type="number" [(ngModel)]="maxValue"></p>
+          <div class="custom-slider">
+            <ng5-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ng5-slider>
+          </div>
+        </div>
+        <div class="value-container">
+          <p>Value <input type="number" [(ngModel)]="minValue"><input type="number" [(ngModel)]="maxValue"></p>
+          <div class="custom-slider">
+            <ng5-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options"></ng5-slider>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -61,7 +72,7 @@
 <ng-template #popAContent>
   You can select a city here, or draw your selection in the map below using the
   <img src='../assets/icons-24px/png/043-lasso.png' height='20' width='20'> icon or
-  <img src='../assets/icons-24px/png/043-lasso.png' height='20' width='20'> icon
+  <img src='../assets/icons-24px/png/icons8-hand-cursor-24.png' height='20' width='20'> icon
  </ng-template>
 <ng-template #popATitle>
    <img src='../assets/icons-50px/png/icons8-circled-a-50.png' height='20' width='20'>

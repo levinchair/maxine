@@ -20,6 +20,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule} from '@angular/material/button';
 import { CurrencyPipe} from '@angular/common';
 import { NgxMapboxGLModule } from 'ngx-mapbox-gl';
+
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,9 +36,10 @@ import { MatTableModule } from '@angular/material/table';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-import {MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatDialogModule} from '@angular/material/dialog';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
+import { Ng5SliderModule } from 'ng5-slider';
+//Components
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -112,7 +114,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     MatCheckboxModule,
     MatButtonToggleModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    Ng5SliderModule
   ],
   providers: [
     LocationService,
