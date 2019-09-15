@@ -14,26 +14,19 @@ import { NeighborhoodBoundaries } from '../../assets/data/cle_neighborhoods';
   styleUrls: ['./leaflet-map.component.css']
 })
 export class LeafletMapComponent implements OnInit {
-  features: any;
-  shapeLayer : any;
   map: any;
+  shapeLayer : any;
   geoJsonLayer;
-  layerGroup: any;
   neighborhoodBoundaries = [];
-  html_city: String;
-  html_neighborhood: String;
-  latlng_area:any;
   selectfeature:any;
-  EPSILON = 0.00001;
   recentData:any;
-  toolData : any[];
   sat: boolean;
   googleSat: any;
   maplabels:any;
   streets: any;
   lassoToggle:boolean = false;
   selectionToggle: boolean = false;
-  selectedParcels: String[] = [];
+  selectedParcels: String[] = []; // holds all the parcels selected by tools
   feature : JsonForm;
   landuse: String[];
   marker:any;
@@ -49,9 +42,7 @@ export class LeafletMapComponent implements OnInit {
 
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
-    //for parcelpin data. Will be fired everytime there is an update to the data
-    this.sub();
-    //init layers
+    this.sub();//for parcelpin data. Will be fired everytime there is an update to the data
     this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
       maxZoom: 20,
       subdomains:['mt0','mt1','mt2','mt3']
@@ -61,15 +52,13 @@ export class LeafletMapComponent implements OnInit {
       subdomains: 'abcd',
       maxZoom: 19,
       zIndex: 1}).addTo(this.map);
-    //only labels
     this.maplabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
     	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     	subdomains: 'abcd',
     	maxZoom: 19,
       zIndex: 3}).addTo(this.map);
-    //Initialize geoJsonLayer
+    //Initialize geoJsonLayer for camera movement
     this.geoJsonLayer = L.geoJSON();
-    //set layer to the map
     this.sat = true;
     this.setBaseLayer();
     //Neighborhood layers
@@ -159,7 +148,7 @@ export class LeafletMapComponent implements OnInit {
       data: parcels,
       map: this.map,
       opacity: 0.7,
-      click:(e, feature : JsonForm) => {
+      click: (e, feature : JsonForm) => { // fired everytime a feature is clicked
         this.feature = feature;
         let popupContent = "<p>" +
           "<b>Parcel Pin</b> : " + feature.properties.parcelpin + "<br>" +
@@ -177,12 +166,11 @@ export class LeafletMapComponent implements OnInit {
             this.selectedParcels.push(feature.properties.parcelpin);
           } else {
             this.selectedParcels = this.selectedParcels.filter((x) => x !== feature.properties.parcelpin);
-            console.log(this.selectedParcels);
           }
         }
-        this.shapeLayer.settings.color = (index, feature : JsonForm) => {
+        this.shapeLayer.settings.color =  (index, feature : JsonForm) => {
             let pin = feature.properties.parcelpin;
-            if(!this.selectionToggle){
+            if(!this.selectionToggle && !this.lassoToggle){
               if(this.feature.properties.parcelpin === pin){
                 return L1.color.fromHex(this.getColors(this.feature.properties.SiteCat1));
               } else {
@@ -195,21 +183,13 @@ export class LeafletMapComponent implements OnInit {
                 return L1.color.grey;
               }
             }
-            // if(this.selectedParcels.includes(pin)){
-            //   return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
-            // } else if(this.feature.properties.parcelpin === pin){
-            //   if(!this.selectionToggle) return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
-            // }else{
-            //   return L1.color.grey;
-            // }
         }
-        //console.log("value of lassotoggle: %s, value of selectionToggle: %s", this.lassoToggle, this.selectionToggle);
         if(!this.lassoToggle && !this.selectionToggle){
           L.popup().setLatLng(e.latlng)
           .setContent(popupContent).openOn(this.map);
         }
         this.shapeLayer.setup().render(); //slow because of resetVertices
-
+  
       },
       border: true,
       color: (index : Number, feature : JsonForm) => {
@@ -217,7 +197,7 @@ export class LeafletMapComponent implements OnInit {
         return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
       }
     });
-  }
+  }  
   getColors(zoneType){
     //console.log(zoneType);
     switch(zoneType){
@@ -255,63 +235,15 @@ export class LeafletMapComponent implements OnInit {
   }
   //add check initialized/undefined flags
   getLassoPlots(){
-    let toolData = [];
-    if(this.lassoToggle){
-          if(this.selectfeature === undefined) {
-          alert("Please use lasso to select an area");
-          this.latlng_area = [];
-
-        }else {
-          this.latlng_area = this.selectfeature.getAllAreaLatLng();
-          console.log(this.selectfeature.getFeaturesSelected());
-        }
-        let tempArray = [];
-        // console.log(this.latlng_area.length);
-        for(let area of this.latlng_area){
-            console.log(area);
-            for(let q = 0; q < area.length; q++){
-              let temp = [area[q].lng,area[q].lat]
-              tempArray.push(temp);
-            }
-        }
-        console.log("temparray: " + JSON.stringify(tempArray));
-        if(tempArray === null || tempArray.length == 0) {
-          throw new Error("temp array is empty");
-        }
-        //recent
-        let feature = [];
-        let allPoints = 0;
-        // console.log(JSON.stringify(this.recentData));
-        for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
-          feature = this.recentData.features[i].geometry.coordinates;
-          for(let j = 0; j < feature.length;j++){ //for each polygon in feature
-            for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
-              allPoints = 0;
-              for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
-                //console.log(JSON.stringify(feature[0][j][l]));
-                if(inside(feature[j][k][l],tempArray) % 2 == 1){
-                  allPoints+=1;
-                  if(!toolData.includes(this.recentData.features[i]) && allPoints == feature[j][k].length){
-                    toolData.push(this.recentData.features[i].properties.parcelpin);
-                  }
-                }
-              }
-            }
-          }
-        }
-
-    } else if(this.selectionToggle){
-      console.log(this.selectedParcels);
-      toolData.push(...this.selectedParcels);
-    }
+    let toolData = [...this.selectedParcels];
     if (!toolData || toolData.length == 0) {
       alert("No parcels were selected");
+      // this.removeLassoPolygons();
     } else {
       this.centralService.showSpinner.next(true)
       this.centralService.setParcelArray(toolData);
       this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
     }
-
   }
   removeLassoPolygons(){
     if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
@@ -321,7 +253,44 @@ export class LeafletMapComponent implements OnInit {
     this.centralService.getGeometry();
     this.centralService.getViews();
   }
-
+  addLassoData(){ //fired
+    let tempArray = [];
+    // this.selectfeature = this.map.selectAreaFeature.enable();
+    let latlng_area = this.selectfeature.getAreaLatLng();
+    for(let latlng of latlng_area){
+      let temp = [latlng.lng,latlng.lat];
+      tempArray.push(temp);
+    }
+    if(tempArray === null || tempArray.length == 0) {
+      throw new Error("temp array is empty");
+    }
+    let feature = [];
+    let allPoints = 0;
+    for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
+      feature = this.recentData.features[i].geometry.coordinates;
+      for(let j = 0; j < feature.length;j++){ //for each polygon in feature
+        for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
+          allPoints = 0;
+          for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
+            if(inside(feature[j][k][l],tempArray) % 2 == 1){
+              allPoints+=1;
+              if(!this.selectedParcels.includes(this.recentData.features[i].properties.parcelpin) && allPoints == feature[j][k].length){
+                this.selectedParcels.push(this.recentData.features[i].properties.parcelpin);
+              }
+            }
+          }
+        }
+      }
+    }
+    this.shapeLayer.settings.color = (e, feature: JsonForm) => { // change color of the circled parcels
+      if(this.selectedParcels.includes(feature.properties.parcelpin)){
+        return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
+      } else {
+        return L1.color.grey;
+      }
+    }
+    this.shapeLayer.setup().render();
+  }
   toggleTool(tool: String){
     if(tool === "select"){ // then toggle selection tool
       if(this.selectionToggle){
@@ -331,18 +300,20 @@ export class LeafletMapComponent implements OnInit {
       }
 
       if(this.lassoToggle) {
-        this.lassoToggle = false;
         this.map.selectAreaFeature.disable();
+        this.lassoToggle = false;
+        this.map.off("mouseup");
       }
     } else if(tool === "lasso"){ // then toggle lasso tool
       if(this.lassoToggle){
         this.lassoToggle = false;
         this.map.selectAreaFeature.disable();
-        console.log(this.map.selectAreaFeature.disable());
+        this.map.off("mouseup");
       }else{
-        console.log(this.map.selectAreaFeature.enable());
         this.selectfeature = this.map.selectAreaFeature.enable();
+        // console.log(this.selectfeature);
         this.lassoToggle = true;
+        this.map.on("mouseup", this.addLassoData, this);
       }
       if(this.selectionToggle) this.selectionToggle = false;
 
