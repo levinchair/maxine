@@ -161,7 +161,6 @@ export class LeafletMapComponent implements OnInit {
         if(this.selectionToggle){
           // add the parcel number to an array when clicked and selection tool is toggled
           //this data will be used after pressing go
-          // console.log(feature.properties.parcelpin);
           if(!this.selectedParcels.includes(feature.properties.parcelpin)){
             this.selectedParcels.push(feature.properties.parcelpin);
           } else {
@@ -236,13 +235,18 @@ export class LeafletMapComponent implements OnInit {
   //add check initialized/undefined flags
   getLassoPlots(){
     let toolData = [...this.selectedParcels];
+    
+    console.log(this.selectedParcels);
     if (!toolData || toolData.length == 0) {
       alert("No parcels were selected");
       // this.removeLassoPolygons();
     } else {
-      this.centralService.showSpinner.next(true)
+      if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
+      this.centralService.showSpinner.next(true);
       this.centralService.setParcelArray(toolData);
       this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
+      this.selectedParcels = [];
+      toolData = [];
     }
   }
   removeLassoPolygons(){

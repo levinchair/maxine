@@ -54,9 +54,13 @@ export class CentralService {
     if(arr === undefined || arr.length == 0 || !Array.isArray(arr)){
       this._arr = [];
     }else {
+        this._arr = [];
         this._arr.push(...arr);
     }
     this._arrStr = JSON.stringify(this._arr);
+    //here e can check if size is too large
+    // console.log(this._arr);
+    // console.log(this._arr.length);
   }
   setGeocoderData(data){
     this.geocoderData.next(data);

@@ -3,7 +3,6 @@
   box-sizing: border-box;
   background: whitesmoke;
   z-index:1;
-  cursor:crosshair;
 }
 #sattelite-button{
   border-right: 1px solid #ccc;

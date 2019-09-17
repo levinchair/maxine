@@ -1,4 +1,4 @@
-<div id="map"></div>
+<div [ngStyle]="{cursor: this.selectionToggle ? 'pointer' : 'crosshair'}" id="map"></div>
 <mat-radio-group
   class="map-radio-group"
   [(ngModel)]="this.currentSiteCat"
