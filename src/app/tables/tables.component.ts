@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, Inject, EventEmitter, Output,Input} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CentralService } from '../Service/central.service';
-import { ModalService } from '../Service/modal-service.service';
-import { ModalComponent } from '../modal/modal.component';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
 import {CurrencyPipe} from '@angular/common';
 import { HostListener } from "@angular/core";
@@ -37,14 +35,10 @@ export class TablesComponent implements OnInit {
 
   constructor(
     private centralService: CentralService,
-    private modalService : ModalService,
     private cp: CurrencyPipe
   ) { }
 
   ngOnInit() {
-    var viewDataFromTable = {
-      modal:"first"};
-    this.modalService.init(ModalComponent, {viewDataFromTable}, {});
     this.centralService.view1Data
       .subscribe( view => {
         this.view1Data = view;
@@ -104,29 +98,11 @@ export class TablesComponent implements OnInit {
       return value.toFixed(precision);
     }
   }
-  initTableModal(){
-    var viewDataFromTable = {
-      modal:"tables",
-      view1Data: this.view1Data,
-      view2Data: this.view2Data,
-      view3Data: this.view3Data,
-      view4Data: this.view4Data,
-      concentrationData: this.concentrationData,
-      landUseConcentrationData: this.landUseConcentrationData};
-    this.modalService.init(ModalComponent, {viewDataFromTable}, {});
-  }
+
   print(content){
     console.log(content);
   }
-  @HostListener('window:resize', ['$event'])
-  onResize(event?) {
-     this.screenHeight = window.innerHeight;
-     this.screenWidth = window.innerWidth;
-  }
-  ngAfterViewInit(){
-      this.onResize();
-      console.log("H: " + this.screenHeight + " W: " + this.screenWidth + " " + Math.floor(this.screenHeight*0.5/38));
-  }
+
   views: Views[] = [
     {value:'view1',viewValue:'View 1'},
     {value:'view2',viewValue:'View 2'},

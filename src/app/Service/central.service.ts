@@ -7,7 +7,7 @@ import {MatSortModule} from '@angular/material/sort';
 import { featureCollection } from  "../../model/featurecollection.model";
 import { view1 } from  "../../model/view1.model";
 import { JsonForm } from '../../model/jsonform.model';
-
+import options from "options";
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +23,7 @@ export class CentralService {
   currentAttr = "AssessedValue";
   search      = "";
   areas = [];
+  options : options;
   currentSiteCat = new Subject<any>();
   geocoderData = new Subject<any>();
   geometryData = new Subject<any>();

@@ -2,8 +2,6 @@ import { LocationService } from '../Service/location.service';
 import { Component, OnInit,EventEmitter, ElementRef, ViewChild, Input, Output,Inject, NgZone, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CentralService } from '../Service/central.service';
-import { ModalService } from '../Service/modal-service.service';
-import { ModalComponent } from '../modal/modal.component';
 import { Location } from '../../model/location.model';
 import { NgxMapboxGLModule } from 'ngx-mapbox-gl';
 
@@ -19,8 +17,7 @@ export class HeaderComponent implements OnInit {
   map: any;
   result: any;
   bounds:Array<Number> = [-84.81,38.38,-80.49,42.0];
-  constructor( private centralService: CentralService,
-    private modalService : ModalService) { }
+  constructor( private centralService: CentralService) { }
 
   ngOnInit() {
 
@@ -31,11 +28,6 @@ export class HeaderComponent implements OnInit {
       this.centralService.getViews(); // inital subscribe of the data
       //Closes dropdown menu if opened
       this.matExpansionPanelRef.close();
-    }
-    helpModal(){
-      var viewDataFromTable = {
-        modal:"first"};
-      this.modalService.init(ModalComponent, {viewDataFromTable}, {});
     }
     searchEvent(e){
       let tempArr = [e.result.center[1],e.result.center[0]]

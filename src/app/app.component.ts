@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ModalService } from './Service/modal-service.service';
 import { CentralService } from './Service/central.service';
 
 //material
@@ -14,9 +13,8 @@ import { ProgressSpinnerComponent } from "./progress-spinner/progress-spinner.co
 })
 export class AppComponent {
   private dialogRef: MatDialogRef<ProgressSpinnerComponent>;
-  
-  constructor(private modalService: ModalService,
-              private centralService: CentralService,
+
+  constructor(private centralService: CentralService,
               private dialog: MatDialog){}
 
   ngOnInit(){
@@ -33,9 +31,6 @@ export class AppComponent {
         }
       }
     });
-  }
-  removeModal(){
-    this.modalService.destroy();
   }
 
 }

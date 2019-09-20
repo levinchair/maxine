@@ -4,6 +4,10 @@
   background-color: #528aae;
   padding:5px;
 }
+.popA{
+  min-width:500px;
+  overflow-wrap: break-word;
+}
 /* a {
   color: black;
   text-decoration: none;
@@ -71,7 +75,7 @@ p input{
   margin: -1px 0px 0px -2px;
   cursor:pointer;
 }
-#dropdownAbatement,#dropdownOwner{
+#dropdownAbatement{
   width:100px;
 }
 #dropdownOwner{
@@ -83,6 +87,15 @@ p input{
 }
 mat-checkbox{
   padding-right:5px;
+}
+.form-control{
+  width:100px;
+  transition-property: width;
+  transition-duration:0.3s;
+  transition-timing-function: linear;
+}
+.form-control:focus{
+  width:300px;
 }
 /*-------------- Custom Slider CSS -------------------------------------------*/
 ::ng-deep .custom-slider .ng5-slider .ng5-slider-bar {

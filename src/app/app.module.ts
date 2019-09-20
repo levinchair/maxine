@@ -12,8 +12,6 @@ import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts';
-import { ModalService } from './Service/modal-service.service';
-import { DomService } from './Service/dom-service.service';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -52,9 +50,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { ChartsComponent } from './charts/charts.component';
 import { TablesComponent } from './tables/tables.component';
-import { ModalComponent } from './modal/modal.component';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { LandingPageContentComponent } from './landing-page-content/landing-page-content.component';
 
 
 
@@ -70,9 +68,9 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     LeafletMapComponent,
     ChartsComponent,
     TablesComponent,
-    ModalComponent,
     ProgressSpinnerComponent,
-    SidebarComponent
+    SidebarComponent,
+    LandingPageContentComponent
   ],
   imports: [
     BrowserModule,
@@ -126,13 +124,11 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     ToggleService,
 	  GeometryService,
     GoogleMapsAPIWrapper,
-    ModalService,
-    DomService,
     CurrencyPipe
   ],
   entryComponents:[
-    ModalComponent,
-    ProgressSpinnerComponent
+    ProgressSpinnerComponent,
+    LandingPageContentComponent
   ],
   bootstrap: [AppComponent]
 })

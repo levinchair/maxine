@@ -1,0 +1,12 @@
+.lp-choose{
+  display:flex;
+  max-width:600px;
+  align-items: stretch;
+}
+.choice{
+}
+.btn-choice{
+  flex-grow: 1;
+  width:auto;
+  background-color: #91bad6;
+}

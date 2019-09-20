@@ -18,6 +18,9 @@ height: 450px;
   background-color: #DDD;
   left: .1em;
 }
+.info{
+  padding:5px;
+}
 /* .neighborhoods{
   position:relative;
   list-style: none;

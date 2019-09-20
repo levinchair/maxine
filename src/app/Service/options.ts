@@ -1,4 +1,4 @@
-interface options{                 //assume feature.
+export interface options{                 //assume feature.
   acres?:[Number,Number],        //totalAcres:Number
   value?:[Number,Number],        //gross_ce_2:Number
   abatement?:[String],           //tax_abatem:String
