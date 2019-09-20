@@ -24,16 +24,16 @@ export class ControlPanelComponent implements OnInit {
 
   cities : string[];
   cityFromService = this.centralService.getCity();
-  selectedCity:string;
-  selectedLandUse:string;
+  selectedCity : string;
+  selectedLandUse : string;
   abatementList = [];
   public isCollapsed = true;
   private citiesSub: Subscription;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
                     "Mixed", "Utility", "null", "All"];
    acresMinValue: number = 0; acresMaxValue: number = 100;
-   valueMinValue: number = 0;  valueMaxValue: number = 100;
-   ownerInput : String; expandOwner: Boolean = false;
+   valueMinValue: number = 0; valueMaxValue: number = 100;
+   ownerInput : String;
    acresOptions: Options = {
      floor: 0,
      ceil: 100
@@ -79,7 +79,7 @@ export class ControlPanelComponent implements OnInit {
     }//Check if value was changed from default
     if(this.valueMinValue != this.valueOptions.floor
         || this.valueMaxValue != this.valueOptions.ceil){
-          this.centralService.options.value = [this.valueMinValue,this.valueMaxValue];
+      this.centralService.options.value = [this.valueMinValue,this.valueMaxValue];
     }//Check if any abatements were selected
     if(this.abatementList.length > 0){
       this.centralService.options.abatement = this.abatementList[0];//NEED TO FIX / CLARIFY
@@ -92,7 +92,7 @@ export class ControlPanelComponent implements OnInit {
     }
   }
   open(){
-    const modalRef = this.modalService.open(LandingPageContentComponent,{ centered: true });
+    const modalRef = this.modalService.open(LandingPageContentComponent,{ centered: true, size: 'lg'});
   }
   search = (text$: Observable<string>) =>
     text$.pipe(

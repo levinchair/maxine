@@ -1,12 +1,31 @@
 .lp-choose{
-  display:flex;
-  max-width:600px;
-  align-items: stretch;
+  width:800px;
 }
-.choice{
+.btn-text{
+  position:absolute;
+  color:black;
+  font-size: 26px;
+  top:99px;
+  left:0px;
+  width:250px;
+  text-align: center;
 }
 .btn-choice{
-  flex-grow: 1;
-  width:auto;
-  background-color: #91bad6;
+  position:relative;
+  width:250px;
+  padding:0px;
+  margin-right:5px;
+}
+button{
+  /* background-color: #fff; */
+}
+img{
+  opacity:0.60;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+p, h4{
+  padding-left:10px;
+}
+p{
+  font-size: 20px;
 }
