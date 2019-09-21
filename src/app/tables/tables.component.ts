@@ -2,8 +2,10 @@ import { Component, OnInit, ViewChild, Inject, EventEmitter, Output,Input} from 
 import { FormControl } from '@angular/forms';
 import { CentralService } from '../Service/central.service';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
-import {CurrencyPipe} from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { HostListener } from "@angular/core";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 // import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 export interface Views {
@@ -35,7 +37,8 @@ export class TablesComponent implements OnInit {
 
   constructor(
     private centralService: CentralService,
-    private cp: CurrencyPipe
+    private cp: CurrencyPipe,
+    public activeModal: NgbActiveModal
   ) { }
 
   ngOnInit() {

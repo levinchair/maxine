@@ -54,10 +54,6 @@ import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.co
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LandingPageContentComponent } from './landing-page-content/landing-page-content.component';
 
-
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -128,7 +124,8 @@ import { LandingPageContentComponent } from './landing-page-content/landing-page
   ],
   entryComponents:[
     ProgressSpinnerComponent,
-    LandingPageContentComponent
+    LandingPageContentComponent,
+    TablesComponent
   ],
   bootstrap: [AppComponent]
 })

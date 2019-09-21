@@ -1,45 +1,21 @@
 ng2-smart-table{
   text-align: right;
-  overflow-x:auto;
-  overflow-y:hidden;
-  padding-bottom:10px;
-  border-style: solid;
-  border-width:0px 5px 5px 5px;
-  border-color:#91bad6;
   background-color:#ffffff !important;
-}
-mat-form-field{
-  margin-top:5px;
-  background-color: #ffffff;
-  padding-top:5px;
-  padding-left:28px;padding-right:50px;
-  border-radius: 4px;
-}
-#table-header{
-  display:flex;
-  width:100%;
-  align-items: baseline;
-  justify-content: center;
-  background-color: #91bad6;
-  padding-bottom:5px;
-}
-#modal-button{
-  position:absolute;
-  margin-top:18px;
-  right: 10px;
-  padding-left: 0px;padding-right:0px;
-  min-width: 42px;
-  min-height: 42px;
-}
-.help-button{
-  position:absolute;
-  right:7px;
-  cursor: pointer;
-  top:194px;
 }
 .hidden{
   display:none;
 }
 .show{
   display:block;
+
 }
+h4{
+  text-align: center;
+  width:100%;
+}
+/* This is super important, don't remove */
+:host{
+  display:block;
+  background-color: #fff;
+}
+/* -----end------ */

@@ -5,7 +5,7 @@ import { Options } from 'ng5-slider';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPageContentComponent } from '../landing-page-content/landing-page-content.component';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
-import '../Service/options';
+import '../Service/SearchOptions.model';
 
 //Will populate with owners when a neighborhood is searched.
 var ownersList = ["Peter","Dakotah Pettry","Joe","Bob"];
@@ -81,15 +81,16 @@ export class ControlPanelComponent implements OnInit {
         || this.valueMaxValue != this.valueOptions.ceil){
       this.centralService.options.value = [this.valueMinValue,this.valueMaxValue];
     }//Check if any abatements were selected
-    if(this.abatementList.length > 0){
-      this.centralService.options.abatement = this.abatementList[0];//NEED TO FIX / CLARIFY
-    }//Check if any owner was selected, empty strings in js are falsey
+    // if(this.abatementList.length > 0){
+    //   this.centralService.options.abatement = this.abatementList[0];//NEED TO FIX / CLARIFY
+    // }//Check if any owner was selected, empty strings in js are falsey
     if(this.ownerInput){
       this.centralService.options.owner = this.ownerInput;
     }//Check if a land use was selected and assign
     if(this.selectedLandUse){
       this.centralService.options.sitecat1 = this.selectedLandUse;
     }
+    console.log(this.centralService.options);
   }
   open(){
     const modalRef = this.modalService.open(LandingPageContentComponent,{ centered: true, size: 'lg'});

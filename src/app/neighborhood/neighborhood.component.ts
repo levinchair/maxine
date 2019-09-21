@@ -13,8 +13,8 @@ export class NeighborhoodComponent implements OnInit {
 private selectedCity;
 private selectedHood;
 onSelectFlag=false;
-neighborhood : string[];
-_neighborhood:string;
+neighborhood : string[] = [];
+_neighborhood:string = "";
 constructor(
   private centralService:CentralService) {
  }

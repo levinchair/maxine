@@ -1,21 +1,26 @@
-<div id="table-header">
-  <mat-form-field>
+<div class="modal-header">
+  <h4 class="modal-title">Table Views</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <!-- <button mat-raised-button id="modal-button" (click)="initTableModal()">
+    <img src="../assets/icons-24px/png/037-switch-to-full-screen-button.png"
+      height="24" width="24" title="Display Table-Modal">
+  </button> -->
+</div>
+<div class="modal-body">
+  <!-- <mat-form-field>
     <mat-label>Data View</mat-label>
     <mat-select [(ngModel)]="this.centralService.currentView" (ngModelChange)="changeView($event)" placeholder="View 1">
       <mat-option *ngFor="let view of views" [value]="view.value">
         {{view.viewValue}}
       </mat-option>
     </mat-select>
-  </mat-form-field>
-  <button mat-raised-button id="modal-button" (click)="initTableModal()">
-    <img src="../assets/icons-24px/png/037-switch-to-full-screen-button.png"
-      height="24" width="24" title="Display Table-Modal">
-  </button>
+  </mat-form-field> -->
+  <ng2-smart-table [ngClass]="table1" [settings]="this.view1settings" [source] = "this.view1Data" (userRowSelect)="this.centralService.currentSiteCat.next($event.data.cat)"></ng2-smart-table>
+  <ng2-smart-table [ngClass]="table2" [settings]="this.view2settings" [source] = "this.view2Data"></ng2-smart-table>
+  <ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source] = "this.view3Data"></ng2-smart-table>
+  <ng2-smart-table [ngClass]="table4" [settings]="this.view4settings" [source] = "this.view4Data"></ng2-smart-table>
+  <ng2-smart-table [ngClass]="table5" [settings]="this.view5settings" [source] = "this.concentrationData"></ng2-smart-table>
+  <ng2-smart-table [ngClass]="table6" [settings]="this.view6settings" [source] = "this.landUseConcentrationData"></ng2-smart-table>
 </div>
-<ng2-smart-table [ngClass]="table1" [settings]="this.view1settings" [source] = "this.view1Data" (userRowSelect)="this.centralService.currentSiteCat.next($event.data.cat)"></ng2-smart-table>
-<ng2-smart-table [ngClass]="table2" [settings]="this.view2settings" [source] = "this.view2Data"></ng2-smart-table>
-<ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source] = "this.view3Data"></ng2-smart-table>
-<ng2-smart-table [ngClass]="table4" [settings]="this.view4settings" [source] = "this.view4Data"></ng2-smart-table>
-<ng2-smart-table [ngClass]="table5" [settings]="this.view5settings" [source] = "this.concentrationData"></ng2-smart-table>
-<ng2-smart-table [ngClass]="table6" [settings]="this.view6settings" [source] = "this.landUseConcentrationData"></ng2-smart-table>
-<!-- <img (click)="helpModal()" class="help-button" title="help-button" src="../assets/icons-16px/png/question.png" height="16" width="16" title="help-button"> -->

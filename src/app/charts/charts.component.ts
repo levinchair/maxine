@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angu
 import { CentralService } from '../Service/central.service';
 import { Chart } from 'chart.js';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {TablesComponent} from '../tables/tables.component';
 
 //models
 import { view1 } from '../../model/view1.model';
@@ -41,7 +43,9 @@ export class ChartsComponent implements OnInit {
                       ["No_parcels","Number of Parcels"],
                       ["percOfLand","Percentage of Land"],
                       ["percOfAssessedVal","Percentage of Assessed Value"]];
-  constructor(private centralService: CentralService) { }
+                      
+  constructor(private centralService: CentralService,
+                private modalService: NgbModal) { }
 
   ngOnInit() {
     // this.createChart();
@@ -129,7 +133,9 @@ export class ChartsComponent implements OnInit {
     //console.log(e + this.view1Data[0][e]);
     this.updateChart1(e);
   }
-
+  openTable(){
+    const modalRef = this.modalService.open(TablesComponent,{ centered: true, size: 'lg'});
+  }
   attributes: Attributes[] = [
     {value:'AssessedValue',attrValue:'Total Value'},
     {value:'No_parcels',attrValue:'# Parcels'},
