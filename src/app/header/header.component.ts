@@ -22,13 +22,16 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
 
     }
-    updateAllData(){
-      this.centralService.showSpinner.next(true);
-      this.centralService.getGeometry();
-      this.centralService.getViews(); // inital subscribe of the data
-      //Closes dropdown menu if opened
-      this.matExpansionPanelRef.close();
-    }
+    // updateAllData(){
+    //   /** This code is not being run */
+    //   console.log("Updated all data");
+    //   this.centralService.showSpinner.next(true);
+    //   this.centralService.getGeometry();
+    //   this.centralService.getViews(); // inital subscribe of the data
+    //   this.centralService.setParcelArray([]);
+    //   //Closes dropdown menu if opened
+    //   this.matExpansionPanelRef.close();
+    // }
     searchEvent(e){
       let tempArr = [e.result.center[1],e.result.center[0]]
       this.centralService.setGeocoderData(tempArr);
