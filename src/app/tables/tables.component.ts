@@ -20,7 +20,7 @@ export interface Views {
 })
 
 export class TablesComponent implements OnInit {
-  view1Data: any;
+  @Input('view1Data') view1Data: any;
   view2Data: any;
   view3Data: any;
   view4Data: any;
@@ -29,12 +29,7 @@ export class TablesComponent implements OnInit {
   concentrationData: any;
   landUseConcentrationData: any;
   private table1 : String = "show";
-  private table2 : String = "hidden";
-  private table3 : String = "hidden";
-  private table4 : String = "hidden";
-  private table5 : String = "hidden";
-  private table6 : String = "hidden";
-
+  model = "lu";
   constructor(
     private centralService: CentralService,
     private cp: CurrencyPipe,
@@ -71,28 +66,6 @@ export class TablesComponent implements OnInit {
       });
   }
 
-  changeView(e){
-    this.centralService.currentView = e;
-    if(e == 'view1'){
-      this.table1 = "show";this.table2 = "hidden";this.table3 = "hidden";
-      this.table4 = "hidden";this.table5="hidden";this.table6 = "hidden";
-    }else if(e == 'view2'){
-      this.table1 = "hidden";this.table2 = "show";this.table3 = "hidden";
-      this.table4 = "hidden";this.table5="hidden";this.table6 = "hidden";
-    }else if(e == 'view3'){
-      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "show";
-      this.table4 = "hidden";this.table5="hidden";this.table6 = "hidden";
-    }else if(e == 'view4'){
-      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
-      this.table4 = "show";this.table5="hidden";this.table6 = "hidden";
-    }else if(e == 'concentration'){
-      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
-      this.table4 = "hidden";this.table5="show";this.table6 = "hidden";
-    }else if(e == 'landUseConcentrationData'){
-      this.table1 = "hidden";this.table2 = "hidden";this.table3 = "hidden";
-      this.table4 = "hidden";this.table5="hidden";this.table6 = "show";
-    }
-  }
   changeFix(value, precision){
     value = Number(value);
     if(value == null || value === undefined){

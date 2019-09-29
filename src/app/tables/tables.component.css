@@ -9,9 +9,13 @@ ng2-smart-table{
   display:block;
 
 }
+.toggleDiv{
+  display:flex;
+  justify-content: center;
+}
 h4{
-  text-align: center;
   width:100%;
+  text-align: center;
 }
 /* This is super important, don't remove */
 :host{
