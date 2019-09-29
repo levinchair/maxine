@@ -131,7 +131,8 @@ function createQuery(param, hood){
       paramParsed = upperCase(param);
       console.log("Unable to parse, default to city. Parse Error: " + JSON.stringify(e));  
     }
-    if(Array.isArray(paramParsed)) {
+    /**This is will be deprecated in the near future */
+    if(Array.isArray(paramParsed)) { 
       query = { 
         "properties.parcelpin": { $in: paramParsed }
       }

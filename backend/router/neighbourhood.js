@@ -4,7 +4,7 @@ var router= express.Router()
 var db = require("../model/db.js").parcelDataModel;
 
 //--------------------------------------------------Show distinct neighbourhood  from selected cities--------------------------------------
-router.get("/showhood/:city",(req,res,next)=>{
+router.all("/showhood/:city",(req,res,next)=>{
    this.city=req.params.city
   this.city= upperCase(this.city);
   console.log("selected cities ",this.city);

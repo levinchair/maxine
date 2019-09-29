@@ -6,13 +6,13 @@ var request = require("request");
 
 /** This is router for sending and recieving owner concentration */
 
-router.get("/concentration/:param?/:hood?", (req, res, next) => {
+router.all("/concentration/:param?/:hood?", (req, res, next) => {
   utils.processOwnerConcentration(req.params.param, req.params.hood)
   .then((payload) => res.send(payload))
   .catch(err => next(err));
 });
 
- router.get("/concentrationbylanduse/:param2?/:hood2?", (req,res,next) => {
+ router.all("/concentrationbylanduse/:param2?/:hood2?", (req,res,next) => {
 
     utils.processOwnerConcentration(req.params.param2, req.params.hood2).then(
     (payload) => { //callback

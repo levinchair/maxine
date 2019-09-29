@@ -12,7 +12,7 @@ _id: String,
     CR4 : Number
 }
 //--------------------------------------------------view3 of land data with city -----------------------------------------------------------------
-router.get("/view3/:param?/:hood?", async (req,res,next)=>{
+router.all("/view3/:param?/:hood?", async (req,res,next)=>{
   /*This router will take an array of parcelpins (String[]) or a city and a neighbourhood and find the corresponding values specified by view1
     Using this array for all residential testing: ["11029010", "11029075", "11029011", "11029076", "11029012", "11029077" ]
     A test array with Com, Inst and Res Parcels: 
@@ -37,7 +37,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
             "totalsqfeet":1}} ])
     .exec()  
     .then(async (data)=>{
-                console.log(JSON.stringify(data));
+                // console.log(JSON.stringify(data));
                 totalSqFeet=data.map(function(v){return v.totalsqfeet;});
                 // console.log("total SquareFeet Area : "+totalSqFeet);
                 //Calculate # of square feet, % of square feet, Assessed value, % assessed value
@@ -89,7 +89,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                                         "com_sq_feet":{"$sum":"$properties.total_com_"}}}
                                 ]).exec()
                                 .then((data)=>{
-                                    console.log(JSON.stringify(data));
+                                    //console.log(JSON.stringify(data));
                                     totalcom_sq_feet=data.map(function(v){
                                         
                                     return v.com_sq_feet;
@@ -116,7 +116,7 @@ router.get("/view3/:param?/:hood?", async (req,res,next)=>{
                                         {"$project":{"_id":1,"com_sq_feet":1,"No_Parcels":1}}
                                 ]).exec()
                                 .then((result)=>{
-                                            console.log(JSON.stringify(result));
+                                            //console.log(JSON.stringify(result));
                                             com_sq_feetPerCat=result.map(function(v){     
                                             return v.com_sq_feet;
                                             });

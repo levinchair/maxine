@@ -4,7 +4,7 @@ var router= express.Router()
 var db = require("../model/db.js").parcelDataModel;
 var utils = require("./utils");
 
- router.get("/view2/:param?/:hood?", async (req,res,next)=>{
+ router.all("/view2/:param?/:hood?", async (req,res,next)=>{
   /*This router will take an array of parcelpins (String[]) or a city and a neighbourhood and find the corresponding values specified by view1
     Using this array for all residential testing: ["11029010", "11029075", "11029011", "11029076", "11029012", "11029077" ]
     A test array with Com, Inst and Res Parcels: 
@@ -36,7 +36,7 @@ var utils = require("./utils");
       .exec()
       .then(
       async (result)=>{
-            console.log("Reesult : "+ JSON.stringify(result));
+            // console.log("Reesult : "+ JSON.stringify(result));
             _view2=result;
             // //console.log("view2 raw: " + JSON.stringify(_view2));
             SiteCat=result.map(function(v){ return v._id; })
@@ -49,7 +49,7 @@ var utils = require("./utils");
                   for(var i in SiteCat){
                         cat=SiteCat[i];
                         Object.defineProperty(_view2[i], "cat", {value: SiteCat[i], enumerable: true});
-                        console.log("I am in "+SiteCat[i]);
+                        // console.log("I am in "+SiteCat[i]);
                         //calculate total  # of Units2 under each SiteCat2 Category
                         //define another property for the query. configure to true to allow redefinition.
                         Object.defineProperty(this.query, "properties.SiteCat2" , {value: SiteCat[i], enumerable: true, configurable: true});
@@ -104,7 +104,7 @@ var utils = require("./utils");
                               //     console.log("error ocuured : "+err);
                             })
                   }
-            console.log("this.view2: ",JSON.stringify(_view2,undefined,2));
+            // console.log("this.view2: ",JSON.stringify(_view2,undefined,2));
             res.json(_view2);
       })
       .catch((err)=>{

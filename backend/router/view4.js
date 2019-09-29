@@ -12,7 +12,7 @@ var _view4={
         CR4 : Number
     }
 
-router.get("/view4/:param?/:hood?", async (req,res,next)=>{
+router.all("/view4/:param?/:hood?", async (req,res,next)=>{
     if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
     
     this.query = utils.createQuery(req.params.param, req.params.hood);
