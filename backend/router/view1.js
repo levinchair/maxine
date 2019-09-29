@@ -3,7 +3,7 @@ var router= express.Router()
 var db = require("../model/db.js").parcelDataModel;
 var utils = require("./utils");
 
-router.get("/view1/:param?/:hood?", (req, res, next) => {
+router.all("/view1/:param?/:hood?", (req, res, next) => {
   /*This router will take an array of parcelpins (String[]) or a city and a neighbourhood and find the corresponding values specified by view1
     Using this array for all residential testing: ["11029010", "11029075", "11029011", "11029076", "11029012", "11029077" ]
     A test array with Com, Inst and Res Parcels: 
@@ -12,6 +12,8 @@ router.get("/view1/:param?/:hood?", (req, res, next) => {
   if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
   
   this.query = utils.createQuery(req.params.param, req.params.hood);
+
+  //we need to use the req.body tag in order to take the data from the option object 
  
   var sum1 = { // this contains the sums for totals for the pipeline from the query
     _id: null,  // property to group by, set to null to sum all documents

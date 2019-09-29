@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,  HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient,  HttpResponse, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { tap, catchError, retry } from 'rxjs/operators';
 import {MatSortModule} from '@angular/material/sort';
@@ -54,15 +54,16 @@ export class CentralService {
   }
   setParcelArray(arr: Array<String>){
     if(arr === undefined || arr.length == 0 || !Array.isArray(arr)){
-      this._arr = [];
-    }else {
         this._arr = [];
-        this._arr.push(...arr);
+        delete this.options.parcelpins;
+    }else {
+        this._arr = [...arr];
+        this.options.parcelpins = [...this._arr]; //set the options array
     }
     this._arrStr = JSON.stringify(this._arr);
-    //here e can check if size is too large
-    // console.log(this._arr);
-    // console.log(this._arr.length);
+  }
+  resetParcelArray(){
+    this._arr = [];
   }
   setGeocoderData(data){
     this.geocoderData.next(data);
@@ -113,25 +114,25 @@ export class CentralService {
   //------ Get data from Database -----------//
   getViews(){
     //Set view1 data
-    this.http.get(`http://localhost:3000/view1/${this._city}/${this._hood}`)
+    this.http.post(`http://localhost:3000/view1/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.view1Data.next(view);
     });
     //set view2 data
-    this.http.get(`http://localhost:3000/view2/${this._city}/${this._hood}`)
+    this.http.post(`http://localhost:3000/view2/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.view2Data.next(view);
     });
     //Set view3 data
-    this.http.get(`http://localhost:3000/view3/${this._city}/${this._hood}`)
+    this.http.post(`http://localhost:3000/view3/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.view3Data.next(view);
     });
     //Set view4 data
-    this.http.get(`http://localhost:3000/view4/${this._city}/${this._hood}`)
+    this.http.post(`http://localhost:3000/view4/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view);
@@ -141,48 +142,58 @@ export class CentralService {
 
   }
   getbyParcelpins(){
-    this.http.get(`http://localhost:3000/view1/${this._arrStr}/`)
-    .subscribe( (view) => {
-      //console.log("view: " + JSON.stringify(view));
-      this.view1Data.next(view);
-    });
-    this.http.get(`http://localhost:3000/view2/${this._arrStr}/`)
-    .subscribe( (view) => {
-      //console.log("view: " + JSON.stringify(view));
-      this.view2Data.next(view);
-    });
-    this.http.get(`http://localhost:3000/view3/${this._arrStr}/`)
-    .subscribe( (view) => {
-      //console.log("view: " + JSON.stringify(view));
-      this.view3Data.next(view);
-    });
-    this.http.get(`http://localhost:3000/view4/${this._arrStr}/`)
-    .subscribe( (view) => {
-      //console.log("view: " + JSON.stringify(view));
-      this.view4Data.next(view);
-    });
-    this.getConcentrationValues(this._arrStr,undefined);
-    this.http.get(`http://localhost:3000/showgeometry/${this._arrStr}/`)
+    /** Turned off these temporarily - Peter */
+    // this.http.post(`http://localhost:3000/view1/${this._arrStr}/`)
+    // .subscribe( (view) => {
+    //   //console.log("view: " + JSON.stringify(view));
+    //   this.view1Data.next(view);
+    // });
+    // this.http.post(`http://localhost:3000/view2/${this._arrStr}/`)
+    // .subscribe( (view) => {
+    //   //console.log("view: " + JSON.stringify(view));
+    //   this.view2Data.next(view);
+    // });
+    // this.http.post(`http://localhost:3000/view3/${this._arrStr}/`)
+    // .subscribe( (view) => {
+    //   //console.log("view: " + JSON.stringify(view));
+    //   this.view3Data.next(view);
+    // });
+    // this.http.post(`http://localhost:3000/view4/${this._arrStr}/`)
+    // .subscribe( (view) => {
+    //   //console.log("view: " + JSON.stringify(view));
+    //   this.view4Data.next(view);
+    // });
+    // this.getViews();
+    // this.getConcentrationValues(this._city,this._hood);
+    this.http.post(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`, this.options)
     .subscribe(view => {
           this.geometryData.next(view);
           //spinner will be turned off after geometry is loaded
           this.showSpinner.next(false);
+    }, err => {
+      this.handleError(err);
     });
   }
 
   getGeometry(){
     //console.log(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`);
      if(this._hood !== undefined && this._city !== undefined){
-        this.http.get(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`)
+        this.http.post(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`, this.options)
         .subscribe(view => {
           this.geometryData.next(view);
           this.showSpinner.next(false);
+        },
+        err =>{ 
+          this.handleError(err);
         });
     }else if(this._hood === undefined && this._city !== undefined){
-        this.http.get(`http://localhost:3000/showgeometry/${this._city}/`)
+        this.http.post(`http://localhost:3000/showgeometry/${this._city}/`, this.options)
         .subscribe(view => {
           this.geometryData.next(view)
           this.showSpinner.next(false);
+        }, 
+        err => {
+          this.handleError(err);
         });
     }
   }
@@ -190,7 +201,6 @@ export class CentralService {
   getCities() {
     return this.http.get<string[]>('http://localhost:3000/showcities/')
       .pipe(
-        // tap(data => console.log("From getCity in Cities Service: " + JSON.stringify(data))),
         catchError(this.handleError)
       );
    }
@@ -209,11 +219,11 @@ export class CentralService {
          });
    }
 
-   private getConcentrationValues(city_or_arr, hood){
-       this.http.get(`http://localhost:3000/concentration/${city_or_arr}/${hood}`)
+   private getConcentrationValues(city, hood){
+       this.http.post(`http://localhost:3000/concentration/${city}/${hood}`, this.options)
        .subscribe(
         (view) => {
-          this.http.get(`http://localhost:3000/concentrationbylanduse/${city_or_arr}/${hood}`)
+          this.http.post(`http://localhost:3000/concentrationbylanduse/${city}/${hood}`, this.options)
           .pipe(catchError(this.handleError))
           .subscribe(
             (view) => { // trying to find another fix...

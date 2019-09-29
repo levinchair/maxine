@@ -5,10 +5,15 @@ var db = require("../model/db.js").parcelDataModel;
 
 
 //--------------------------------------------------Show  geometric features  for selected neighbourhood--------------------------------------
-router.get("/showgeometry/:param?/:hood?",(req,res,next)=>{
+router.all("/showgeometry/:param?/:hood?",(req,res,next)=>{
 
     this.query = utils.createQuery(req.params.param, req.params.hood);
-
+    // console.log("This is the body: ", req.body);
+    // console.log(req.body.parcelpins);
+    if(req.body.parcelpins !== undefined){
+      Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
+    }
+    // console.log("QUERY IS HERE: " + JSON.stringify(this.query));
     var newJson = {};
 
       db.find(this.query,
@@ -22,14 +27,14 @@ router.get("/showgeometry/:param?/:hood?",(req,res,next)=>{
     			features: result
     		}
             res.json(newJson);
-            console.log(newJson);
+            // console.log(newJson);
     });
 
   });
 
 module.exports=router;
 
-router.get("/getparcels/:geoObject?" , (req, res, next ) => {
+router.all("/getparcels/:geoObject?" , (req, res, next ) => {
   // this.obj should be in the form of a geojson object { "type" : "Polygon",coordinates" : [[...]]}
     if(req.params.geoObject === undefined)  res.status(500).send("Error: Please Specify geoObject");
     try { // convert string form parameter to JSON. will fail if not encapsulated in braces

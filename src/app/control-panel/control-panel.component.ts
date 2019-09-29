@@ -68,6 +68,7 @@ export class ControlPanelComponent implements OnInit {
   }
   updateAllData(){
     this.centralService.showSpinner.next(true);
+    this.centralService.setParcelArray([]);
     this.setOptions();
     this.centralService.getGeometry();
     this.centralService.getViews(); // inital subscribe of the data

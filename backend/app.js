@@ -11,6 +11,7 @@ var router5= require("./router/view2");
 var router6= require("./router/view3");
 var router7= require("./router/view4");
 var router8= require("./router/OwnerConcentration");
+var router9 = require("./router/viewOwners");
 var app = express();
 var fs = require('fs');
 
@@ -42,6 +43,7 @@ app.use("/",router5);
 app.use("/",router6); 
 app.use("/",router7);
 app.use("/",router8);
+app.use("/",router9);
 
 //runs a script to generate prerendered files for cleveland. trying to make it ron server startup.
 

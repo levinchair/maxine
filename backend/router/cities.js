@@ -1,7 +1,7 @@
 var express= require('express')
 var router= express.Router()
 var db = require("../model/db.js").parcelDataModel;
- router.get("/showcities",(req,res,next)=>{
+ router.all("/showcities",(req,res,next)=>{
     var cities=[10000];
     db.distinct("properties.par_city")
     .exec(function(err, result) {
