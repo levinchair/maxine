@@ -63,7 +63,6 @@ export class LeafletMapComponent implements OnInit {
     this.setBaseLayer();
     //Neighborhood layers
     var hBoundaries = new NeighborhoodBoundaries();
-    // console.log(hBoundaries.data);
     for(var k = 0; k < hBoundaries.data.records.length; k++){
       var tempPolygon = hBoundaries.data.records[k].fields.geo_shape.coordinates[0];
       for(var i = 0; i < tempPolygon.length; i++){
@@ -80,7 +79,6 @@ export class LeafletMapComponent implements OnInit {
   }
   changed(){
     /** Fired when there is a change in the selection of the radio button */
-    // console.log(this.centralService.currentSiteCat);
     if(this.shapeLayer !== undefined){
         this.shapeLayer.settings.color = (index: Number, feature: JsonForm) => {
           if(this.currentSiteCat === feature.properties.SiteCat1){
@@ -113,7 +111,6 @@ export class LeafletMapComponent implements OnInit {
           for(var i = 0; i < hood.length;i++){
             // console.log(inside(data,hood[i][2]));
             if(inside(data,hood[i][2])){
-              //console.log(hood[i][0] + " " + hood[i][1]);
               //Found neighborhood
               this.centralService.showSpinner.next(true);
               this.centralService.search = "";
@@ -198,7 +195,6 @@ export class LeafletMapComponent implements OnInit {
     });
   }  
   getColors(zoneType){
-    //console.log(zoneType);
     switch(zoneType){
       case "Residential":
         return "#E5BE77";
@@ -236,7 +232,6 @@ export class LeafletMapComponent implements OnInit {
   getLassoPlots(){
     let toolData = [...this.selectedParcels];
     
-    console.log(this.selectedParcels);
     if (!toolData || toolData.length == 0) {
       alert("No parcels were selected");
       // this.removeLassoPolygons();
@@ -315,7 +310,6 @@ export class LeafletMapComponent implements OnInit {
         this.map.off("mouseup");
       }else{
         this.selectfeature = this.map.selectAreaFeature.enable();
-        // console.log(this.selectfeature);
         this.lassoToggle = true;
         this.map.on("mouseup", this.addLassoData, this);
       }
