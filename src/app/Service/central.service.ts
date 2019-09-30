@@ -234,17 +234,21 @@ export class CentralService {
         error => this.handleError(error));
    }
    getFilterOwnerData(){
-     this.http.post(`http://localhost:3000/owners/${this._city}/${this._hood}`)
+     this.http.post(`http://localhost:3000/owners/${this._city}/${this._hood}`,this.options)
      .subscribe(
        (view) => {
          //Data contains null values need to remove them
          var viewAll = [];
-         for(var i = 0; i < view.length; i++){
-           if(view[i] != null){
-             viewAll.push(view[i]);
+         if(view instanceof Array){
+           for(var i = 0; i < view.length; i++){
+             if(view[i] != null){
+               viewAll.push(view[i]);
+             }
            }
+           this.filterOwnerData.next(viewAll);
+         }else{
+           this.filterOwnerData.next([]);
          }
-         this.filterOwnerData.next(viewAll);
        },
        error => this.handleError(error));
    }

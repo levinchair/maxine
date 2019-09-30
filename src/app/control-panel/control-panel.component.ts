@@ -4,7 +4,7 @@ import { CentralService } from '../Service/central.service';
 import { Options } from 'ng5-slider';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPageContentComponent } from '../landing-page-content/landing-page-content.component';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import '../Service/SearchOptions.model';
 
 //Will populate with owners when a neighborhood is searched.

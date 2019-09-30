@@ -30,7 +30,7 @@ export class ChartsComponent implements OnInit {
   view1Data: any;
   view2Data: any;
   view3Data: any;
-  landUseConcentrationData: any;
+  landUseConcentrationData = [];
   chartType: string;
   title = "";
   yAxisLabel = "temp"
