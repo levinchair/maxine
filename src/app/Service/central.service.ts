@@ -29,12 +29,12 @@ export class CentralService {
   geocoderData = new Subject<any>();
   geometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
-  view1Data = new Subject<any>();
-  view2Data = new Subject<any>();
-  view3Data = new Subject<any>();
-  view4Data = new Subject<any>();
-  concentrationData = new Subject<any>();
-  landUseConcentrationData = new Subject<any>();
+  view1Data = new Subject<any>(); view1DataRaw: any;
+  view2Data = new Subject<any>(); view2DataRaw: any;
+  view3Data = new Subject<any>(); view3DataRaw: any;
+  view4Data = new Subject<any>(); view4DataRaw: any;
+  concentrationData = new Subject<any>(); concentrationDataRaw: any;
+  landUseConcentrationData = new Subject<any>(); landUseConcentrationDataRaw: any;
   view1parcelData = new Subject<any>();
   filterOwnerData = new Subject<any>();
   //used by other components to turn on loading spinner
@@ -118,24 +118,28 @@ export class CentralService {
     this.http.post(`http://localhost:3000/view1/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
+      this.view1DataRaw = view;
       this.view1Data.next(view);
     });
     //set view2 data
     this.http.post(`http://localhost:3000/view2/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
+      this.view2DataRaw = view;
       this.view2Data.next(view);
     });
     //Set view3 data
     this.http.post(`http://localhost:3000/view3/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
+      this.view3DataRaw = view;
       this.view3Data.next(view);
     });
     //Set view4 data
     this.http.post(`http://localhost:3000/view4/${this._city}/${this._hood}`, this.options)
     .subscribe( (view) => {
       //console.log("view: " + JSON.stringify(view));
+      this.view4DataRaw = view;
       this.view4Data.next(view);
     });
     this.getConcentrationValues(this._city, this._hood);
@@ -227,8 +231,10 @@ export class CentralService {
           .pipe(catchError(this.handleError))
           .subscribe(
             (view) => { // trying to find another fix...
+              this.landUseConcentrationDataRaw = view;
               this.landUseConcentrationData.next(view);
             });
+          this.concentrationDataRaw = view;
           this.concentrationData.next(view);
         },
         error => this.handleError(error));

@@ -20,7 +20,7 @@ export interface Views {
 })
 
 export class TablesComponent implements OnInit {
-  @Input('view1Data') view1Data: any;
+  view1Data: any;
   view2Data: any;
   view3Data: any;
   view4Data: any;
@@ -37,6 +37,12 @@ export class TablesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.view1Data = this.centralService.view1DataRaw;
+    this.view2Data = this.centralService.view2DataRaw;
+    this.view3Data = this.centralService.view3DataRaw;
+    this.view4Data = this.centralService.view4DataRaw;
+    this.concentrationData = this.centralService.concentrationDataRaw;
+    this.landUseConcentrationData = this.centralService.landUseConcentrationDataRaw;
     this.centralService.view1Data
       .subscribe( view => {
         this.view1Data = view;
@@ -146,9 +152,6 @@ export class TablesComponent implements OnInit {
         title: 'CR4',
         valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
       }
-    },
-    pager : {
-      perPage: 6
     }
   };
   view3settings = {

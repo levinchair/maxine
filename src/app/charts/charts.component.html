@@ -1,4 +1,16 @@
 <div class="chart-container">
   <canvas #chartA>{{ chart }}</canvas>
+  <button id="view1Modal"(click)="openTable()">
+    <img src='../assets/bootstrap-png/spreadsheet-8x.png' alt="table popout" height='24' width='24'>
+  </button>
 </div>
-<button (click)="openTable()">Tables</button>--Doesn't show data right now
+<div class="toggleDiv">
+  <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="model">
+    <label ngbButtonLabel class="btn-primary">
+      <input ngbButton type="radio" value="acres"> Acres
+    </label>
+    <label ngbButtonLabel class="btn-primary">
+      <input ngbButton type="radio" value="value"> Value
+    </label>
+  </div>
+</div>

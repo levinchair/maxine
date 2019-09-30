@@ -1,10 +1,30 @@
 .chart-container{
   position:relative !important;
-  height:45vh;
+  height:65vh;
   padding:10px;
   background-color:#91bad6;
 }
 canvas{
   padding:15px;
   background-color: #ffffff;
+}
+.toggleDiv{
+  display:flex;
+  justify-content: center;
+  background-color:#91bad6;
+  padding-bottom:10px;
+}
+#view1Modal{
+  position:absolute;
+  right: 27px;
+  top: 33px;
+  padding-bottom: 0px;
+  padding-left: 3px;
+  padding-right: 3px;
+  background-color: white;
+  border-radius: 3px;
+  padding-top: 3px;
+}
+#view1Modal:hover{
+  background-color: #5cd8eb;
 }

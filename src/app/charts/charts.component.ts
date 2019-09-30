@@ -3,7 +3,8 @@ import { CentralService } from '../Service/central.service';
 import { Chart } from 'chart.js';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {TablesComponent} from '../tables/tables.component';
+import { TablesComponent } from '../tables/tables.component';
+import { CurrencyPipe } from '@angular/common';
 
 //models
 import { view1 } from '../../model/view1.model';
@@ -24,7 +25,6 @@ export interface Views {
 export class ChartsComponent implements OnInit {
   @Input() defaultChoice: string;
   @Input() value: string;
-  @Output() change: EventEmitter<MatRadioChange>;
   @ViewChild('chartA') private chartRef;
   chart: any;
   view1Data: any;
@@ -32,13 +32,14 @@ export class ChartsComponent implements OnInit {
   view3Data: any;
   landUseConcentrationData = [];
   chartType: string;
-  title = "";
-  yAxisLabel = "temp"
+  title = "Title";
+  yAxisLabel = "Acre %"
   labels = [];
   colorsLU = [];
   colorsCR4 = [];
   landUseData = [];
   CR4 = [];
+  model = "value";
   //CREATE A MAP OF CAT->HEX COLORS
   CATCOLORS = new Map([["Residential","#E5BE77"],["Commercial","#FF4C4C"],
                       ["Industrial","#BE69F2"],["Mixed","#fd8f45"],
@@ -51,12 +52,14 @@ export class ChartsComponent implements OnInit {
                       ["percOfAssessedVal","Percentage of Assessed Value"]];
 
   constructor(private centralService: CentralService,
-                private modalService: NgbModal) { }
+              private cp: CurrencyPipe,
+              private modalService: NgbModal) { }
 
   ngOnInit() {
     this.createChart();
     this.centralService.view1Data
       .subscribe( view => {
+        console.log("View1:" + JSON.stringify(view));
         this.view1Data = view;
         this.updateChart1();
       });
@@ -70,7 +73,7 @@ export class ChartsComponent implements OnInit {
       });
     this.centralService.landUseConcentrationData
       .subscribe( view => {
-        // console.log(view);
+        console.log("LUConc:" + JSON.stringify(view));
         this.landUseConcentrationData = view;
         this.updateChart1();
       });
@@ -91,7 +94,8 @@ export class ChartsComponent implements OnInit {
             borderWidth:1,
             pointBackgroundColor:"black",
             borderColor:"black",
-            showLine:false
+            showLine:false,
+            yAxisID: 'cr4-y-axis'
           },{
             label:"Land Use",
             data: this.landUseData, // your data array
@@ -101,13 +105,15 @@ export class ChartsComponent implements OnInit {
             borderWidth: 0,
             hoverBackgroundColor: this.colorsLU,
             hoverBorderWidth:2,
+            yAxisID: 'lu-y-axis'
           }]
       },
       options: {
         title: {
           display: true,
           text: this.title,
-          fontSize: 16
+          fontSize: 24,
+          fontColor: '#000'
         },
         legend:{
           display:true,
@@ -115,10 +121,35 @@ export class ChartsComponent implements OnInit {
         },
         scales: {
             yAxes: [{
+                    id:"cr4-y-axis",
+                    type:'linear',
+                    position:'right',
                     scaleLabel: {
                         display: true,
-                        labelString: this.yAxisLabel
-                    }}]
+                        labelString: "CR4 %"
+                    }},
+                    {
+                      id:"lu-y-axis",
+                      type:"linear",
+                      scaleLabel: {
+                          display: true,
+                          labelString: "Total Value $"
+                      },
+                      ticks:{
+                        callback: function(value, index, values) {
+                             //cannot call outside methods wtf charts.js
+                             var retVal = "";
+                             while(value/1000 >= 1){
+                               console.log("val=" + value);
+                               retVal = ",000" + retVal;
+                               value = value/1000;
+                             }
+                             if(value >= 1){retVal = "$" + value*10 + retVal;}
+                             else if(value > 0){retVal = "$" + value + "," + retVal;}
+                             return retVal;
+                         }
+                      }
+                    }]
         },
         responsive:true,
         maintainAspectRatio:false,
@@ -133,7 +164,6 @@ export class ChartsComponent implements OnInit {
     this.colorsLU.length = 0;
     this.colorsCR4.length = 0;
     this.chart.options.title.text = this.centralService.getCity() + ' : ' + this.centralService.getHood();
-    this.chart.options.scales.yAxes[0].scaleLabel.labelString = "Acre";
     //Pushing Colors for matching
     for(var x = 0; x < this.view1Data.length; x++){
       this.labels.push(this.view1Data[x].cat);
@@ -147,7 +177,7 @@ export class ChartsComponent implements OnInit {
     this.landUseData.length = 0;
     this.CR4.length = 0;
     for(var y = 0; y < this.view1Data.length; y++){
-      this.landUseData.push(this.view1Data[y].percOfLand.toFixed(1));
+      this.landUseData.push(this.view1Data[y].AssessedValue.toFixed(0));
     }
     for(var z = 0; z < this.landUseConcentrationData.length; z++){
       this.CR4.push(this.landUseConcentrationData[z].MarketCR4.toFixed(1));
