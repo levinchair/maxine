@@ -36,6 +36,7 @@ export class CentralService {
   concentrationData = new Subject<any>();
   landUseConcentrationData = new Subject<any>();
   view1parcelData = new Subject<any>();
+  filterOwnerData = new Subject<any>();
   //used by other components to turn on loading spinner
   public showSpinner = new Subject<boolean>();
 
@@ -137,7 +138,6 @@ export class CentralService {
       //console.log("view: " + JSON.stringify(view));
       this.view4Data.next(view);
     });
-
     this.getConcentrationValues(this._city, this._hood);
 
   }
@@ -183,7 +183,7 @@ export class CentralService {
           this.geometryData.next(view);
           this.showSpinner.next(false);
         },
-        err =>{ 
+        err =>{
           this.handleError(err);
         });
     }else if(this._hood === undefined && this._city !== undefined){
@@ -191,7 +191,7 @@ export class CentralService {
         .subscribe(view => {
           this.geometryData.next(view)
           this.showSpinner.next(false);
-        }, 
+        },
         err => {
           this.handleError(err);
         });
@@ -233,7 +233,21 @@ export class CentralService {
         },
         error => this.handleError(error));
    }
-
+   getFilterOwnerData(){
+     this.http.post(`http://localhost:3000/owners/${this._city}/${this._hood}`)
+     .subscribe(
+       (view) => {
+         //Data contains null values need to remove them
+         var viewAll = [];
+         for(var i = 0; i < view.length; i++){
+           if(view[i] != null){
+             viewAll.push(view[i]);
+           }
+         }
+         this.filterOwnerData.next(viewAll);
+       },
+       error => this.handleError(error));
+   }
    private handleError(error: HttpErrorResponse){
     if(error.error instanceof ErrorEvent){
       console.log('An error has occurred:  ', error.error.message);

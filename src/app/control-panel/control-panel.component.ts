@@ -4,11 +4,10 @@ import { CentralService } from '../Service/central.service';
 import { Options } from 'ng5-slider';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPageContentComponent } from '../landing-page-content/landing-page-content.component';
-import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import '../Service/SearchOptions.model';
 
 //Will populate with owners when a neighborhood is searched.
-var ownersList = ["Peter","Dakotah Pettry","Joe","Bob"];
 
 @Component({
   selector: 'app-control-panel',
@@ -27,6 +26,10 @@ export class ControlPanelComponent implements OnInit {
   selectedCity : string;
   selectedLandUse : string;
   abatementList = [];
+  customText = ["Old", "Older","Oldest"];
+  private selectedHood;
+  neighborhood : string[] = [];
+  _neighborhood:string = "";
   public isCollapsed = true;
   private citiesSub: Subscription;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
@@ -34,6 +37,7 @@ export class ControlPanelComponent implements OnInit {
    acresMinValue: number = 0; acresMaxValue: number = 100;
    valueMinValue: number = 0; valueMaxValue: number = 100;
    ownerInput : String;
+   ownerList = ["Sample Owner List","Example"];
    acresOptions: Options = {
      floor: 0,
      ceil: 100
@@ -42,13 +46,22 @@ export class ControlPanelComponent implements OnInit {
      floor: 0,
      ceil: 100
    };
+
   ngOnInit() {
      this.citiesSub = this.centralService.getCities()
-     .subscribe( (cities : string[]) => {
+      .subscribe( (cities : string[]) => {
        cities.splice(0,1);
        this.cities = cities;
        //console.log(this.cities);
      });
+     this.centralService.filterOwnerData.subscribe( (view) => {
+         this.ownerList = view;
+       }
+     )
+     this.centralService.neighborhoods.subscribe( (hoods) => {
+         this.neighborhood = hoods;
+         //console.log(JSON.stringify(view));
+       });
      //populates abatementList w/ 1-26
      for(let i = 1; i < 27; i++){
        this.abatementList.push(i);
@@ -97,12 +110,18 @@ export class ControlPanelComponent implements OnInit {
   open(){
     const modalRef = this.modalService.open(LandingPageContentComponent,{ centered: true, size: 'lg'});
   }
+  onSelectHood(hood: string) {
+      this.selectedHood=hood;
+  	  this.centralService.setHood(hood);
+      this.centralService.getFilterOwnerData();
+    }
+  //observable object for filter's owners input
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => term.length < 1 ? []
-        : ownersList.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+      map(term => term.length < 2 ? []
+        : this.ownerList.filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
     )
 
 }

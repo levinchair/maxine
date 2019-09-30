@@ -23,10 +23,10 @@ button{
 overflow-y: scroll;
 height: 450px;
 }
-.cityDropdownButton{
+.cityDropdownButton, .hoodDropdownButton{
     line-height: 1em;
 }
-.cityDropdownButton:hover,.landUseDropdownButton:hover{
+.cityDropdownButton:hover,.landUseDropdownButton:hover,.hoodDropdownButton:hover{
   color: rgb(139, 99, 96);
   background-color: #DDD;
   left: .1em;

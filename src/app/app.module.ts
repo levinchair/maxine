@@ -2,7 +2,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { GeojsonDataService } from './Service/geojson-data.service';
 import { CitiesService } from './Service/cities.service';
 import { GeometryService } from './Service/geometry.service';
-import { NeighbourhoodService } from './Service/neighbourhood.service';
 import { LocationService } from './Service/location.service';
 import { ToggleService } from './Service/toggle.service';
 import { CentralService } from './Service/central.service';
@@ -42,7 +41,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ControlPanelComponent } from './control-panel/control-panel.component';
-import { NeighborhoodComponent } from './neighborhood/neighborhood.component';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { ToggleableDirective } from './control-panel/toggleable.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -59,7 +57,6 @@ import { LandingPageContentComponent } from './landing-page-content/landing-page
     AppComponent,
     HeaderComponent,
     ControlPanelComponent,
-    NeighborhoodComponent,
     ToggleableDirective,
     LeafletMapComponent,
     ChartsComponent,
@@ -116,7 +113,6 @@ import { LandingPageContentComponent } from './landing-page-content/landing-page
     CentralService,
     CitiesService,
     GeojsonDataService,
-    NeighbourhoodService,
     ToggleService,
 	  GeometryService,
     GoogleMapsAPIWrapper,
