@@ -52,7 +52,7 @@ export class ChartsComponent implements OnInit {
                       ["percOfAssessedVal","Percentage of Assessed Value"]];
 
   constructor(private centralService: CentralService,
-              private cp: CurrencyPipe,
+              public cp: CurrencyPipe,
               private modalService: NgbModal) { }
 
   ngOnInit() {
@@ -138,15 +138,40 @@ export class ChartsComponent implements OnInit {
                       ticks:{
                         callback: function(value, index, values) {
                              //cannot call outside methods wtf charts.js
+                             value = value.toString();
                              var retVal = "";
-                             while(value/1000 >= 1){
-                               console.log("val=" + value);
-                               retVal = ",000" + retVal;
-                               value = value/1000;
+                             if(value.includes(".")){//checks for decimals
+                               while(value.slice(-1) != '.'){
+                                 retVal = value.slice(-1) + retVal;
+                                 value = value.slice(0,-1);
+                               }
+                               retVal =  value.slice(-1) + retVal;
+                               value = value.slice(0,-1);
                              }
-                             if(value >= 1){retVal = "$" + value*10 + retVal;}
-                             else if(value > 0){retVal = "$" + value + "," + retVal;}
-                             return retVal;
+                             if(value.slice(0,1) == "-"){
+                               for(var i = 0; i < value.length-1; i++){
+                                 if(i%3 == 0 && i > 2){
+                                   retVal = value.slice(-1) + "," + retVal;
+                                   value  = value.slice(0,-1);
+                                 }else{
+                                   retVal = value.slice(-1) + retVal;
+                                   value  = value.slice(0,-1);
+                                 }
+                               }
+                               return '$-' + retVal;
+                             }
+                             var q = value.length;
+                             for(var i = 0; i < q; i++){
+                               if(i%3 == 0 && i > 2){
+                                 retVal = value.slice(-1) + "," + retVal;
+                                 value  = value.slice(0,-1);
+                                 console.log(value);
+                               }else{
+                                 retVal = value.slice(-1) + retVal;
+                                 value  = value.slice(0,-1);
+                               }
+                             }
+                             return '$' + retVal;
                          }
                       }
                     }]

@@ -25,6 +25,7 @@ export class ControlPanelComponent implements OnInit {
   cityFromService = this.centralService.getCity();
   selectedCity : string;
   selectedLandUse : string;
+  sitecat2Selected: boolean = true;
   abatementList = [];
   customText = ["Old", "Older","Oldest"];
   private selectedHood;
@@ -36,6 +37,7 @@ export class ControlPanelComponent implements OnInit {
                     "Mixed", "Utility", "null", "All"];
    acresMinValue: number = 0; acresMaxValue: number = 100;
    valueMinValue: number = 0; valueMaxValue: number = 100;
+   unitsMinValue: number = 0; unitsMaxValue: number = 100;
    ownerInput : String;
    ownerList = ["Sample Owner List","Example"];
    acresOptions: Options = {
@@ -43,6 +45,10 @@ export class ControlPanelComponent implements OnInit {
      ceil: 100
    };
    valueOptions: Options = {
+     floor: 0,
+     ceil: 100
+   };
+   unitsOptions: Options = {
      floor: 0,
      ceil: 100
    };
@@ -105,6 +111,10 @@ export class ControlPanelComponent implements OnInit {
     if(this.selectedLandUse){
       this.centralService.options.sitecat1 = this.selectedLandUse;
     }
+    if(this.unitsMinValue != this.unitsOptions.floor
+        || this.unitsMaxValue != this.unitsOptions.ceil){
+      this.centralService.options.scale_units = [this.unitsMinValue,this.unitsMaxValue];
+    }//Check if value was changed from default
     console.log(this.centralService.options);
   }
   open(){

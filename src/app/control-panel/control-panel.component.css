@@ -8,6 +8,13 @@
   min-width:500px;
   overflow-wrap: break-word;
 }
+.abatement-container{
+  min-width:120px;
+}
+.DTLU-container{
+  min-width:235px;
+  padding-left:15px;
+}
 /* a {
   color: black;
   text-decoration: none;
@@ -68,7 +75,7 @@ p input{
   justify-content:flex-start;
 
 }
-.owner-container, .abatement-container{
+.owner-container, .abatement-container, .units-container{
   padding-left:15px;
 }
 .info-button{
