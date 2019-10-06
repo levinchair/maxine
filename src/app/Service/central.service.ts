@@ -146,29 +146,8 @@ export class CentralService {
 
   }
   getbyParcelpins(){
-    /** Turned off these temporarily - Peter */
-    // this.http.post(`http://localhost:3000/view1/${this._arrStr}/`)
-    // .subscribe( (view) => {
-    //   //console.log("view: " + JSON.stringify(view));
-    //   this.view1Data.next(view);
-    // });
-    // this.http.post(`http://localhost:3000/view2/${this._arrStr}/`)
-    // .subscribe( (view) => {
-    //   //console.log("view: " + JSON.stringify(view));
-    //   this.view2Data.next(view);
-    // });
-    // this.http.post(`http://localhost:3000/view3/${this._arrStr}/`)
-    // .subscribe( (view) => {
-    //   //console.log("view: " + JSON.stringify(view));
-    //   this.view3Data.next(view);
-    // });
-    // this.http.post(`http://localhost:3000/view4/${this._arrStr}/`)
-    // .subscribe( (view) => {
-    //   //console.log("view: " + JSON.stringify(view));
-    //   this.view4Data.next(view);
-    // });
-    // this.getViews();
-    // this.getConcentrationValues(this._city,this._hood);
+    this.getViews(); // get views with updated options object
+    this.getConcentrationValues(this._city,this._hood);
     this.http.post(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`, this.options)
     .subscribe(view => {
           this.geometryData.next(view);

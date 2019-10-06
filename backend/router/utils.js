@@ -5,9 +5,13 @@ const VALID_LANDUSE = ["Industrial", "Government", "Institutional", "Commercial"
 const [RESIDENTIAL] = VALID_LANDUSE.slice(-1);
 
 
-const processOwnerConcentration =  async(param, hood) => {
+const processOwnerConcentration =  async(param, hood, body) => {
 
-    this.query = createQuery(param, hood); //this is the initial match query
+    this.query = createQuery(param, hood, body); //this is the initial match query
+    //need to pass in the req.body
+    if(body.parcelpins !== undefined){
+      Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: body.parcelpins}, enumerable: true});
+    }
 
     //var checkVacant = { $in: ["$properties.SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]]}
     var catfilter = { //filter for SiteCat to appropriate value
