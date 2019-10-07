@@ -61,7 +61,7 @@ export class ChartsComponent implements OnInit {
       .subscribe( view => {
         console.log("View1:" + JSON.stringify(view));
         this.view1Data = view;
-        this.updateChart1();
+        this.updateChart1("value");
       });
     this.centralService.view2Data
       .subscribe( view => {
@@ -75,7 +75,7 @@ export class ChartsComponent implements OnInit {
       .subscribe( view => {
         console.log("LUConc:" + JSON.stringify(view));
         this.landUseConcentrationData = view;
-        this.updateChart1();
+        this.updateChart1("value");
       });
   }
 
@@ -117,7 +117,10 @@ export class ChartsComponent implements OnInit {
         },
         legend:{
           display:true,
-          position:"bottom"
+          position:"bottom",
+          labels:{
+            usePointStyle:true
+          }
         },
         scales: {
             yAxes: [{
@@ -136,45 +139,23 @@ export class ChartsComponent implements OnInit {
                           labelString: "Total Value $"
                       },
                       ticks:{
-                        callback: function(value, index, values) {
-                             //cannot call outside methods wtf charts.js
-                             value = value.toString();
-                             var retVal = "";
-                             if(value.includes(".")){//checks for decimals
-                               while(value.slice(-1) != '.'){
-                                 retVal = value.slice(-1) + retVal;
-                                 value = value.slice(0,-1);
-                               }
-                               retVal =  value.slice(-1) + retVal;
-                               value = value.slice(0,-1);
-                             }
-                             if(value.slice(0,1) == "-"){
-                               for(var i = 0; i < value.length-1; i++){
-                                 if(i%3 == 0 && i > 2){
-                                   retVal = value.slice(-1) + "," + retVal;
-                                   value  = value.slice(0,-1);
-                                 }else{
-                                   retVal = value.slice(-1) + retVal;
-                                   value  = value.slice(0,-1);
-                                 }
-                               }
-                               return '$-' + retVal;
-                             }
-                             var q = value.length;
-                             for(var i = 0; i < q; i++){
-                               if(i%3 == 0 && i > 2){
-                                 retVal = value.slice(-1) + "," + retVal;
-                                 value  = value.slice(0,-1);
-                                 console.log(value);
-                               }else{
-                                 retVal = value.slice(-1) + retVal;
-                                 value  = value.slice(0,-1);
-                               }
-                             }
-                             return '$' + retVal;
-                         }
+                        callback:(value,index,values) =>{
+                          return this.cp.transform(value,"USD","symbol","1.0-0");
+                        }
                       }
                     }]
+        },
+        tooltips:{
+          callbacks: {
+            label: (tooltipItem,data) => {
+              var label = " ";
+              if(tooltipItem.datasetIndex == 0){
+                return label + tooltipItem.yLabel + "%";
+              }else{
+                return label + this.yAxisCheck(tooltipItem.index);
+              }
+            }
+          }
         },
         responsive:true,
         maintainAspectRatio:false,
@@ -184,38 +165,100 @@ export class ChartsComponent implements OnInit {
     });
   }
 
-  updateChart1(){
-    this.labels.length = 0;
-    this.colorsLU.length = 0;
-    this.colorsCR4.length = 0;
-    this.chart.options.title.text = this.centralService.getCity() + ' : ' + this.centralService.getHood();
-    //Pushing Colors for matching
-    for(var x = 0; x < this.view1Data.length; x++){
-      this.labels.push(this.view1Data[x].cat);
-      if(this.CATCOLORS.has(this.labels[x])){
-        this.colorsLU.push(this.CATCOLORS.get(this.labels[x]));
-      }else{
-        this.colorsLU.push("#5050505");
+  updateChart1(selection:String){
+    if(this.view1Data){
+      this.labels.length = 0;
+      this.colorsLU.length = 0;
+      this.colorsCR4.length = 0;
+      this.chart.options.title.text = this.centralService.getCity() + ' : ' + this.centralService.getHood();
+      //Pushing Colors for matching
+      for(var x = 0; x < this.view1Data.length; x++){
+        this.labels.push(this.view1Data[x].cat);
+        if(this.CATCOLORS.has(this.labels[x])){
+          this.colorsLU.push(this.CATCOLORS.get(this.labels[x]));
+        }else{
+          this.colorsLU.push("#5050505");
+        }
       }
+      this.chart.update(); //Charts can never have an empty data variable
+      this.landUseData.length = 0;
+      this.CR4.length = 0;
+      //Check for selection value/acres
+      if(selection == 'value'){
+        this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Value $";
+        this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
+          return this.cp.transform(value,"USD","symbol","1.0-0");
+        };
+        for(var y = 0; y < this.view1Data.length; y++){
+          this.landUseData.push(this.view1Data[y].AssessedValue.toFixed(0));
+        }
+        for(var z = 0; z < this.landUseConcentrationData.length; z++){
+          this.CR4.push(this.landUseConcentrationData[z].MarketCR4.toFixed(1));
+        }
+      }else{
+        this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Acres";
+        this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
+          return this.cp.transform(value,"USD","","1.0-0");
+        };
+        for(var y = 0; y < this.landUseConcentrationData.length; y++){
+          this.landUseData.push(this.landUseConcentrationData[y].landuseTot.toFixed(2));
+        }
+        for(var z = 0; z < this.landUseConcentrationData.length; z++){
+          this.CR4.push(this.landUseConcentrationData[z].MarketCR4.toFixed(1));
+        }
+      }
+      this.chart.update();
     }
-    this.chart.update(); //Charts can never have an empty data variable
-    this.landUseData.length = 0;
-    this.CR4.length = 0;
-    for(var y = 0; y < this.view1Data.length; y++){
-      this.landUseData.push(this.view1Data[y].AssessedValue.toFixed(0));
-    }
-    for(var z = 0; z < this.landUseConcentrationData.length; z++){
-      this.CR4.push(this.landUseConcentrationData[z].MarketCR4.toFixed(1));
-    }
-    this.chart.update();
   }
-
+  yAxisCheck(data){
+    if(this.model == 'value'){
+      return this.cp.transform(this.landUseData[data],"USD","symbol","1.0-0");
+    }else{
+      return this.cp.transform(this.landUseData[data],"USD","","1.0-0");
+    }
+  }
   openTable(){
     const modalRef = this.modalService.open(TablesComponent,{ centered: true, size: 'lg'});
   }
-  yLandUseAcre(data){
-
-  }
+  // yAxisAcres(value, index, values){
+  //
+  // }
+  // yAxisValue(value, index, values){
+  //      //cannot call outside methods wtf charts.js
+  //      value = value.toString();
+  //      var retVal = "";
+  //      if(value.includes(".")){//checks for decimals
+  //        while(value.slice(-1) != '.'){
+  //          retVal = value.slice(-1) + retVal;
+  //          value = value.slice(0,-1);
+  //        }
+  //        retVal =  value.slice(-1) + retVal;
+  //        value = value.slice(0,-1);
+  //      }
+  //      if(value.slice(0,1) == "-"){
+  //        for(var i = 0; i < value.length-1; i++){
+  //          if(i%3 == 0 && i > 2){
+  //            retVal = value.slice(-1) + "," + retVal;
+  //            value  = value.slice(0,-1);
+  //          }else{
+  //            retVal = value.slice(-1) + retVal;
+  //            value  = value.slice(0,-1);
+  //          }
+  //        }
+  //        return '$-' + retVal;
+  //      }
+  //      var q = value.length;
+  //      for(var i = 0; i < q; i++){
+  //        if(i%3 == 0 && i > 2){
+  //          retVal = value.slice(-1) + "," + retVal;
+  //          value  = value.slice(0,-1);
+  //        }else{
+  //          retVal = value.slice(-1) + retVal;
+  //          value  = value.slice(0,-1);
+  //        }
+  //      }
+  //      return '$' + retVal;
+  //  }
 
   // View1: [
   //   {"_id":{"cat":"Mixed"},
