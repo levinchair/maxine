@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,  HttpResponse, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient,  HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { tap, catchError, retry } from 'rxjs/operators';
-import {MatSortModule} from '@angular/material/sort';
 //Models
-import { featureCollection } from  "../../model/featurecollection.model";
-import { view1 } from  "../../model/view1.model";
-import { JsonForm } from '../../model/jsonform.model';
 import { SearchOptions } from './SearchOptions.model';
 
 @Injectable({
@@ -17,7 +13,6 @@ export class CentralService {
   private _hood : string;
   private _landUse : string;
   private _arr : Array<String> = [];
-  private _arrStr: String;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
                     "Mixed", "Utility", null, "All"];
   currentView = "view1";
@@ -37,8 +32,7 @@ export class CentralService {
   landUseConcentrationData = new Subject<any>(); landUseConcentrationDataRaw: any;
   view1parcelData = new Subject<any>();
   filterOwnerData = new Subject<any>();
-  //used by other components to turn on loading spinner
-  public showSpinner = new Subject<boolean>();
+  public showSpinner = new Subject<boolean>(); // public load spinner
 
   constructor(private http: HttpClient) { }
 
@@ -61,7 +55,6 @@ export class CentralService {
         this._arr = [...arr];
         this.options.parcelpins = [...this._arr]; //set the options array
     }
-    this._arrStr = JSON.stringify(this._arr);
   }
   resetParcelArray(){
     this._arr = [];
@@ -147,7 +140,6 @@ export class CentralService {
   }
   getbyParcelpins(){
     this.getViews(); // get views with updated options object
-    this.getConcentrationValues(this._city,this._hood);
     this.http.post(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`, this.options)
     .subscribe(view => {
           this.geometryData.next(view);
