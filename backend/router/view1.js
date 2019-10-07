@@ -4,7 +4,8 @@ var db = require("../model/db.js").parcelDataModel;
 var utils = require("./utils");
 
 router.all("/view1/:param?/:hood?", (req, res, next) => {
-  /*This router will take an array of parcelpins (String[]) or a city and a neighbourhood and find the corresponding values specified by view1
+  /*This router will a city and a neighbourhood and find the corresponding values specified by view1.
+    AS OF 10/19, THE PARCELPIN ARRAY IS PASSED IN THE req.body, and is optional when specifying city
     Using this array for all residential testing: ["11029010", "11029075", "11029011", "11029076", "11029012", "11029077" ]
     A test array with Com, Inst and Res Parcels: 
     ["10924128", "10924051", "10924128", "10924052", "10924127", "10924131", "10924052", "10924027",
@@ -13,12 +14,15 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   
   this.query = utils.createQuery(req.params.param, req.params.hood);
 
+  if(req.body.parcelpins !== undefined){
+    Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
+  }
   //we need to use the req.body tag in order to take the data from the option object 
  
   var sum1 = { // this contains the sums for totals for the pipeline from the query
     _id: null,  // property to group by, set to null to sum all documents
     tot_assessedval: {$sum: "$properties.gross_ce_2"},
-    tot_land:  {$sum: "$properties.total_acre"}, // total are of land
+    tot_land:  {$sum: "$properties.total_acre"}, // total arces of land for all parcels in the query
     indivs:{
       $push: { // creates an array
         indiv_pin: "$properties.parcelpin",
@@ -55,6 +59,7 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   }
   var sum2 = { //group by SiteCat1 (cat)
     _id: "$cat",
+    tot_land: {$first: "$tot_land"},
     tot_AssessedValue: {$first: "$tot_assessedval"},
     tot_Scale: {$sum: "$scale" }, //tot scale for each cat
     No_parcels: {$sum: 1},
@@ -68,7 +73,9 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
     Scale: "$tot_Scale", 
     No_parcels: 1,
     percOfLand: 1,
-    percOfAssessedVal: 1
+    percOfAssessedVal: 1,
+    totLandPerSiteCat: {$multiply: ["$percOfLand", "$tot_land"]},
+    tot_land: 1
   }
   var pipeline = [
     {$match: this.query}, 

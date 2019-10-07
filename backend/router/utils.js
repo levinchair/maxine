@@ -5,22 +5,26 @@ const VALID_LANDUSE = ["Industrial", "Government", "Institutional", "Commercial"
 const [RESIDENTIAL] = VALID_LANDUSE.slice(-1);
 
 
-const processOwnerConcentration =  async(param, hood) => {
+const processOwnerConcentration =  async(param, hood, body) => {
 
-    this.query = createQuery(param, hood); //this is the initial match query
+    this.query = createQuery(param, hood, body); //this is the initial match query
+    //need to pass in the req.body
+    if(body.parcelpins !== undefined){
+      Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: body.parcelpins}, enumerable: true});
+    }
 
     //var checkVacant = { $in: ["$properties.SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]]}
     var catfilter = { //filter for SiteCat to appropriate value
         $switch: {
         branches: [
-            {case: {$in: ["$properties.SiteCat1", VALID_LANDUSE.slice(0,5)]}, then: "$properties.total_com_"},
+            {case: {$in: ["$properties.SiteCat1", VALID_LANDUSE.slice(0,5)]}, then: "$properties.Units2"},
             {case: {$eq: ["$properties.SiteCat1", RESIDENTIAL]}, then: "$properties.Units2"},
             //{case: checkVacant, then: "$properties.total_acre"}
         ], 
-        default: "$properties.total_acre"
+        default: "$properties.Units2"
         }
     }
-    var full_value = {
+    var full_value = { //grouped
         _id: null,
         tot_value: {
             $sum: catfilter
@@ -38,7 +42,7 @@ const processOwnerConcentration =  async(param, hood) => {
             }
         }
     }
-    var owner = {
+    var owner = { //grouped
         _id: "$indivs.Owner_name",
         tot_value: {$first: "$tot_value"},
         tot_OwnerValue: {$sum: "$indivs.value"},
@@ -78,28 +82,28 @@ const processOwnerConcentration =  async(param, hood) => {
     var pipeline = [
         {$match: this.query },
         {$group: full_value},
-        {$unwind: "$indivs"},
-        {$group: owner},
-        {$sort: { tot_OwnerValue: -1}},
-        {$facet: split},
-        {$project: {
-        rows: {$concatArrays: ["$topCR4", "$otherParcels"]}
-        }},
-        {$unwind: "$rows"},
-        {$group: {
-        _id: null,
-        MarketCR4: {$first: "$rows.CR4"},
-        indivs: {$push: { OwnerName: "$rows.OwnerName", OwnerValue: "$rows.OwnerValue", MarketShare: "$rows.MarketShare",landuse: "$rows.landuse"}}
-        }},
-        {$unwind: "$indivs"},
-        {$project: {
-        _id:0,
-        MarketCR4: 1,
-        MarketShare: "$indivs.MarketShare",
-        OwnerValue: "$indivs.OwnerValue",
-        OwnerName: "$indivs.OwnerName", 
-        landuse: "$indivs.landuse"
-        }}
+        // {$unwind: "$indivs"},
+        // {$group: owner},
+        // {$sort: { tot_OwnerValue: -1}},
+        // {$facet: split},
+        // {$project: {
+        // rows: {$concatArrays: ["$topCR4", "$otherParcels"]}
+        // }},
+        // {$unwind: "$rows"},
+        // {$group: {
+        // _id: null,
+        // MarketCR4: {$first: "$rows.CR4"},
+        // indivs: {$push: { OwnerName: "$rows.OwnerName", OwnerValue: "$rows.OwnerValue", MarketShare: "$rows.MarketShare",landuse: "$rows.landuse"}}
+        // }},
+        // {$unwind: "$indivs"},
+        // {$project: {
+        // _id:0,
+        // MarketCR4: 1,
+        // MarketShare: "$indivs.MarketShare",
+        // OwnerValue: "$indivs.OwnerValue",
+        // OwnerName: "$indivs.OwnerName", 
+        // landuse: "$indivs.landuse"
+        // }}
     ]
     var a;
     var payload = [];

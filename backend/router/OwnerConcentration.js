@@ -1,27 +1,25 @@
 var express= require('express')
 var router= express.Router();
-var db = require("../model/db.js").parcelDataModel;
 var utils = require('./utils');
-var request = require("request");
 
 /** This is router for sending and recieving owner concentration */
 
 router.all("/concentration/:param?/:hood?", (req, res, next) => {
-  utils.processOwnerConcentration(req.params.param, req.params.hood)
+  utils.processOwnerConcentration(req.params.param, req.params.hood, req.body)
   .then((payload) => res.send(payload))
   .catch(err => next(err));
 });
 
  router.all("/concentrationbylanduse/:param2?/:hood2?", (req,res,next) => {
 
-    utils.processOwnerConcentration(req.params.param2, req.params.hood2).then(
+    utils.processOwnerConcentration(req.params.param2, req.params.hood2, req.body).then(
     (payload) => { //callback
 
       var data = payload;
       var landuseSum = [];
       var cr4;
       var dataMod;
-      //cal data using filter, map, reduce
+      //calculate data using filter, map, reduce
       for( var SiteCat of utils.VALID_LANDUSE){
         dataMod = data.filter( owner => owner.landuse === SiteCat);
         if(dataMod === undefined || dataMod.length == 0) {
