@@ -22,7 +22,7 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   var sum1 = { // this contains the sums for totals for the pipeline from the query
     _id: null,  // property to group by, set to null to sum all documents
     tot_assessedval: {$sum: "$properties.gross_ce_2"},
-    tot_land:  {$sum: "$properties.total_acre"}, // total are of land
+    tot_land:  {$sum: "$properties.total_acre"}, // total arces of land for all parcels in the query
     indivs:{
       $push: { // creates an array
         indiv_pin: "$properties.parcelpin",
@@ -59,6 +59,7 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   }
   var sum2 = { //group by SiteCat1 (cat)
     _id: "$cat",
+    tot_land: {$first: "$tot_land"},
     tot_AssessedValue: {$first: "$tot_assessedval"},
     tot_Scale: {$sum: "$scale" }, //tot scale for each cat
     No_parcels: {$sum: 1},
@@ -72,7 +73,9 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
     Scale: "$tot_Scale", 
     No_parcels: 1,
     percOfLand: 1,
-    percOfAssessedVal: 1
+    percOfAssessedVal: 1,
+    totLandPerSiteCat: {$multiply: ["$percOfLand", "$tot_land"]},
+    tot_land: 1
   }
   var pipeline = [
     {$match: this.query}, 

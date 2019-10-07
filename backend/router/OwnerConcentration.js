@@ -19,7 +19,7 @@ router.all("/concentration/:param?/:hood?", (req, res, next) => {
       var landuseSum = [];
       var cr4;
       var dataMod;
-      //cal data using filter, map, reduce
+      //calculate data using filter, map, reduce
       for( var SiteCat of utils.VALID_LANDUSE){
         dataMod = data.filter( owner => owner.landuse === SiteCat);
         if(dataMod === undefined || dataMod.length == 0) {
