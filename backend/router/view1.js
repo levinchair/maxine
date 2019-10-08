@@ -22,7 +22,7 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   var sum1 = { // this contains the sums for totals for the pipeline from the query
     _id: null,  // property to group by, set to null to sum all documents
     tot_assessedval: {$sum: "$properties.gross_ce_2"},
-    tot_land:  {$sum: "$properties.total_acre"}, // total arces of land for all parcels in the query
+    tot_land:  {$sum: "$properties.total_acre"},
     indivs:{
       $push: { // creates an array
         indiv_pin: "$properties.parcelpin",
@@ -44,7 +44,6 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
     _id: 0,
     tot_assessedval: 1,
     tot_land: 1,
-    //"indivs.indiv_SiteCat2": 1,
     cat:  { 
       $cond: { // checks to see if it is vacant land
         if: { $in: ["$indivs.indiv_SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]] },
@@ -59,7 +58,7 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   }
   var sum2 = { //group by SiteCat1 (cat)
     _id: "$cat",
-    tot_land: {$first: "$tot_land"},
+    //tot_land: {$first: "$tot_land"},
     tot_AssessedValue: {$first: "$tot_assessedval"},
     tot_Scale: {$sum: "$scale" }, //tot scale for each cat
     No_parcels: {$sum: 1},
@@ -73,13 +72,13 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
     Scale: "$tot_Scale", 
     No_parcels: 1,
     percOfLand: 1,
-    percOfAssessedVal: 1,
-    totLandPerSiteCat: {$multiply: ["$percOfLand", "$tot_land"]},
-    tot_land: 1
+    percOfAssessedVal: 1, 
+    //totLandPerSiteCat: {$multiply: ["$percOfLand", "$tot_land"]},
+    //tot_land: 1
   }
   var pipeline = [
     {$match: this.query}, 
-    {$group: sum1}, 
+    {$group: sum1},
     {$unwind: "$indivs"}, //flattens $indivs to separate documents/objects
     {$project: proj},
     {$group: sum2},

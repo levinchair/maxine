@@ -2,7 +2,6 @@ var upperCase = require('upper-case');
 var db = require("../model/db.js").parcelDataModel;
 
 const VALID_LANDUSE = ["Industrial", "Government", "Institutional", "Commercial", "Mixed", "Other", "Utility", "Residential"];
-const [RESIDENTIAL] = VALID_LANDUSE.slice(-1);
 
 
 const processOwnerConcentration =  async(param, hood, body) => {
@@ -14,11 +13,11 @@ const processOwnerConcentration =  async(param, hood, body) => {
     }
 
     //var checkVacant = { $in: ["$properties.SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]]}
-    var catfilter = { //filter for SiteCat to appropriate value
+    var catfilter = { //filter for SiteCat to appropriate scale
         $switch: {
         branches: [
             {case: {$in: ["$properties.SiteCat1", VALID_LANDUSE.slice(0,5)]}, then: "$properties.total_com_"},
-            {case: {$eq: ["$properties.SiteCat1", RESIDENTIAL]}, then: "$properties.Units2"},
+            {case: {$eq: ["$properties.SiteCat1", "Residential"]}, then: "$properties.Units2"},
             //{case: checkVacant, then: "$properties.total_acre"}
         ], 
         default: "$properties.total_acre"
@@ -133,7 +132,7 @@ function createQuery(param, hood){
       paramParsed = JSON.parse(param); //this will throw an error and exit if not possible to parse to JSON
     }catch(e){ //if cannot parse to json, then assume it is a name of a city
       paramParsed = upperCase(param);
-      console.log("Unable to parse, default to city. Parse Error: " + JSON.stringify(e));  
+      console.log("Unable to parse, defaulting to city.");  
     }
     /**This is will be deprecated in the near future */
     if(Array.isArray(paramParsed)) { 
