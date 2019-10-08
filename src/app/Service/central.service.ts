@@ -183,13 +183,15 @@ export class CentralService {
    getNeighbourhood() {
        this.http.get<string[]>(`http://localhost:3000/showhood/${this._city}`)
          .subscribe( (hoods: string[]) => {
-           hoods = hoods.map(hood => { // change null to All
-             if(hood === null){
-               return 'All'
-             }else {
-               return hood
-             }
-           });
+           if(hoods !== undefined || hoods.length != 0){
+            hoods = hoods.map(hood => { // change null to All
+              if(hood === null){
+                return 'All'
+              }else {
+                return hood
+              }
+            });
+           }
            this.neighborhoods.next(hoods);
          });
    }

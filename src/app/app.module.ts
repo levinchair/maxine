@@ -118,7 +118,7 @@ import { LandingPageContentComponent } from './landing-page-content/landing-page
     GoogleMapsAPIWrapper,
     CurrencyPipe
   ],
-  entryComponents:[
+  entryComponents:[ //add modals here
     ProgressSpinnerComponent,
     LandingPageContentComponent,
     TablesComponent
