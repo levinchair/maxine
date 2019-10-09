@@ -135,6 +135,7 @@ export class ControlPanelComponent implements OnInit {
       this.selectedHood=hood;
   	  this.centralService.setHood(hood);
       this.centralService.getFilterOwnerData();
+      this.centralService.getFilterMaxData();
     }
   setMax(data){
     //Because of the way events work in angular you have to create a new Options
