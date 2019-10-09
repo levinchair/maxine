@@ -85,10 +85,10 @@ export class ControlPanelComponent implements OnInit {
     this.centralService.setCity(city);
     this.centralService.getNeighbourhood();
     this.centralService.setHood("All");
-    this.centralService.getFilterMaxData();
     this.ownerList = [];
     if(this.cityAll.includes(city)){
       this.centralService.getFilterOwnerData();
+      this.centralService.getFilterMaxData();
     }
 
   }
