@@ -73,12 +73,12 @@ export class ChartsComponent implements OnInit {
       });
     this.centralService.landUseConcentrationData
       .subscribe( view => {
-        console.log("LUConc:" + JSON.stringify(view));
+        console.log("LUCdata:" + JSON.stringify(view));
         this.landUseConcentrationData = view;
         this.updateChart1("value");
       });
   }
-
+//http://jsfiddle.net/1Lngmtz7/
   createChart(){
     //Land Use
     this.chart = new Chart(this.chartRef.nativeElement, {
@@ -147,7 +147,7 @@ export class ChartsComponent implements OnInit {
         },
         tooltips:{
           callbacks: {
-            label: (tooltipItem,data) => {
+            label:(tooltipItem,data) => {
               var label = " ";
               if(tooltipItem.datasetIndex == 0){
                 return label + tooltipItem.yLabel + "%";
@@ -157,12 +157,61 @@ export class ChartsComponent implements OnInit {
             }
           }
         },
-        responsive:true,
-        maintainAspectRatio:false,
-        devicePixelRatio: 1
-      },
-
-    });
+        hover:{
+          mode:'nearest'
+        },
+        onClick:(e, active)=>{
+         // var helpers = Chart.helpers;
+         //
+         // var eventPosition = helpers.getRelativePosition(e, this.chart);
+         // var mouseX = eventPosition.x;
+         // var mouseY = eventPosition.y;
+         // var activePoints = [];
+         // var ctx = this.chartRef.nativeElement.getContext("2d");
+         // // loop through all the labels
+         // helpers.each(this.chart.scale.ticks, function (label, index) {
+         //     for (var i = this.getValueCount() - 1; i >= 0; i--) {
+         //         // here we effectively get the bounding box for each label
+         //         var pointLabelPosition = this.getPointPosition(i, this.getDistanceFromCenterForValue(this.options.reverse ? this.min : this.max) + 5);
+         //         var pointLabelFontSize = helpers.getValueOrDefault(this.options.pointLabels.fontSize, Chart.defaults.global.defaultFontSize);
+         //         var pointLabeFontStyle = helpers.getValueOrDefault(this.options.pointLabels.fontStyle, Chart.defaults.global.defaultFontStyle);
+         //         var pointLabeFontFamily = helpers.getValueOrDefault(this.options.pointLabels.fontFamily, Chart.defaults.global.defaultFontFamily);
+         //         var pointLabeFont = helpers.fontString(pointLabelFontSize, pointLabeFontStyle, pointLabeFontFamily);
+         //         ctx.font = pointLabeFont;
+         //         var labelsCount = this.pointLabels.length,
+         //             halfLabelsCount = this.pointLabels.length / 2,
+         //             quarterLabelsCount = halfLabelsCount / 2,
+         //             upperHalf = (i < quarterLabelsCount || i > labelsCount - quarterLabelsCount),
+         //             exactQuarter = (i === quarterLabelsCount || i === labelsCount - quarterLabelsCount);
+         //         var width = ctx.measureText(this.pointLabels[i]).width;
+         //         var height = pointLabelFontSize;
+         //         var x, y;
+         //         if (i === 0 || i === halfLabelsCount)
+         //             x = pointLabelPosition.x - width / 2;
+         //         else if (i < halfLabelsCount)
+         //             x = pointLabelPosition.x;
+         //         else
+         //             x = pointLabelPosition.x - width;
+         //         if (exactQuarter)
+         //             y = pointLabelPosition.y - height / 2;
+         //         else if (upperHalf)
+         //             y = pointLabelPosition.y - height;
+         //         else
+         //             y = pointLabelPosition.y
+         //         // check if the click was within the bounding box
+         //         if ((mouseY >= y && mouseY <= y + height) && (mouseX >= x && mouseX <= x + width))
+         //             activePoints.push({ index: i, label: this.pointLabels[i] });
+         //     }}, this.chart.scale);
+         //         var firstPoint = activePoints[0];
+         //         if (firstPoint !== undefined) {
+         //             alert(firstPoint.index + ': ' + firstPoint.label);
+         //         }
+              },
+              responsive:true,
+              maintainAspectRatio:false,
+              devicePixelRatio: 1
+            },
+          });
   }
 
   updateChart1(selection:String){
@@ -193,18 +242,18 @@ export class ChartsComponent implements OnInit {
           this.landUseData.push(this.view1Data[y].AssessedValue.toFixed(0));
         }
         for(var z = 0; z < this.landUseConcentrationData.length; z++){
-          this.CR4.push(this.landUseConcentrationData[z].MarketCR4.toFixed(1));
+          this.CR4.push((this.landUseConcentrationData[z].MarketCR4 * 100).toFixed(0));
         }
       }else{
         this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Acres";
         this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
           return this.cp.transform(value,"USD","","1.0-0");
         };
-        for(var y = 0; y < this.landUseConcentrationData.length; y++){
-          this.landUseData.push(this.landUseConcentrationData[y].landuseTot.toFixed(2));
+        for(var y = 0; y < this.view1Data.length; y++){
+          this.landUseData.push(this.view1Data[y].Scale.toFixed(2));
         }
         for(var z = 0; z < this.landUseConcentrationData.length; z++){
-          this.CR4.push(this.landUseConcentrationData[z].MarketCR4.toFixed(1));
+          this.CR4.push((this.landUseConcentrationData[z].MarketCR4 * 100).toFixed(0));
         }
       }
       this.chart.update();

@@ -266,7 +266,7 @@ export class TablesComponent implements OnInit {
       }
     },
     pager : {
-      perPage: 6
+      perPage: 8
     }
   };
 }

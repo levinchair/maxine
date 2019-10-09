@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { CentralService } from '../Service/central.service';
-import { Options } from 'ng5-slider';
+import { Options, LabelType } from 'ng5-slider';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPageContentComponent } from '../landing-page-content/landing-page-content.component';
 import { debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import '../Service/SearchOptions.model';
+import { CurrencyPipe } from '@angular/common';
 
 //Will populate with owners when a neighborhood is searched.
 
@@ -19,6 +20,7 @@ import '../Service/SearchOptions.model';
 export class ControlPanelComponent implements OnInit {
 
   constructor ( private centralService:CentralService,
+                public cp: CurrencyPipe,
                 private modalService: NgbModal ) { }
 
   cities : string[];
@@ -35,22 +37,22 @@ export class ControlPanelComponent implements OnInit {
   private citiesSub: Subscription;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
                     "Mixed", "Utility", "null", "All"];
-   acresMinValue: number = 0; acresMaxValue: number = 100;
-   valueMinValue: number = 0; valueMaxValue: number = 100;
-   unitsMinValue: number = 0; unitsMaxValue: number = 100;
+   acresMinValue: number = 0; acresMaxValue: number = 5;
+   valueMinValue: number = 0; valueMaxValue: number = 10;
+   unitsMinValue: number = 0; unitsMaxValue: number = 10;
    ownerInput : String;
    ownerList = ["Sample Owner List","Example"];
    acresOptions: Options = {
      floor: 0,
-     ceil: 100
+     ceil: 5
    };
    valueOptions: Options = {
      floor: 0,
-     ceil: 100
+     ceil: 10
    };
    unitsOptions: Options = {
      floor: 0,
-     ceil: 100
+     ceil: 10
    };
 
   ngOnInit() {
@@ -68,6 +70,9 @@ export class ControlPanelComponent implements OnInit {
          this.neighborhood = hoods;
          //console.log(JSON.stringify(view));
        });
+     this.centralService.filterMaxData.subscribe( (data) => {
+        this.setMax(data);
+     });
      //populates abatementList w/ 1-26
      for(let i = 1; i < 27; i++){
        this.abatementList.push(i);
@@ -80,6 +85,12 @@ export class ControlPanelComponent implements OnInit {
     this.centralService.setCity(city);
     this.centralService.getNeighbourhood();
     this.centralService.setHood("All");
+    this.centralService.getFilterMaxData();
+    this.ownerList = [];
+    if(this.cityAll.includes(city)){
+      this.centralService.getFilterOwnerData();
+    }
+
   }
   selectLandUse(landUse:string){
     this.selectedLandUse = landUse;
@@ -125,6 +136,43 @@ export class ControlPanelComponent implements OnInit {
   	  this.centralService.setHood(hood);
       this.centralService.getFilterOwnerData();
     }
+  setMax(data){
+    //Because of the way events work in angular you have to create a new Options
+    //object each time you want to change the slider options
+    var maxAcre = 5; var maxValue = 10; var maxScale = 10;
+    for(var i = 0; i < data.length; i++){
+      if(data[i].maxAcre > maxAcre){
+        maxAcre = data[i].maxAcre;
+      }if(data[i].maxValue > maxValue){
+        maxValue = data[i].maxValue;
+      }if(data[i].maxScale > maxScale){
+        maxScale = data[i].maxScale;
+      }
+    }
+    //Create new options objects to assign for each slider
+    const newOptions: Options = Object.assign({}, this.acresOptions);
+    newOptions.ceil = maxAcre; newOptions.floor = 0; this.acresMaxValue = maxAcre;
+    this.acresOptions = newOptions;
+    //Create new options objects to assign for each slider
+    const new2Options: Options = Object.assign({}, this.valueOptions);
+    new2Options.ceil = maxValue; new2Options.floor = 0; this.valueMaxValue = maxValue;
+    //Gives value Dollar signs
+    new2Options.translate = (value: number, label: LabelType): string => {
+      switch (label) {
+        case LabelType.Low:
+          return this.cp.transform(value,"USD","symbol","1.0-0");
+        case LabelType.High:
+          return this.cp.transform(value,"USD","symbol","1.0-0");
+        default:
+          return this.cp.transform(value,"USD","symbol","1.0-0");
+      }
+    }
+    this.valueOptions = new2Options;
+    //Create new options objects to assign for each slider
+    const new3Options: Options = Object.assign({}, this.unitsOptions);
+    new3Options.ceil = maxScale; new3Options.floor = 0; this.unitsMaxValue = maxScale;
+    this.unitsOptions = new3Options;
+  }
   //observable object for filter's owners input
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -133,5 +181,17 @@ export class ControlPanelComponent implements OnInit {
       map(term => term.length < 2 ? []
         : this.ownerList.filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
     )
-
+    //used to get filters for city's with no neighborhoods
+    cityAll = [
+              "BAY VILLAGE","BEACHWOOD","BEDFORD","BEDFORD HEIGHTS",
+              "BENTLEYVILLE","BEREA","BRECKSVILLE","BROADVIEW HEIGHTS",
+              "CHAGRIN FALLS","GATES MILLS","GLENWILLOW","HIGHLAND HEIGHTS",
+              "HIGHLAND HILLS","HUNTING VALLEY","INDEPENDENCE","LINNDALE",
+              "LYNDHURST","MAPLE HEIGHTS","MAYFIELD","MAYFIELD HEIGHTS",
+              "MORLAND HILLS","NEWBURGH HEIGHTS","NORTH OLMSTED","NORTH RANDALL",
+              "NORTH ROYALTON","OAKWOOD","OLMSTED FALLS","OLMSTED TOWNSHIP",
+              "ORANGE","PARMA","PARMA HEIGHTS","PEPPER PIKE","RICHMOND HEIGHTS",
+              "ROCKY RIVER","SEVEN HILLS","SOLON","STRONGSVILLE","UNIVERSITY HEIGHTS",
+              "VALLEY VIEW","WALTON HILLS","WESTLAKE","WOODMERE"
+             ];
 }

@@ -74,7 +74,7 @@
         <div class="top-row">
           <!-- Acres slider -->
           <div class="acres-container">
-            <p>Acres <input type="number" [(ngModel)]="acresMinValue"><input type="number" [(ngModel)]="acresMaxValue"></p>
+            <p>Acres <br><input type="number" [(ngModel)]="acresMinValue"><input type="number" [(ngModel)]="acresMaxValue"></p>
             <div class="custom-slider">
               <ng5-slider [(value)]="acresMinValue" [(highValue)]="acresMaxValue" [options]="acresOptions"></ng5-slider>
             </div>
@@ -93,7 +93,7 @@
           </div>
           <!-- Only visible if a Sitecat2 was selected in Land Use -->
           <div *ngIf="sitecat2Selected" class="units-container">
-            <p>Units/Square Feet <input type="number" [(ngModel)]="unitsMinValue"><input type="number" [(ngModel)]="unitsMaxValue"></p>
+            <p>Units/Square Feet <br><input type="number" [(ngModel)]="unitsMinValue"><input type="number" [(ngModel)]="unitsMaxValue"></p>
             <div class="custom-slider">
               <ng5-slider [(value)]="unitsMinValue" [(highValue)]="unitsMaxValue" [options]="unitsOptions"></ng5-slider>
             </div>
@@ -103,7 +103,7 @@
         <div class="bottom-row">
           <!-- Value Slider -->
           <div class="value-container">
-            <p>Value <input type="number" [(ngModel)]="valueMinValue"><input type="number" [(ngModel)]="valueMaxValue"></p>
+            <p>Value <br><input type="number" [(ngModel)]="valueMinValue"><input type="number" [(ngModel)]="valueMaxValue"></p>
             <div class="custom-slider">
               <ng5-slider [(value)]="valueMinValue" [(highValue)]="valueMaxValue" [options]="valueOptions"></ng5-slider>
             </div>

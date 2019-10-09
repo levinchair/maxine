@@ -32,6 +32,7 @@ export class CentralService {
   landUseConcentrationData = new Subject<any>(); landUseConcentrationDataRaw: any;
   view1parcelData = new Subject<any>();
   filterOwnerData = new Subject<any>();
+  filterMaxData = new Subject<any>();
   public showSpinner = new Subject<boolean>(); // public load spinner
 
   constructor(private http: HttpClient) { }
@@ -230,6 +231,13 @@ export class CentralService {
          }
        },
        error => this.handleError(error));
+   }
+   getFilterMaxData(){
+     this.http.post(`http://localhost:3000/maxproperties/${this._city}/${this._hood}`)
+     .subscribe(
+       (data) =>{
+         this.filterMaxData.next(data);
+      })
    }
    private handleError(error: HttpErrorResponse){
     if(error.error instanceof ErrorEvent){
