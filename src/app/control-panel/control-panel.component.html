@@ -101,7 +101,7 @@
           <!-- Owners selected go here -->
           <div class="ownerDisplay">
             <div *ngFor="let owner of ownerInputList" class="ownerDisplayItem">
-              {{owner | titlecase }}
+              <span class="ownerDisplayItemText">{{owner | titlecase }}</span>
               <button type="button" class="close removeOwner" aria-label="Close" (click)="removeOwner(owner)">
                 <span aria-hidden="true">&times;</span>
               </button>

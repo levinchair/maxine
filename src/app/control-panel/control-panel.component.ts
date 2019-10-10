@@ -209,9 +209,7 @@ export class ControlPanelComponent implements OnInit {
     if(owner != "" && owner != null && owner !== undefined){
       if(this.ownerInputList.indexOf(owner.toUpperCase()) >= 0){
         this.ownerInput = "";
-        console.log("1" + owner);
       }else{
-        console.log("2" + owner);
         this.ownerInputList.push(owner.toUpperCase());
         this.ownerInputList.sort();
         this.ownerInput = "";
