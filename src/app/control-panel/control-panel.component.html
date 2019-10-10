@@ -55,7 +55,7 @@
                   [class.selected] = "landUse === selectedCity"
                   class="landUseDropdownButton"
                   ngbDropdownItem>
-                  {{ landUse | titlecase }}
+                    {{ landUse | titlecase }}
         </button>
       </div>
   </div>
@@ -98,6 +98,15 @@
               <ng5-slider [(value)]="unitsMinValue" [(highValue)]="unitsMaxValue" [options]="unitsOptions"></ng5-slider>
             </div>
           </div>
+          <!-- Owners selected go here -->
+          <div class="ownerDisplay">
+            <div *ngFor="let owner of ownerInputList" class="ownerDisplayItem">
+              {{owner | titlecase }}
+              <button type="button" class="close removeOwner" aria-label="Close" (click)="removeOwner(owner)">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
         </div>
         <!-- Bottom Row of Filters Body -->
         <div class="bottom-row">
@@ -113,6 +122,9 @@
             Owner
             <br>
             <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="ownerInput" [ngbTypeahead]="search"/>
+            <button type="button" class="close addOwner" aria-label="Close" (click)="addOwner(ownerInput)">
+              <span aria-hidden="true">&#43;</span>
+            </button>
           </div>
           <!-- Only visible if a Sitecat2 was selected in Land Use -->
           <div *ngIf="sitecat2Selected" ngbDropdown class="d-inline-block DTLU-container">
@@ -128,6 +140,7 @@
               </div>
           </div>
         </div>
+        <button type="button" class="btn btn-outline-primary resetFilters" (click)="resetFilter()">Reset Filters</button>
       </div>
     </div>
   </div>

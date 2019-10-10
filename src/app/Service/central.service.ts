@@ -233,7 +233,7 @@ export class CentralService {
        error => this.handleError(error));
    }
    getFilterMaxData(){
-     this.http.post(`http://localhost:3000/maxproperties/${this._city}/${this._hood}`)
+     this.http.post(`http://localhost:3000/maxproperties/${this._city}/${this._hood}`,this.options)
      .subscribe(
        (data) =>{
          this.filterMaxData.next(data);
