@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
 import { NeighborhoodBoundaries } from '../../assets/data/cle_neighborhoods';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-leaflet-map',
@@ -34,6 +35,7 @@ export class LeafletMapComponent implements OnInit {
 
   constructor(
     private centralService : CentralService,
+    public cp: CurrencyPipe
   ){}
 
   ngOnInit() {
@@ -152,7 +154,7 @@ export class LeafletMapComponent implements OnInit {
           "<b>Land Use</b>   : " + feature.properties.SiteCat1 + "<br>" +
           "<b>-> Sub-Category</b> : " + feature.properties.SiteCat2 + "<br>" +
           "<b>Address</b>    : " + feature.properties.par_addr_a + "<br>" +
-          "<b>Total SqFt</b> : " + feature.properties.total_squa + "<br>" +
+          "<b>Total SqFt</b> : " + this.cp.transform(feature.properties.total_squa,"USD","","1.0-0") + "<br>" +
           "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
         /** do something when a shape is clicked **/
         if(this.selectionToggle){
@@ -185,7 +187,7 @@ export class LeafletMapComponent implements OnInit {
           .setContent(popupContent).openOn(this.map);
         }
         this.shapeLayer.setup().render(); //slow because of resetVertices
-  
+
       },
       border: true,
       color: (index : Number, feature : JsonForm) => {
@@ -193,7 +195,7 @@ export class LeafletMapComponent implements OnInit {
         return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
       }
     });
-  }  
+  }
   getColors(zoneType){
     switch(zoneType){
       case "Residential":
@@ -231,7 +233,7 @@ export class LeafletMapComponent implements OnInit {
   //add check initialized/undefined flags
   getLassoPlots(){
     let toolData = [...this.selectedParcels];
-    
+
     if (!toolData || toolData.length == 0) {
       alert("No parcels were selected");
       // this.removeLassoPolygons();

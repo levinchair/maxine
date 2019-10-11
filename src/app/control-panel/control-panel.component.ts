@@ -7,6 +7,8 @@ import { LandingPageContentComponent } from '../landing-page-content/landing-pag
 import { debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import '../Service/SearchOptions.model';
 import { CurrencyPipe } from '@angular/common';
+import { AbatementModalComponent } from '../abatement-modal/abatement-modal.component';
+import { DTLUModalComponent } from '../dtlu-modal/dtlu-modal.component';
 
 //Will populate with owners when a neighborhood is searched.
 
@@ -29,9 +31,8 @@ export class ControlPanelComponent implements OnInit {
   selectedLandUse : string;
   sitecat2Selected: boolean = true;
   abatementList = [];
-  private selectedHood;
   neighborhood : string[] = [];
-  _neighborhood:string = "";
+  selectedHood:string = "";
   public isCollapsed = true;
   private citiesSub: Subscription;
   private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
@@ -42,6 +43,7 @@ export class ControlPanelComponent implements OnInit {
    ownerInput : String;
    ownerInputList : String[] = [];
    ownerList = ["Sample Owner List","Example"];
+   ownerMessage: String = "";
    acresOptions: Options = {
      floor: 0,
      ceil: 5
@@ -85,11 +87,13 @@ export class ControlPanelComponent implements OnInit {
     this.selectedCity = city;
     this.centralService.setCity(city);
     this.centralService.getNeighbourhood();
-    this.centralService.setHood("All");
-    this.ownerList = [];
+    this.ownerList = []; this.ownerMessage = "";
     if(this.cityAll.includes(city)){
+      this.onSelectHood('All');
       this.centralService.getFilterOwnerData();
       this.centralService.getFilterMaxData();
+    }else{
+      this.selectedHood = "Select Neighborhood...";
     }
     this.resetFilter();
   }
@@ -150,17 +154,23 @@ export class ControlPanelComponent implements OnInit {
     //object each time you want to change the slider options
     var maxAcre = 5; var maxValue = 10; var maxScale = 10;
     for(var i = 0; i < data.length; i++){
-      if(data[i].maxAcre > maxAcre){
+      if(Math.ceil(data[i].maxAcre) > maxAcre){
         maxAcre = data[i].maxAcre;
-      }if(data[i].maxValue > maxValue){
+      }if(Math.ceil(data[i].maxValue) > maxValue){
         maxValue = data[i].maxValue;
-      }if(data[i].maxScale > maxScale){
+      }if(Math.ceil(data[i].maxScale) > maxScale){
         maxScale = data[i].maxScale;
       }
     }
     //Create new options objects to assign for each slider
     const newOptions: Options = Object.assign({}, this.acresOptions);
     newOptions.ceil = maxAcre; newOptions.floor = 0; this.acresMaxValue = maxAcre;
+    //Setting tick values
+    newOptions.showTicksValues = true;
+    newOptions.stepsArray = [
+      {value:0},{value:0.1},{value:0.2},{value:0.3},{value:0.4},{value:0.5},
+      {value:1},{value:2},{value:3},{value:4},{value:5},{value:Math.ceil(maxAcre)}
+    ];
     this.acresOptions = newOptions;
     //Create new options objects to assign for each slider
     const new2Options: Options = Object.assign({}, this.valueOptions);
@@ -207,15 +217,20 @@ export class ControlPanelComponent implements OnInit {
 
   addOwner(owner){
     if(owner != "" && owner != null && owner !== undefined){
-      if(this.ownerInputList.indexOf(owner.toUpperCase()) >= 0){
+      if(this.ownerInputList.indexOf(owner.toUpperCase().trim()) >= 0){
+        //owner is already in list, alert user and reset ownerInput
+        this.ownerMessage = "Repeat Entry"
         this.ownerInput = "";
       }else{
-        this.ownerInputList.push(owner.toUpperCase());
+        //owner is not in list, add as uppercased and trim excess whitespace
+        this.ownerInputList.push(owner.toUpperCase().trim());
         this.ownerInputList.sort();
+        this.ownerMessage = "";
         this.ownerInput = "";
       }
     }
   }
+
   removeOwner(owner){
     //find Index of owener
     let index = this.ownerInputList.indexOf(owner);
@@ -224,9 +239,16 @@ export class ControlPanelComponent implements OnInit {
       this.ownerInputList.splice(index,1);
       //Sort in alphabetical
       this.ownerInputList.sort();
+      this.ownerMessage = "";
     }else{console.log("Error:removeOwner owner not found");}
   }
 
+  openAbatementModal(){
+    const modalRef = this.modalService.open(AbatementModalComponent,{ centered: true, size: 'lg'});
+  }
+  openDTLUModal(){
+    const modalRef = this.modalService.open(DTLUModalComponent,{ centered: true, size: 'lg'});
+  }
   //observable object for filter's owners input
   search = (text$: Observable<string>) =>
     text$.pipe(

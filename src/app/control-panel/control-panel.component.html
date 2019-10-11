@@ -22,7 +22,7 @@
       <button class="btn btn-outline-primary" id="dropdownHood" ngbDropdownToggle
       [ngbPopover]="popBContent" [openDelay]="666"
       triggers="mouseenter:mouseleave" [popoverTitle]="popBTitle">
-      Neighborhood: {{this.centralService._hood | titlecase}}</button>
+      Neighborhood: {{this.selectedHood | titlecase}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="force-scroll">
         <div *ngIf="neighborhood.length > 0">
         <button *ngFor= "let hood of neighborhood"
@@ -81,7 +81,7 @@
           </div>
           <!-- Abatement Dropdown -->
           <div ngbDropdown class="d-inline-block abatement-container">
-            <span>Abatement <img class="info-button" title="info-button" src="../assets/icons-24px/png/iconfinder_exclamation.png" height="20" width="20" title="info-button"></span>
+            <span>Abatement <img class="info-button" title="info-button" src="../assets/icons-24px/png/iconfinder_exclamation.png" height="20" width="20" title="info-button" (click)="openAbatementModal()"></span>
             <br>
               <button type="button" class="btn btn-outline-primary" id="dropdownAbatement" ngbDropdownToggle>Select</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="abatement-body">
@@ -121,15 +121,18 @@
           <div ngbDropdown class="d-inline-block owner-container">
             Owner
             <br>
-            <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="ownerInput" [ngbTypeahead]="search"/>
+            <input id="typeahead-basic" type="text" class="form-control"
+                  [(ngModel)]="ownerInput" [ngbTypeahead]="search"
+                  (keydown.enter)="addOwner(ownerInput)"/>
             <button type="button" class="close addOwner" aria-label="Close" (click)="addOwner(ownerInput)">
               <span aria-hidden="true">&#43;</span>
             </button>
+            <span alert class="ownerMessage">{{ownerMessage}}</span>
           </div>
           <!-- Only visible if a Sitecat2 was selected in Land Use -->
           <div *ngIf="sitecat2Selected" ngbDropdown class="d-inline-block DTLU-container">
             Detailed Taxable Land Use
-            <img class="info-button" title="info-button" src="../assets/icons-24px/png/iconfinder_exclamation.png" height="20" width="20" title="info-button">
+            <img class="info-button" title="info-button" src="../assets/icons-24px/png/iconfinder_exclamation.png" height="20" width="20" title="info-button" (click)="openDTLUModal()">
             <br>
               <button type="button" class="btn btn-outline-primary" id="dropdownAbatement" ngbDropdownToggle>Select</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="abatement-body">

@@ -51,6 +51,8 @@ import { TablesComponent } from './tables/tables.component';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LandingPageContentComponent } from './landing-page-content/landing-page-content.component';
+import { AbatementModalComponent } from './abatement-modal/abatement-modal.component';
+import { DTLUModalComponent } from './dtlu-modal/dtlu-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import { LandingPageContentComponent } from './landing-page-content/landing-page
     TablesComponent,
     ProgressSpinnerComponent,
     SidebarComponent,
-    LandingPageContentComponent
+    LandingPageContentComponent,
+    AbatementModalComponent,
+    DTLUModalComponent
   ],
   imports: [
     BrowserModule,
@@ -121,7 +125,9 @@ import { LandingPageContentComponent } from './landing-page-content/landing-page
   entryComponents:[ //add modals here
     ProgressSpinnerComponent,
     LandingPageContentComponent,
-    TablesComponent
+    TablesComponent,
+    AbatementModalComponent,
+    DTLUModalComponent
   ],
   bootstrap: [AppComponent]
 })
