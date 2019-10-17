@@ -9,6 +9,7 @@ import '../Service/SearchOptions.model';
 import { CurrencyPipe } from '@angular/common';
 import { AbatementModalComponent } from '../abatement-modal/abatement-modal.component';
 import { DTLUModalComponent } from '../dtlu-modal/dtlu-modal.component';
+import { AddressSearchComponent } from '../address-search/address-search.component';
 
 //Will populate with owners when a neighborhood is searched.
 
@@ -56,7 +57,20 @@ export class ControlPanelComponent implements OnInit {
      floor: 0,
      ceil: 10
    };
-
+    //used to get filters for city's with no neighborhoods
+    //moved to top because this is a constant
+    cityAll = [
+      "BAY VILLAGE","BEACHWOOD","BEDFORD","BEDFORD HEIGHTS",
+      "BENTLEYVILLE","BEREA","BRECKSVILLE","BROADVIEW HEIGHTS",
+      "CHAGRIN FALLS","GATES MILLS","GLENWILLOW","HIGHLAND HEIGHTS",
+      "HIGHLAND HILLS","HUNTING VALLEY","INDEPENDENCE","LINNDALE",
+      "LYNDHURST","MAPLE HEIGHTS","MAYFIELD","MAYFIELD HEIGHTS",
+      "MORLAND HILLS","NEWBURGH HEIGHTS","NORTH OLMSTED","NORTH RANDALL",
+      "NORTH ROYALTON","OAKWOOD","OLMSTED FALLS","OLMSTED TOWNSHIP",
+      "ORANGE","PARMA","PARMA HEIGHTS","PEPPER PIKE","RICHMOND HEIGHTS",
+      "ROCKY RIVER","SEVEN HILLS","SOLON","STRONGSVILLE","UNIVERSITY HEIGHTS",
+      "VALLEY VIEW","WALTON HILLS","WESTLAKE","WOODMERE"
+     ];
   ngOnInit() {
      this.citiesSub = this.centralService.getCities()
       .subscribe( (cities : string[]) => {
@@ -257,17 +271,10 @@ export class ControlPanelComponent implements OnInit {
       map(term => term.length < 2 ? []
         : this.ownerList.filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
     )
-    //used to get filters for city's with no neighborhoods
-    cityAll = [
-              "BAY VILLAGE","BEACHWOOD","BEDFORD","BEDFORD HEIGHTS",
-              "BENTLEYVILLE","BEREA","BRECKSVILLE","BROADVIEW HEIGHTS",
-              "CHAGRIN FALLS","GATES MILLS","GLENWILLOW","HIGHLAND HEIGHTS",
-              "HIGHLAND HILLS","HUNTING VALLEY","INDEPENDENCE","LINNDALE",
-              "LYNDHURST","MAPLE HEIGHTS","MAYFIELD","MAYFIELD HEIGHTS",
-              "MORLAND HILLS","NEWBURGH HEIGHTS","NORTH OLMSTED","NORTH RANDALL",
-              "NORTH ROYALTON","OAKWOOD","OLMSTED FALLS","OLMSTED TOWNSHIP",
-              "ORANGE","PARMA","PARMA HEIGHTS","PEPPER PIKE","RICHMOND HEIGHTS",
-              "ROCKY RIVER","SEVEN HILLS","SOLON","STRONGSVILLE","UNIVERSITY HEIGHTS",
-              "VALLEY VIEW","WALTON HILLS","WESTLAKE","WOODMERE"
-             ];
+  addressSearch(){
+    /** Do something when Address Searh button is clicked */
+    console.log("Address search");
+    const modalRef = this.modalService.open(AddressSearchComponent,{ centered: true, size: 'lg'});
+  }
+
 }

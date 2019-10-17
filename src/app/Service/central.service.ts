@@ -237,7 +237,9 @@ export class CentralService {
      .subscribe(
        (data) =>{
          this.filterMaxData.next(data);
-      })
+        },
+        err => this.handleError(err)
+      );
    }
    private handleError(error: HttpErrorResponse){
     if(error.error instanceof ErrorEvent){

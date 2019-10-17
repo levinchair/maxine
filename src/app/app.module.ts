@@ -53,6 +53,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { LandingPageContentComponent } from './landing-page-content/landing-page-content.component';
 import { AbatementModalComponent } from './abatement-modal/abatement-modal.component';
 import { DTLUModalComponent } from './dtlu-modal/dtlu-modal.component';
+import { AddressSearchComponent } from './address-search/address-search.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { DTLUModalComponent } from './dtlu-modal/dtlu-modal.component';
     SidebarComponent,
     LandingPageContentComponent,
     AbatementModalComponent,
-    DTLUModalComponent
+    DTLUModalComponent,
+    AddressSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -127,7 +129,8 @@ import { DTLUModalComponent } from './dtlu-modal/dtlu-modal.component';
     LandingPageContentComponent,
     TablesComponent,
     AbatementModalComponent,
-    DTLUModalComponent
+    DTLUModalComponent,
+    AddressSearchComponent
   ],
   bootstrap: [AppComponent]
 })
