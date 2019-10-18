@@ -19,6 +19,7 @@ export class CentralService {
   currentAttr = "AssessedValue";
   search      = "";
   areas = [];
+  firstVisit = false;
   options : SearchOptions = new SearchOptions();
   currentSiteCat = new Subject<any>();
   geocoderData = new Subject<any>();

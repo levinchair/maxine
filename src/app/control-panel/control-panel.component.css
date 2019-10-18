@@ -13,10 +13,7 @@ button{
   color: #528aae;
 }
 /* ----------------------------Nav Bar---------------------------- */
-.popA{
-  min-width:500px;
-  overflow-wrap: break-word;
-}
+
 .force-scroll {
 overflow-y: scroll;
 height: 450px;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { CentralService } from '../Service/central.service';
 import { Options, LabelType } from 'ng5-slider';
@@ -28,7 +28,7 @@ export class ControlPanelComponent implements OnInit {
 
   cities : string[];
   cityFromService = this.centralService.getCity();
-  selectedCity : string;
+  selectedCity : string = "Select city...";
   selectedLandUse : string;
   sitecat2Selected: boolean = true;
   abatementList = [];
@@ -43,7 +43,7 @@ export class ControlPanelComponent implements OnInit {
    unitsMinValue: number = 0; unitsMaxValue: number = 10;
    ownerInput : String;
    ownerInputList : String[] = [];
-   ownerList = ["Sample Owner List","Example"];
+   ownerList : String[] = [];
    ownerMessage: String = "";
    acresOptions: Options = {
      floor: 0,
@@ -57,8 +57,11 @@ export class ControlPanelComponent implements OnInit {
      floor: 0,
      ceil: 10
    };
+   @ViewChild('a') private popA;@ViewChild('b') private popB;
+   @ViewChild('c') private popC;@ViewChild('d') private popD;
+   @ViewChild('e') private popE;
+
     //used to get filters for city's with no neighborhoods
-    //moved to top because this is a constant
     cityAll = [
       "BAY VILLAGE","BEACHWOOD","BEDFORD","BEDFORD HEIGHTS",
       "BENTLEYVILLE","BEREA","BRECKSVILLE","BROADVIEW HEIGHTS",
@@ -72,6 +75,7 @@ export class ControlPanelComponent implements OnInit {
       "VALLEY VIEW","WALTON HILLS","WESTLAKE","WOODMERE"
      ];
   ngOnInit() {
+    console.log(this.centralService.firstVisit);
      this.citiesSub = this.centralService.getCities()
       .subscribe( (cities : string[]) => {
        cities.splice(0,1);
@@ -80,8 +84,7 @@ export class ControlPanelComponent implements OnInit {
      });
      this.centralService.filterOwnerData.subscribe( (view) => {
          this.ownerList = view;
-       }
-     )
+       });
      this.centralService.neighborhoods.subscribe( (hoods) => {
          this.neighborhood = hoods;
          //console.log(JSON.stringify(view));
@@ -108,21 +111,50 @@ export class ControlPanelComponent implements OnInit {
       this.centralService.getFilterMaxData();
     }else{
       this.selectedHood = "Select Neighborhood...";
+      //if first time visiting opens popupB
+      if(this.centralService.firstVisit){
+        this.popB.open();
+      }
+    }
+    if(this.centralService.firstVisit){
+      this.popA.close();
     }
     this.resetFilter();
   }
 
+  onSelectHood(hood: string) {
+      this.selectedHood=hood;
+  	  this.centralService.setHood(hood);
+      this.centralService.getFilterOwnerData();
+      this.centralService.getFilterMaxData();
+      this.resetFilter();
+      //if first time visiting opens popupC
+      if(this.centralService.firstVisit){
+        this.popB.close();
+        this.popC.open();
+      }
+    }
+
   selectLandUse(landUse:string){
     this.selectedLandUse = landUse;
     this.centralService.setLandUse(landUse);
+    //if first time visiting opens popupD
+    if(this.centralService.firstVisit){
+      this.popC.close();
+      this.popD.open();
+    }
   }
 
   updateAllData(){
+    if(this.centralService.firstVisit){
+      this.popE.close();
+    }
     this.centralService.showSpinner.next(true);
     this.centralService.setParcelArray([]);
     this.setOptions();
     this.centralService.getGeometry();
     this.centralService.getViews(); // inital subscribe of the data
+
   }
 
   setOptions(){
@@ -138,8 +170,9 @@ export class ControlPanelComponent implements OnInit {
     // if(this.abatementList.length > 0){
     //   this.centralService.options.abatement = this.abatementList[0];//NEED TO FIX / CLARIFY
     // }//Check if any owner was selected, empty strings in js are falsey
-    if(this.ownerInput){
-      this.centralService.options.owner = this.ownerInput;
+    if(this.ownerInputList.length > 0){
+      //sets to first value, because we haven't implemented multiple search in db
+      this.centralService.options.owner = this.ownerInputList[0];
     }//Check if a land use was selected and assign
     if(this.selectedLandUse){
       this.centralService.options.sitecat1 = this.selectedLandUse;
@@ -150,18 +183,6 @@ export class ControlPanelComponent implements OnInit {
     }//Check if value was changed from default
     console.log(this.centralService.options);
   }
-
-  open(){
-    const modalRef = this.modalService.open(LandingPageContentComponent,{ centered: true, size: 'lg'});
-  }
-
-  onSelectHood(hood: string) {
-      this.selectedHood=hood;
-  	  this.centralService.setHood(hood);
-      this.centralService.getFilterOwnerData();
-      this.centralService.getFilterMaxData();
-      this.resetFilter();
-    }
 
   setMax(data){
     //Because of the way events work in angular you have to create a new Options
@@ -218,6 +239,7 @@ export class ControlPanelComponent implements OnInit {
     this.unitsOptions = new3Options;
   }
 
+  //Clears all filter options to default
   resetFilter(){
     // Reset Sliders
     this.acresMaxValue = this.acresOptions.ceil; this.acresMinValue = this.acresOptions.floor;
@@ -229,6 +251,7 @@ export class ControlPanelComponent implements OnInit {
     this.ownerInput = "";
   }
 
+  //Adds owner selected to ownerInputList
   addOwner(owner){
     if(owner != "" && owner != null && owner !== undefined){
       if(this.ownerInputList.indexOf(owner.toUpperCase().trim()) >= 0){
@@ -244,7 +267,7 @@ export class ControlPanelComponent implements OnInit {
       }
     }
   }
-
+  //Removes owner string from ownerInputList
   removeOwner(owner){
     //find Index of owener
     let index = this.ownerInputList.indexOf(owner);
@@ -257,12 +280,39 @@ export class ControlPanelComponent implements OnInit {
     }else{console.log("Error:removeOwner owner not found");}
   }
 
+  //handles filter popover logic
+  filterToggle(){
+    this.isCollapsed = !this.isCollapsed
+    //for opening e popover when filter is closed, and popovers enabled
+    if(!(this.popD.isOpen()) && this.centralService.firstVisit){
+      this.popE.open();
+    }else{
+      this.popD.close();
+    }
+  }
+  //Opens landing page modal at init
+  open(){
+    const modalRef = this.modalService.open(LandingPageContentComponent,{ centered: true, size: 'lg'});
+    //modalRef uses a result promise so message is passed from landing page dismiss call
+    modalRef.result.then(()=>{},(message)=>{
+      if(message == 'A'){ //Property Market
+        this.popA.open();
+      }else if(message == 'B'){ //Labor Market
+        console.log("Labor Market selected");
+      }else if(message =='C'){ //Address Search
+        this.addressSearch();
+      }
+    });
+  }
+  //Opens abatement modal when abatement (i) is clicked in filters
   openAbatementModal(){
     const modalRef = this.modalService.open(AbatementModalComponent,{ centered: true, size: 'lg'});
   }
+  //Opens Detailed Taxable Land use modal when (i) is clicked in filters
   openDTLUModal(){
     const modalRef = this.modalService.open(DTLUModalComponent,{ centered: true, size: 'lg'});
   }
+
   //observable object for filter's owners input
   search = (text$: Observable<string>) =>
     text$.pipe(

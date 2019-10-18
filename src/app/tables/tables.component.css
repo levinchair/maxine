@@ -16,6 +16,7 @@ ng2-smart-table{
 h4{
   width:100%;
   text-align: center;
+  padding-left:33px;
 }
 /* This is super important, don't remove */
 :host{
