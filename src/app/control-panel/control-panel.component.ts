@@ -3,13 +3,13 @@ import { Subscription, Observable } from 'rxjs';
 import { CentralService } from '../Service/central.service';
 import { Options, LabelType } from 'ng5-slider';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LandingPageContentComponent } from '../landing-page-content/landing-page-content.component';
+import { LandingPageContentComponent } from '../modalComponents/landing-page-content/landing-page-content.component';
 import { debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import '../Service/SearchOptions.model';
 import { CurrencyPipe } from '@angular/common';
-import { AbatementModalComponent } from '../abatement-modal/abatement-modal.component';
-import { DTLUModalComponent } from '../dtlu-modal/dtlu-modal.component';
-import { AddressSearchComponent } from '../address-search/address-search.component';
+import { AbatementModalComponent } from '../modalComponents/abatement-modal/abatement-modal.component';
+import { DTLUModalComponent } from '../modalComponents/dtlu-modal/dtlu-modal.component';
+import { AddressSearchComponent } from '../modalComponents/address-search/address-search.component';
 
 //Will populate with owners when a neighborhood is searched.
 

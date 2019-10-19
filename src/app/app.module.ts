@@ -38,7 +38,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { Ng5SliderModule } from 'ng5-slider';
 //Components
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ControlPanelComponent } from './control-panel/control-panel.component';
 import { FlexLayoutModule } from "@angular/flex-layout";
@@ -48,17 +47,16 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { ChartsComponent } from './charts/charts.component';
 import { TablesComponent } from './tables/tables.component';
-import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
+import { ProgressSpinnerComponent } from './modalComponents/progress-spinner/progress-spinner.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { LandingPageContentComponent } from './landing-page-content/landing-page-content.component';
-import { AbatementModalComponent } from './abatement-modal/abatement-modal.component';
-import { DTLUModalComponent } from './dtlu-modal/dtlu-modal.component';
-import { AddressSearchComponent } from './address-search/address-search.component';
+import { LandingPageContentComponent } from './modalComponents/landing-page-content/landing-page-content.component';
+import { AbatementModalComponent } from './modalComponents/abatement-modal/abatement-modal.component';
+import { DTLUModalComponent } from './modalComponents/dtlu-modal/dtlu-modal.component';
+import { AddressSearchComponent, AddressAreaComponent } from './modalComponents/address-search/address-search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     ControlPanelComponent,
     ToggleableDirective,
     LeafletMapComponent,
@@ -69,7 +67,8 @@ import { AddressSearchComponent } from './address-search/address-search.componen
     LandingPageContentComponent,
     AbatementModalComponent,
     DTLUModalComponent,
-    AddressSearchComponent
+    AddressSearchComponent,
+    AddressAreaComponent
   ],
   imports: [
     BrowserModule,
@@ -130,7 +129,8 @@ import { AddressSearchComponent } from './address-search/address-search.componen
     TablesComponent,
     AbatementModalComponent,
     DTLUModalComponent,
-    AddressSearchComponent
+    AddressSearchComponent,
+    AddressAreaComponent
   ],
   bootstrap: [AppComponent]
 })

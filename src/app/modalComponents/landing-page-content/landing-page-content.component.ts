@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CentralService } from '../Service/central.service';
+import { CentralService } from '../../Service/central.service';
 
 @Component({
   selector: 'app-landing-page-content',

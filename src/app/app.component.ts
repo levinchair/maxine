@@ -4,7 +4,7 @@ import { CentralService } from './Service/central.service';
 //material
 import {MatDialog, MatDialogRef} from '@angular/material';
 //spinner component
-import { ProgressSpinnerComponent } from "./progress-spinner/progress-spinner.component"
+import { ProgressSpinnerComponent } from "./modalComponents/progress-spinner/progress-spinner.component"
 
 @Component({
   selector: 'app-root',
