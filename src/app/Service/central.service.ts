@@ -4,6 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { tap, catchError, retry } from 'rxjs/operators';
 //Models
 import { SearchOptions } from './SearchOptions.model';
+import { SearchAddress } from 'src/model/search-address';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,10 @@ export class CentralService {
   filterMaxData = new Subject<any>();
   public showSpinner = new Subject<boolean>(); // public load spinner
 
+  //data for the address search
+  public searchAddr: SearchAddress;
+
+
   constructor(private http: HttpClient) { }
 
   setCity(city: string){
@@ -66,6 +71,12 @@ export class CentralService {
   }
   setAreas(e:Array<String>){
     this.areas = e;
+
+  }
+
+  setAddressdata(){
+    //instantiate a new searchAddress object here with the passed object 
+    //from the addressSearch component
 
   }
   getCity(){

@@ -1,12 +1,41 @@
 <div class="modal-header">
-  <h4 class="modal-title">Hi there!</h4>
+  <h4 class="modal-title">Terra-Mapping</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  
-  <button (click)="openSecondModal()">Open modal</button>
+    <div class="container">
+        <h1>Address Search</h1>  
+        {{testModel}}
+        <form (ngSubmit)="onSubmit()" #addressForm="ngForm">
+          <div class="form-group">
+            <label for="streetnum">Street Number</label>
+            <input type="text" class="form-control" id="streetNum" name="streetNum" [(ngModel)]="this.model.streetNum" required>
+          </div>
+    
+          <div class="form-group">
+            <label for="streetName">Street Name</label>
+            <input type="text" class="form-control" id="streetName" name="streetName" [(ngModel)]="this.model.streetName" required>
+          </div>
+          <div class="form-group">
+            <label for="cityName">City Name</label>
+            <input type="text" class="form-control" id="cityName" name="cityName" [(ngModel)]="this.model.cityName">
+          </div>
+          <div class="form-group">
+            <label for="zip">Zip Code</label>
+            <input type="text" class="form-control" id="zip" name="zipcode" [(ngModel)]="this.model.zipcode">
+          </div>
+          <div class="form-group">
+            <label for="interest">Area of Interest</label>
+            <select class="form-control" required>
+            <option *ngFor="let area of areas" [value]="area" class="from-control" id="interest">{{area}}</option>
+            </select>
+          </div>
+         <button type="submit" class="btn btn-success">Submit</button>    
+    
+        </form>
+    </div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
