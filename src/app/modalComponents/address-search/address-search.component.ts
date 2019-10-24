@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 //Models
 import { SearchAddress } from 'src/model/search-address';
 
+import { CentralService } from '../../Service/central.service';
+
+
 @Component({
   selector: 'app-address-search',
   templateUrl: './address-search.component.html',
@@ -11,7 +14,7 @@ import { SearchAddress } from 'src/model/search-address';
 })
 export class AddressSearchComponent implements OnInit {
 
-  constructor(private modalService: NgbModal, public activeModal: NgbActiveModal ) {}
+  constructor(private modalService: NgbModal, public activeModal: NgbActiveModal, private centralService:CentralService) {}
   areas: string[];
   model: SearchAddress;
 
@@ -21,19 +24,13 @@ export class AddressSearchComponent implements OnInit {
   }
 
   onSubmit(){
-    //need to add the form to local data
-    //get data to central service, the model is binded to the form.
-
-
-    //this is option (have second modal)
-    //this.modalService.open(AddressAreaComponent);
-
+    this.centralService.setAddressdata(this.model);
   }
   get testModel() { return JSON.stringify(this.model); }
 
 }
 
-//inner component Opened by the address Component 
+//inner component Opened by the address Component (ALTERNATE PLAN)
 @Component({
   selector: 'address-area',
   template: `
@@ -68,8 +65,6 @@ export class AddressAreaComponent {
   ngOnInit(){
     this.areas = ['half-mile radius', 'Neighborhood', 'City', 'County'];
   }
-  onSubmit(){
-    //here we append the data from the area selected
-  }
+
 
 }

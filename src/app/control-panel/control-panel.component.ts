@@ -324,6 +324,7 @@ export class ControlPanelComponent implements OnInit {
   addressSearch(){
     /** Do something when Address Searh button is clicked */
     console.log("Address search");
+    //maybe try to make this modal totally fit in the page
     const modalRef = this.modalService.open(AddressSearchComponent,{ centered: true, size: 'lg'});
   }
 
