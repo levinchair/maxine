@@ -7,17 +7,16 @@
 <div class="modal-body">
     <div class="container">
         <h1>Address Search</h1>  
-        {{testModel}}
         <form (ngSubmit)="onSubmit()" #addressForm="ngForm">
           <div class="form-group">
             <label for="streetNum">Street Number</label>
-            <input type="text" class="form-control" id="streetNum" name="streetNum" [(ngModel)]="this.model.streetNum" required #name >
-            <!-- <div [hidden]="streetNum.valid || streetNum.pristine" class="alert alert-danger">Name is required</div> -->
+            <input type="text" class="form-control" id="streetNum" name="streetNum" [(ngModel)]="this.model.streetNum" required #streetNum="ngModel">
+            <div [hidden]="streetNum.valid || streetNum.pristine" class="alert alert-danger">Street Number is required</div>
           </div>
           <div class="form-group">
             <label for="streetName">Street Name</label>
-            <input type="text" class="form-control" id="streetName" name="streetName" [(ngModel)]="this.model.streetName" #spy required>
-            <br>Remove this eventually: {{spy.ClassName}}
+            <input type="text" class="form-control" id="streetName" name="streetName" [(ngModel)]="this.model.streetName" #streetName="ngModel" required>
+            <div [hidden]="streetName.valid || streetName.pristine" class="alert alert-danger">Street Name is required</div>
           </div>
           <div class="form-group">
             <label for="cityName">City Name</label>
@@ -32,8 +31,10 @@
             <select class="form-control" required [(ngModel)]="this.model.areaOfInterest" name="areaOfInterest" #areaOfInterest="ngModel">
             <option *ngFor="let area of areas" [value]="area" class="from-control" id="interest">{{area}}</option>
             </select>
+            <div [hidden]="areaOfInterest.valid || areaOfInterest.pristine" class="alert alert-danger">Area of Interest is required</div>
           </div>
-         <button type="submit" class="btn btn-success">Submit</button>    
+         <button type="submit" class="btn btn-success" [disabled]="!addressForm.form.valid">Submit</button>    
+         <button type="button" class="btn btn-default" (click)="newAddress(); addressForm.reset()">Clear Address</button>
     
         </form>
     </div>

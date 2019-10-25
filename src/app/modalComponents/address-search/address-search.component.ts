@@ -26,6 +26,9 @@ export class AddressSearchComponent implements OnInit {
   onSubmit(){
     this.centralService.setAddressdata(this.model);
   }
+  newAddress(){
+    this.model = new SearchAddress('','','');
+  }
   get testModel() { return JSON.stringify(this.model); }
 
 }
