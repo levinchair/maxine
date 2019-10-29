@@ -17,6 +17,7 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   if(req.body.parcelpins !== undefined){
     Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
   }
+  console.log("this is view 1: " + JSON.stringify(req.body));
   //we need to use the req.body tag in order to take the data from the option object 
  
   var sum1 = { // this contains the sums for totals for the pipeline from the query

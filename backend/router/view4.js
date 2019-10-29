@@ -19,6 +19,7 @@ router.all("/view4/:param?/:hood?", async (req,res,next)=>{
     if(req.body.parcelpins !== undefined){
         Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
     }
+    console.log("This is the req body in view 4: " + JSON.stringify(req.body));
     Object.defineProperty(this.query, "properties.SiteCat1" , {value: "Industrial", enumerable: true});
     
     var totalSqFeet;

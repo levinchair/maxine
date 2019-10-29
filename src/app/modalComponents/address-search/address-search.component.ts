@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { SearchAddress } from 'src/model/search-address';
 
 import { CentralService } from '../../Service/central.service';
-
+ 
 
 @Component({
   selector: 'app-address-search',

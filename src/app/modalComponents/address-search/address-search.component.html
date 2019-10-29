@@ -27,14 +27,14 @@
             <input type="text" class="form-control" id="zip" name="zipcode" [(ngModel)]="this.model.zipcode">
           </div>
           <div class="form-group">
-            <label for="interest">Area of Interest</label>
-            <select class="form-control" required [(ngModel)]="this.model.areaOfInterest" name="areaOfInterest" #areaOfInterest="ngModel">
+            <label placement="right" ngbTooltip="Choose an area around the address" for="interest">Area of Interest</label>
+            <select  class="form-control" required [(ngModel)]="this.model.areaOfInterest" name="areaOfInterest" #areaOfInterest="ngModel">
             <option *ngFor="let area of areas" [value]="area" class="from-control" id="interest">{{area}}</option>
             </select>
             <div [hidden]="areaOfInterest.valid || areaOfInterest.pristine" class="alert alert-danger">Area of Interest is required</div>
           </div>
-         <button type="submit" class="btn btn-success" [disabled]="!addressForm.form.valid">Submit</button>    
-         <button type="button" class="btn btn-default" (click)="newAddress(); addressForm.reset()">Clear Address</button>
+         <button ngbTooltip="Search for Address" type="submit" class="btn btn-success" [disabled]="!addressForm.form.valid">Submit</button>    
+         <button class="btn btn-default" (click)="newAddress(); addressForm.reset()">Clear Address</button>
     
         </form>
     </div>

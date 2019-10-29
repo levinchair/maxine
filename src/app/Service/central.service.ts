@@ -78,7 +78,7 @@ export class CentralService {
     //instantiate a new searchAddress object here with the passed object 
     //from the addressSearch component
     this.searchAddr = searchM;
-    console.log(this.searchAddr);
+    // console.log(this.searchAddr);
 
   }
   getCity(){
