@@ -201,15 +201,15 @@ export class ControlPanelComponent implements OnInit {
 
   setMax(data){
     //Because of the way events work in angular you have to create a new Options
-    //object each time you want to change the slider options
+    //-- object each time you want to change the slider options
     var maxAcre = 5; var maxValue = 10; var maxScale = 10;
     for(var i = 0; i < data.length; i++){
       if(Math.ceil(data[i].maxAcre) > maxAcre){
-        maxAcre = data[i].maxAcre;
+        maxAcre = Math.ceil(data[i].maxAcre);
       }if(Math.ceil(data[i].maxValue) > maxValue){
-        maxValue = data[i].maxValue;
+        maxValue = Math.ceil(data[i].maxValue);
       }if(Math.ceil(data[i].maxScale) > maxScale){
-        maxScale = data[i].maxScale;
+        maxScale = Math.ceil(data[i].maxScale);
       }
     }
     //Create new options objects to assign for each slider

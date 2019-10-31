@@ -21,6 +21,9 @@ button{
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+.info{
+  padding:5px;
+}
 /* ----------------------------Nav Bar---------------------------- */
 
 .force-scroll {
