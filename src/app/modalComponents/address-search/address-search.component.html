@@ -1,12 +1,11 @@
 <div class="modal-header">
-  <h4 class="modal-title">Terra-Mapping</h4>
+  <h1 class="modal-title">Address Search</h1>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
     <div class="container">
-        <h1>Address Search</h1>  
         <form (ngSubmit)="onSubmit()" #addressForm="ngForm">
           <div class="form-group">
             <label for="streetNum">Street Number</label>
@@ -33,9 +32,9 @@
             </select>
             <div [hidden]="areaOfInterest.valid || areaOfInterest.pristine" class="alert alert-danger">Area of Interest is required</div>
           </div>
-         <button ngbTooltip="Search for Address" type="submit" class="btn btn-success" [disabled]="!addressForm.form.valid">Submit</button>    
+         <button ngbTooltip="Search for Address" type="submit" class="btn btn-success" [disabled]="!addressForm.form.valid">Submit</button>
          <button class="btn btn-default" (click)="newAddress(); addressForm.reset()">Clear Address</button>
-    
+
         </form>
     </div>
 </div>

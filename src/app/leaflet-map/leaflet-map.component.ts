@@ -49,16 +49,17 @@ export class LeafletMapComponent implements OnInit {
       maxZoom: 20,
       subdomains:['mt0','mt1','mt2','mt3']
     });
-    this.streets = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    //https://github.com/CartoDB/basemap-styles -- see for map styles
+    this.streets = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 19,
       zIndex: 1}).addTo(this.map);
-    this.maplabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
-    	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    	subdomains: 'abcd',
-    	maxZoom: 19,
-      zIndex: 3}).addTo(this.map);
+    // this.maplabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+    // 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    // 	subdomains: 'abcd',
+    // 	maxZoom: 19,
+    //   zIndex: 3}).addTo(this.map);
     //Initialize geoJsonLayer for camera movement
     this.geoJsonLayer = L.geoJSON();
     this.sat = true;
@@ -149,13 +150,13 @@ export class LeafletMapComponent implements OnInit {
       opacity: 0.7,
       click: (e, feature : JsonForm) => { // fired everytime a feature is clicked
         this.feature = feature;
-        let popupContent = "<p>" +
-          "<b>Parcel Pin</b> : " + feature.properties.parcelpin + "<br>" +
-          "<b>Land Use</b>   : " + feature.properties.SiteCat1 + "<br>" +
-          "<b>-> Sub-Category</b> : " + feature.properties.SiteCat2 + "<br>" +
-          "<b>Address</b>    : " + feature.properties.par_addr_a + "<br>" +
-          "<b>Total SqFt</b> : " + this.cp.transform(feature.properties.total_squa,"USD","","1.0-0") + "<br>" +
-          "<b>Owner</b>      : " + feature.properties.deeded_own2 + "</p>";
+        let popupContent = "<table class='table table-sm table-striped table-bordered'>" + "<tbody>" +
+          "<tr>" + "<td>Address</td><td>" + feature.properties.par_addr_a + "</td></tr>" +
+          "<tr>" + "<td>Total SqFt</td><td>" + this.cp.transform(feature.properties.total_squa,"USD","","1.0-0") + "</td></tr>" +
+          "<tr>" + "<td>Owner</td><td>" + feature.properties.deeded_own2 + "</td></tr>" +
+          "<tr>" + "<td>Land Use</td><td>" + feature.properties.SiteCat1 + "</td></tr>" +
+          "<tr>" + "<td>Sub-Cat</td><td>" + feature.properties.SiteCat2 + "</td></tr>" +
+          "<tr>" + "<td>Parcel Pin</td><td>" + feature.properties.parcelpin + "</td></tr></tbody></table>";
         /** do something when a shape is clicked **/
         if(this.selectionToggle){
           // add the parcel number to an array when clicked and selection tool is toggled

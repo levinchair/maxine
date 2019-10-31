@@ -109,7 +109,8 @@ export class TablesComponent implements OnInit {
         valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       No_parcels: {
-        title: '# Parcels'
+        title: '# Parcels',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
       },
       percOfLand: {
         title: '% Land',

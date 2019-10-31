@@ -30,7 +30,7 @@ export class ControlPanelComponent implements OnInit {
   cityFromService = this.centralService.getCity();
   selectedCity : string = "Select city...";
   selectedLandUse : string;
-  sitecat2Selected: boolean = true;
+  sitecat2Selected: boolean = false;
   abatementList = [];
   neighborhood : string[] = [];
   selectedHood:string = "";
@@ -143,11 +143,17 @@ export class ControlPanelComponent implements OnInit {
       this.popC.close();
       this.popD.open();
     }
+    if(landUse == "All"){
+      this.sitecat2Selected = true;
+    }else{
+      this.sitecat2Selected = false;
+    }
   }
 
   updateAllData(){
     if(this.centralService.firstVisit){
-      this.popE.close();
+      this.popE.close();this.popD.close();this.popC.close();this.popB.close();
+      this.centralService.firstVisit = false;
     }
     this.centralService.showSpinner.next(true);
     this.centralService.setParcelArray([]);
@@ -155,6 +161,15 @@ export class ControlPanelComponent implements OnInit {
     this.centralService.getGeometry();
     this.centralService.getViews(); // inital subscribe of the data
 
+  }
+
+  goDisabled(){
+    if(this.selectedHood.length > 0 && this.selectedHood != "Select Neighborhood..." &&
+        this.selectedCity != "Select city..."){
+        return false;
+    }else{
+      return true;
+    }
   }
 
   setOptions(){

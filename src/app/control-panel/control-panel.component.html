@@ -148,7 +148,7 @@
     </div>
   </div>
 <!-- Go Button -->
-  <button type="submit" class="btn btn-outline-primary goButton"
+  <button type="submit" class="btn btn-outline-primary goButton" [class.disabled]="goDisabled()"
           (click)='updateAllData()' [autoClose]="false"
           [ngbPopover]="popEContent" [openDelay]="666" #e="ngbPopover"
           triggers="manual" [popoverTitle]="popETitle">
