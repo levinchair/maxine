@@ -125,9 +125,9 @@ export class ControlPanelComponent implements OnInit {
   onSelectHood(hood: string) {
       this.selectedHood=hood;
   	  this.centralService.setHood(hood);
-      this.centralService.getFilterOwnerData();
-      this.centralService.getFilterMaxData();
-      this.resetFilter();
+      this.centralService.getFilterOwnerData(); // 1st call after neighborhood
+      this.centralService.getFilterMaxData(); // 2nd call after neighborhood
+      this.resetFilter(); // filter  reset here
       //if first time visiting opens popupC
       if(this.centralService.firstVisit){
         this.popB.close();
@@ -187,7 +187,7 @@ export class ControlPanelComponent implements OnInit {
     // }//Check if any owner was selected, empty strings in js are falsey
     if(this.ownerInputList.length > 0){
       //sets to first value, because we haven't implemented multiple search in db
-      this.centralService.options.owner = this.ownerInputList[0];
+      this.centralService.options.owner = this.ownerInputList;
     }//Check if a land use was selected and assign
     if(this.selectedLandUse){
       this.centralService.options.sitecat1 = this.selectedLandUse;
@@ -264,6 +264,9 @@ export class ControlPanelComponent implements OnInit {
     // Reset Owner
     this.ownerInputList = [];
     this.ownerInput = "";
+    
+    this.centralService.resetSearchOptionsData(); //need to reset centralService object
+
   }
 
   //Adds owner selected to ownerInputList
@@ -271,7 +274,7 @@ export class ControlPanelComponent implements OnInit {
     if(owner != "" && owner != null && owner !== undefined){
       if(this.ownerInputList.indexOf(owner.toUpperCase().trim()) >= 0){
         //owner is already in list, alert user and reset ownerInput
-        this.ownerMessage = "Repeat Entry"
+        this.ownerMessage = "Repeat Entry";
         this.ownerInput = "";
       }else{
         //owner is not in list, add as uppercased and trim excess whitespace
@@ -297,7 +300,7 @@ export class ControlPanelComponent implements OnInit {
 
   //handles filter popover logic
   filterToggle(){
-    this.isCollapsed = !this.isCollapsed
+    this.isCollapsed = !this.isCollapsed;
     //for opening e popover when filter is closed, and popovers enabled
     if(!(this.popD.isOpen()) && this.centralService.firstVisit){
       this.popE.open();
