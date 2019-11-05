@@ -81,6 +81,9 @@ export class CentralService {
     // console.log(this.searchAddr);
 
   }
+  resetSearchOptionsData(){
+    this.options = new SearchOptions();
+  }
   getCity(){
     return this._city;
     //console.log(this._city);
