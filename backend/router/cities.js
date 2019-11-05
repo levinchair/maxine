@@ -9,7 +9,7 @@ var db = require("../model/db.js").parcelDataModel;
        // res.send('error occured')
        res.status(err.status >= 100 && err.status < 600 ? err.code : 500).send(err.message);
       } else {
-        console.log(result);
+        // console.log(result);
         res.json(result);
        // res.end(result);
         //res.send(result,{cities:cities});

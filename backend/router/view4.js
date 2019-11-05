@@ -15,10 +15,7 @@ var _view4={
 router.all("/view4/:param?/:hood?", async (req,res,next)=>{
     if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
     
-    this.query = utils.createQuery(req.params.param, req.params.hood);
-    if(req.body.parcelpins !== undefined){
-        Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
-    }
+    this.query = utils.createQuery(req.params.param, req.params.hood, req.body);
     console.log("This is the req body in view 4: " + JSON.stringify(req.body));
     Object.defineProperty(this.query, "properties.SiteCat1" , {value: "Industrial", enumerable: true});
     

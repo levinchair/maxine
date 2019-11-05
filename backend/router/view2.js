@@ -12,10 +12,7 @@ var utils = require("./utils");
      "10924053", "10924129", "10924054", "10924130", "10924023", "10924025", "10924024"  ] */
      if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
     
-     this.query = utils.createQuery(req.params.param, req.params.hood);
-     if(req.body.parcelpins !== undefined){
-      Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
-    }
+     this.query = utils.createQuery(req.params.param, req.params.hood, req.body);
      Object.defineProperty(this.query, "properties.SiteCat1" , {value: "Residential", enumerable: true});
       
       var SiteCat = [];

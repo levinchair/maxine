@@ -7,12 +7,9 @@ var db = require("../model/db.js").parcelDataModel;
 //--------------------------------------------------Show  geometric features  for selected neighbourhood--------------------------------------
 router.all("/showgeometry/:param?/:hood?",(req,res,next)=>{
 
-    this.query = utils.createQuery(req.params.param, req.params.hood);
+    this.query = utils.createQuery(req.params.param, req.params.hood, req.body);
     // console.log("This is the body: ", req.body);
     // console.log(req.body.parcelpins);
-    if(req.body.parcelpins !== undefined){
-      Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
-    }
     // console.log("QUERY IS HERE: " + JSON.stringify(this.query));
     var newJson = {};
 

@@ -25,9 +25,12 @@ console.log("Connected to database 2");
 });
 */
 console.log("Node is running");
-app.use(bodyParser.json());
+//this is usign the json body parser. Look at Express Docs for more info. 
+app.use(bodyParser.json()); // for parsing json
 //extended allows for parsing url-encoded data using the qs library
-app.use(bodyParser.urlencoded({extended: true, parameterLimit: 100})); 
+// the body parser will only allow handlers that are 
+app.use(bodyParser.urlencoded({extended: true, parameterLimit: 100}));  //for parsing application/x-www-form-urlencoded
+// app.use(bodyParser.text());
 //app.use(cors());
 //another way of doing cross origin resource sharing
 app.use((req,res,next)=>{ 
@@ -48,10 +51,7 @@ app.use("/",router9);
 app.use("/",router10);
 
 //runs a script to generate prerendered files for cleveland. trying to make it ron server startup.
-
-
 //var scriptSuccess = require("./scripts/prerendercities.js");
-
 /*app.listen(3000,function(){
     console.log("Listning on 3000");
 });*/

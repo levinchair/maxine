@@ -3,6 +3,7 @@ var router= express.Router()
 var db = require("../model/db.js").parcelDataModel;
 var utils = require("./utils");
 
+
 router.all("/view1/:param?/:hood?", (req, res, next) => {
   /*This router will a city and a neighbourhood and find the corresponding values specified by view1.
     AS OF 10/19, THE PARCELPIN ARRAY IS PASSED IN THE req.body, and is optional when specifying city
@@ -10,13 +11,11 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
     A test array with Com, Inst and Res Parcels: 
     ["10924128", "10924051", "10924128", "10924052", "10924127", "10924131", "10924052", "10924027",
      "10924053", "10924129", "10924054", "10924130", "10924023", "10924025", "10924024"  ] */
-  if(req.params.param === undefined) return next("Error: Please Specify array of Parcels or a city (undefined)");
-  
-  this.query = utils.createQuery(req.params.param, req.params.hood);
 
-  if(req.body.parcelpins !== undefined){
-    Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: req.body.parcelpins}, enumerable: true});
-  }
+
+  this.query = utils.createQuery(req.params.param, req.params.hood, req.body);
+  
+  console.log("This is the query before aggregation: " + JSON.stringify(this.query));
   console.log("this is view 1: " + JSON.stringify(req.body));
   //we need to use the req.body tag in order to take the data from the option object 
  

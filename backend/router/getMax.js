@@ -7,7 +7,7 @@ const NOT_RESIDENTIAL = utils.VALID_LANDUSE.slice(0,5);
 
 router.all("/maxproperties/:city?/:hood?", (req, res, next) => {
     //make the query to get the owners
-    this.query = utils.createQuery(req.params.city, req.params.hood);
+    this.query = utils.createQuery(req.params.city, req.params.hood, req.body);
     //connect to the data base and retrieve the information 
     var catfilter = { //filter for SiteCat to appropriate scale
         $switch: {

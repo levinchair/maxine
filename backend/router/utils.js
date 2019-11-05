@@ -4,13 +4,24 @@ var db = require("../model/db.js").parcelDataModel;
 const VALID_LANDUSE = ["Industrial", "Government", "Institutional", "Commercial", "Mixed", "Other", "Utility", "Residential"];
 
 
+dbKeysArrays = new Map([
+  ['parcelpins', {dbName: 'properties.parcelpin'}],
+  ['owner', {dbName: 'properties.deeded_own2'}],
+  ['abatement', {dbName: 'properties.tax_abatem'}],
+  ['taxLanduse', {dbName: 'properties.tax_luc_de'}]
+]);
+dbKeysRange = new Map([
+  ['acres', {dbName: 'properties.total_acre'}],
+  ['value', {dbName: 'properties.gross_ce_2'}],
+  ['scale_units', {dbName1: 'properties.total_com_', dbName2: 'properties.units2'}]
+]);
+dbKeysStrings = new Map([
+  ['sitecat1', {dbName: 'properties.SiteCat1'}],
+  ['sitecat2', {dbName: 'properties.SiteCat2'}]                
+]);
 const processOwnerConcentration =  async(param, hood, body) => {
 
     this.query = createQuery(param, hood, body); //this is the initial match query
-    //need to pass in the req.body
-    if(body.parcelpins !== undefined){
-      Object.defineProperty(this.query, "properties.parcelpin", {value: { $in: body.parcelpins}, enumerable: true});
-    }
 
     //var checkVacant = { $in: ["$properties.SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]]}
     var catfilter = { //filter for SiteCat to appropriate scale
@@ -123,33 +134,94 @@ const processOwnerConcentration =  async(param, hood, body) => {
 
 }
 
-function createQuery(param, hood){
+function createQuery(city, hood, body){
     //param could be an array or string
     query = {};
-    if(param === undefined) throw new Error("Please Specify array of Parcels or a city (undefined)");
-    try{
-      console.log("here is the passed argument: " + param + ", attempting to parse...");
-      paramParsed = JSON.parse(param); //this will throw an error and exit if not possible to parse to JSON
-    }catch(e){ //if cannot parse to json, then assume it is a name of a city
-      paramParsed = upperCase(param);
-      console.log("Unable to parse, defaulting to city.");  
+    if(city === undefined) throw new Error("Please Specify a City (undefined)");
+    cityParsed = upperCase(city); // all cities are capital
+    if(typeof cityParsed === "object") JSON.stringify(cityParsed); // make sure we are not passing an object
+    query = {
+      "properties.par_city": cityParsed
     }
-    /**This is will be deprecated in the near future */
-    if(Array.isArray(paramParsed)) { 
-      query = { 
-        "properties.parcelpin": { $in: paramParsed }
-      }
+    
+    if(!isAllHood(hood)){ // add hood to query
+      Object.defineProperty(query, "properties.SPA_NAME", { value : hood, enumerable : true });       
+    }
+
+    if(!body || Object.keys(body).length === 0){
+      console.log("body is undefined");
     }else{
-      if(typeof paramParsed === "object") JSON.stringify(paramParsed); // make sure we are not passing an object
-      query = {
-        "properties.par_city": paramParsed
+      //parse body
+      let dbName = ''; // name of the field in the db
+      let dbMatch = {}; // match value for the field 
+      for(let key of Object.keys(body)){
+        // console.log("Parsing key: " + key);
+        if(dbKeysArrays.has(key)){
+          dbName = dbKeysArrays.get(key).dbName;
+          dbMatch = {$in: body[key]};
+        }
+        else if(dbKeysStrings.has(key)){
+          dbName = dbKeysStrings.get(key).dbName;
+          dbMatch = body[key];
+        }
+        else if(dbKeysRange.has(key)){
+          if(key === 'scale_units'){
+            //we need to know if residential lot or not
+            //first check if SiteCat1 key exists
+            //if does, then we need to change the dbname
+            if(body['sitecat1'] !== undefined && VALID_LANDUSE.includes(body['sitecat1'])){
+
+              if(body['sitecat1'] === 'Residential'){
+                dbName = dbKeysRange.get(key).dbName2;
+              }else{
+                dbName = dbKeysRange.get(key).dbName1;
+              }
+
+              dbMatch = {$lte: body[key][1], $gte: body[key][0]};
+            } else {
+              throw new Error("cannot read scale_units because sitecat1 doesnt exist");
+              // console.error("cannot read scale_units because sitecat1 doesnt exist, skipping key: " + key);
+              // continue;
+            }
+          }else{
+            dbName = dbKeysRange.get(key).dbName;
+            dbMatch = {$lte: body[key][1], $gte: body[key][0]};
+          }
+        }else{
+          throw new Error("Invalid Key: " + key);
+          // console.error("Skipping Invalid Key: " + key);
+          // continue;
+        }
+        Object.defineProperty(query, dbName, {value: dbMatch, enumerable: true, writeable: true, configurable: true});
       }
-      
-      if(!isAllHood(hood)){
-        Object.defineProperty(query, "properties.SPA_NAME", { value : hood, enumerable : true });       
-      }
+      console.log("This is the query object from utils.createQuery: " + JSON.stringify(query));
     }
-    return query;
+
+    return query
+    
+    // try{
+    //   console.log("here is the passed argument: " + city + ", attempting to parse...");
+    //   paramParsed = JSON.parse(param); //this will throw an error and exit if not possible to parse to JSON
+    // }catch(e){ //if cannot parse to json, then assume it is a name of a city
+    //   paramParsed = upperCase(param);
+    //   console.log("Unable to parse, defaulting to city.");  
+    // }
+    // /**This is will be deprecated in the near future */
+    // if(Array.isArray(paramParsed)) { 
+    //   query = { 
+    //     "properties.parcelpin": { $in: paramParsed }
+    //   }
+    // }else{
+    //   if(typeof paramParsed === "object") JSON.stringify(paramParsed); // make sure we are not passing an object
+    //   query = {
+    //     "properties.par_city": paramParsed
+    //   }
+      
+    //   if(!isAllHood(hood)){
+    //     Object.defineProperty(query, "properties.SPA_NAME", { value : hood, enumerable : true });       
+    //   }
+    // }
+    // return query;
   }
 
 function isAllHood(x){
