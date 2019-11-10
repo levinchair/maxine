@@ -6,19 +6,19 @@ import { JsonForm } from '../../model/jsonform.model';
 import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
-import { NeighborhoodBoundaries } from '../../assets/data/cle_neighborhoods';
 import { CurrencyPipe } from '@angular/common';
+import { NeighborhoodBoundaries } from '../../assets/JSON/cleveland_spa';
 
 @Component({
   selector: 'app-leaflet-map',
   templateUrl: './leaflet-map.component.html',
   styleUrls: ['./leaflet-map.component.css']
 })
+
 export class LeafletMapComponent implements OnInit {
   map: any;
   shapeLayer : any;
   geoJsonLayer;
-  neighborhoodBoundaries = [];
   selectfeature:any;
   recentData:any;
   sat: boolean;
@@ -32,6 +32,7 @@ export class LeafletMapComponent implements OnInit {
   landuse: String[];
   marker:any;
   currentSiteCat:String;
+  neighborhoodBoundaries =[];
 
   constructor(
     private centralService : CentralService,
@@ -39,9 +40,7 @@ export class LeafletMapComponent implements OnInit {
   ){}
 
   ngOnInit() {
-
     this.landuse = this.centralService.getLanduse();
-
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
     this.sub();//for parcelpin data. Will be fired everytime there is an update to the data
@@ -65,21 +64,20 @@ export class LeafletMapComponent implements OnInit {
     this.sat = true;
     this.setBaseLayer();
     //Neighborhood layers
-    var hBoundaries = new NeighborhoodBoundaries();
-    for(var k = 0; k < hBoundaries.data.records.length; k++){
-      var tempPolygon = hBoundaries.data.records[k].fields.geo_shape.coordinates[0];
-      for(var i = 0; i < tempPolygon.length; i++){
-        var tempVal = tempPolygon[i][1];
-        tempPolygon[i][1] = tempPolygon[i][0];
-        tempPolygon[i][0] = tempVal;
+    let nb = new NeighborhoodBoundaries();
+    for(var feature in nb.nb.features){
+      //reverse coords from [lng, lat] -> [lat, lng]
+      for(var coord in nb.nb.features[feature].geometry.coordinates){
+        nb.nb.features[feature].geometry.coordinates[coord] =
+          nb.nb.features[feature].geometry.coordinates[coord].reverse();
       }
-      this.neighborhoodBoundaries.push(
-        [ hBoundaries.data.records[k].fields.city,
-          hBoundaries.data.records[k].fields.name,
-          tempPolygon
-        ]);
+      this.neighborhoodBoundaries.push({"coordinates":nb.nb.features[feature].geometry.coordinates,
+             "neighborhood":nb.nb.features[feature].properties.SPA_NAME});
+      // var p = new L.Polygon(nb.nb.features[feature].geometry.coordinates as [number, number][],{color:"red"});
     }
+    console.log(this.pointInsideNeighborhood([41.50,-81.68]));
   }
+
   changed(){
     /** Fired when there is a change in the selection of the radio button */
     if(this.shapeLayer !== undefined){
@@ -110,30 +108,30 @@ export class LeafletMapComponent implements OnInit {
         data => {
           //Given search bar address lng/lat [Number,Number]
           //Create Neighborhood Layers and run Point in Polygon
-          var hood = this.neighborhoodBoundaries;
-          for(var i = 0; i < hood.length;i++){
-            // console.log(inside(data,hood[i][2]));
-            if(inside(data,hood[i][2])){
-              //Found neighborhood
-              this.centralService.showSpinner.next(true);
-              this.centralService.search = "";
-              this.centralService.setCity(hood[i][0]);
-              this.centralService.setHood(hood[i][1]);
-              this.centralService.getGeometry();
-              this.centralService.getViews();
-              break;
-            }
-          }
-          if(i == hood.length){
-            //No neighborhood found Let user know
-            this.centralService.search = "Address not within our Database";
-          }
-          if(this.marker === undefined){
-            this.marker = L.marker(data).addTo(this.map);
-          }else{
-            this.marker.setLatLng(data);
-          }
-        }
+        //   var hood = this.neighborhoodBoundaries;
+        //   for(var i = 0; i < hood.length;i++){
+        //     // console.log(inside(data,hood[i][2]));
+        //     if(inside(data,hood[i][2])){
+        //       //Found neighborhood
+        //       this.centralService.showSpinner.next(true);
+        //       this.centralService.search = "";
+        //       this.centralService.setCity(hood[i][0]);
+        //       this.centralService.setHood(hood[i][1]);
+        //       this.centralService.getGeometry();
+        //       this.centralService.getViews();
+        //       break;
+        //     }
+        //   }
+        //   if(i == hood.length){
+        //     //No neighborhood found Let user know
+        //     this.centralService.search = "Address not within our Database";
+        //   }
+        //   if(this.marker === undefined){
+        //     this.marker = L.marker(data).addTo(this.map);
+        //   }else{
+        //     this.marker.setLatLng(data);
+        //   }
+         }
       );
       this.centralService.currentSiteCat.subscribe(
         siteCat1 => {
@@ -317,7 +315,17 @@ export class LeafletMapComponent implements OnInit {
         this.map.on("mouseup", this.addLassoData, this);
       }
       if(this.selectionToggle) this.selectionToggle = false;
-
     }
   }
+  //returns String[] of neighborhoods that contain point param 
+  pointInsideNeighborhood(point:Number[]){
+    let neighborhoods:String[] = [];
+    for(var bounds in this.neighborhoodBoundaries){
+      if(inside(point,this.neighborhoodBoundaries[bounds].coordinates)){
+        neighborhoods.push(this.neighborhoodBoundaries[bounds].neighborhood);
+      }
+    }
+    return neighborhoods;
+  }
+
 }
