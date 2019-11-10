@@ -161,8 +161,18 @@ function createQuery(city, hood, body){
           dbMatch = {$in: body[key]};
         }
         else if(dbKeysStrings.has(key)){
+          // console.log("this is the residential key: " , key, body[key]);
+          if(key === 'sitecat1' && isAllSiteCat1(body[key])){ //checks if key is 'All'
+            continue;
+          }
+
           dbName = dbKeysStrings.get(key).dbName;
-          dbMatch = body[key];
+          
+          if(!isNull(body[key])){
+            dbMatch = body[key];
+          } else {
+            dbMatch = null;
+          }
         }
         else if(dbKeysRange.has(key)){
           if(key === 'scale_units'){
@@ -198,7 +208,7 @@ function createQuery(city, hood, body){
     }
 
     return query
-    
+    /** OLD CODE */
     // try{
     //   console.log("here is the passed argument: " + city + ", attempting to parse...");
     //   paramParsed = JSON.parse(param); //this will throw an error and exit if not possible to parse to JSON
@@ -226,6 +236,12 @@ function createQuery(city, hood, body){
 
 function isAllHood(x){
   return (x === undefined || x === 'undefined' || x === 'All' || x === 'Null')
+}
+function isAllSiteCat1(cat){
+  return (cat === 'All')
+}
+function isNull(value){ // null will be a string from the frontend
+  return (value === 'null')
 }
 
   module.exports = { VALID_LANDUSE, processOwnerConcentration, createQuery };

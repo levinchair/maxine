@@ -44,7 +44,7 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
     _id: 0,
     tot_assessedval: 1,
     tot_land: 1,
-    cat:  { 
+    cat:  {
       $cond: { // checks to see if it is vacant land
         if: { $in: ["$indivs.indiv_SiteCat2", ["Residential Vacant", "Commercial Vacant", "Industrial Vacant", "Vacant Agricultural"]] },
         then: "Vacant",
@@ -53,8 +53,8 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
     }, // indivs needs to be flattened in order for this to work. 
     scale: "$indivs.indiv_Scale",
     tot_land: 1,
-    percOfland: { $divide: ["$indivs.indiv_land", "$tot_land"]},
-    percOfassessed: {$divide: [ "$indivs.indiv_assessed", "$tot_assessedval"]}
+    percOfland: {$cond: [{$eq: ["$tot_land", 0]}, 0, { $divide: ["$indivs.indiv_land", "$tot_land"]} ]}, //{ $divide: ["$indivs.indiv_land", "$tot_land"]},
+    percOfassessed: {$cond: [{$eq: ["$tot_assessedval", 0]}, 0, { $divide: ["$indivs.indiv_assessed", "$tot_assessedval"]} ]} //{$divide: [ "$indivs.indiv_assessed", "$tot_assessedval"]}
   }
   var sum2 = { //group by SiteCat1 (cat)
     _id: "$cat",

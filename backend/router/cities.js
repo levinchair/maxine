@@ -2,7 +2,6 @@ var express= require('express')
 var router= express.Router()
 var db = require("../model/db.js").parcelDataModel;
  router.all("/showcities",(req,res,next)=>{
-    var cities=[10000];
     db.distinct("properties.par_city")
     .exec(function(err, result) {
       if(err) {
