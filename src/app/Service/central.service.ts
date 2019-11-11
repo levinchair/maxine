@@ -67,7 +67,7 @@ export class CentralService {
     this._arr = [];
   }
   getGeoCoderData(){
-    this.http.get("http://localhost:4200/getNeighbourhoodBoundaries").subscribe(
+    this.http.get("http://localhost:3000/getNeighbourhoodBoundaries").subscribe(
       (data) => {
         this.geocoderData.next(data);
       }
