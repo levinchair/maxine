@@ -66,6 +66,13 @@ export class CentralService {
   resetParcelArray(){
     this._arr = [];
   }
+  getGeoCoderData(){
+    this.http.get("http://localhost:4200/getNeighbourhoodBoundaries").subscribe(
+      (data) => {
+        this.geocoderData.next(data);
+      }
+    )
+  }
   setGeocoderData(data){
     this.geocoderData.next(data);
   }

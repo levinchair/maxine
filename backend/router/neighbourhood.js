@@ -2,6 +2,7 @@ var express= require('express')
 var upperCase = require('upper-case')
 var router= express.Router()
 var db = require("../model/db.js").parcelDataModel;
+var neighbourhoodBoundaries = require("../model/db.js").neighborhoodBoundariesModel;
 
 //--------------------------------------------------Show distinct neighbourhood  from selected cities--------------------------------------
 router.all("/showhood/:city",(req,res,next)=>{
@@ -15,12 +16,26 @@ router.all("/showhood/:city",(req,res,next)=>{
         res.status(err.status >= 100 && err.status < 600 ? err.code : 500).send(err.message);
       } else {
         result = result.filter(x => x !== 'NULL');
-        // console.log(result);
         res.json(result);
-        /* res.write(result);
-        res.end(result); */
       }
     });
-    //next();
 });
+
+router.all("/getNeighborhoodBoundaries", (req,res,next) => { //get neighborhood boundaries
+  neighbourhoodBoundaries.find().exec( (err, result) => {
+    if(err) {
+       throw new Error("Error at Aggregation: " + err.message);
+     } else {
+      result = result.filter(x => x !== 'NULL');
+      newJson = {
+        type: "FeatureCollection",
+        name: "neighborhoodBoundaries",
+        features: result
+      }
+      res.json(newJson);
+     }
+  });
+});
+
+
 module.exports=router;

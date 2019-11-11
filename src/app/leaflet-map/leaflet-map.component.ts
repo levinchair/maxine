@@ -7,7 +7,7 @@ import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
 import { CurrencyPipe } from '@angular/common';
-import { NeighborhoodBoundaries } from '../../assets/JSON/cleveland_spa';
+// import { NeighborhoodBoundaries } from '../../assets/JSON/cleveland_spa';
 
 @Component({
   selector: 'app-leaflet-map',
@@ -64,17 +64,17 @@ export class LeafletMapComponent implements OnInit {
     this.sat = true;
     this.setBaseLayer();
     //Neighborhood layers
-    let nb = new NeighborhoodBoundaries();
-    for(var feature in nb.nb.features){
-      //reverse coords from [lng, lat] -> [lat, lng]
-      for(var coord in nb.nb.features[feature].geometry.coordinates){
-        nb.nb.features[feature].geometry.coordinates[coord] =
-          nb.nb.features[feature].geometry.coordinates[coord].reverse();
-      }
-      this.neighborhoodBoundaries.push({"coordinates":nb.nb.features[feature].geometry.coordinates,
-             "neighborhood":nb.nb.features[feature].properties.SPA_NAME});
-      // var p = new L.Polygon(nb.nb.features[feature].geometry.coordinates as [number, number][],{color:"red"});
-    }
+    // let nb = new NeighborhoodBoundaries();
+    // for(var feature in nb.nb.features){
+    //   //reverse coords from [lng, lat] -> [lat, lng]
+    //   for(var coord in nb.nb.features[feature].geometry.coordinates){
+    //     nb.nb.features[feature].geometry.coordinates[coord] =
+    //       nb.nb.features[feature].geometry.coordinates[coord].reverse();
+    //   }
+    //   this.neighborhoodBoundaries.push({"coordinates":nb.nb.features[feature].geometry.coordinates,
+    //          "neighborhood":nb.nb.features[feature].properties.SPA_NAME});
+    //   // var p = new L.Polygon(nb.nb.features[feature].geometry.coordinates as [number, number][],{color:"red"});
+    // }
     console.log(this.pointInsideNeighborhood([41.50,-81.68]));
   }
 
@@ -106,6 +106,12 @@ export class LeafletMapComponent implements OnInit {
       });
       this.centralService.geocoderData.subscribe(
         data => {
+
+          for(let feature of data.features){
+            this.neighborhoodBoundaries.push({"coordinates": feature.geometry.coordinates,
+            "neighborhood":feature.properties.SPA_NAME});
+          }
+          console.log(this.neighborhoodBoundaries);
           //Given search bar address lng/lat [Number,Number]
           //Create Neighborhood Layers and run Point in Polygon
         //   var hood = this.neighborhoodBoundaries;
