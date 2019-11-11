@@ -5,7 +5,7 @@ import { Options, LabelType } from 'ng5-slider';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPageContentComponent } from '../modalComponents/landing-page-content/landing-page-content.component';
 import { debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
-import '../Service/SearchOptions.model';
+import '../../model/SearchOptions.model';
 import { CurrencyPipe } from '@angular/common';
 import { AbatementModalComponent } from '../modalComponents/abatement-modal/abatement-modal.component';
 import { DTLUModalComponent } from '../modalComponents/dtlu-modal/dtlu-modal.component';

@@ -3,7 +3,7 @@ import { HttpClient,  HttpResponse, HttpErrorResponse } from '@angular/common/ht
 import { Observable, throwError, Subject } from 'rxjs';
 import { tap, catchError, retry } from 'rxjs/operators';
 //Models
-import { SearchOptions } from './SearchOptions.model';
+import { SearchOptions } from '../../model/SearchOptions.model';
 import { SearchAddress } from 'src/model/search-address';
 
 @Injectable({
