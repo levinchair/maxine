@@ -54,11 +54,10 @@ cleveland_spa.find({}).exec((err, res) => {
         throw new Error("Error at find aggregation: " + err);
     }
     //do data manipulation here
-    //** Flips the coordinates */
+    //reverse coords from [lng, lat] -> [lat, lng]
     for(let data of res){
         for(let point of data.geometry.coordinates[0]){ //an extra array
-            point[0] = -1*point[0];
-            point[1] = -1*point[1];
+            point.reverse();
         }
     }
     let newData = res;
@@ -72,6 +71,6 @@ cleveland_spa.find({}).exec((err, res) => {
             }
         );}
     //close the connection
-    mongoose.connections.close();
+    //mongoose.connection.close();
 });
 
