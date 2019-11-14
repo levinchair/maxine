@@ -33,6 +33,7 @@ export class LeafletMapComponent implements OnInit {
   marker:any;
   currentSiteCat:String;
   neighborhoodBoundaries =[];
+  neighborhoodRecentData:any;
 
   constructor(
     private centralService : CentralService,
@@ -44,6 +45,7 @@ export class LeafletMapComponent implements OnInit {
     //Initialize Map with no labels
     this.map = L.map('map').setView([41.4843,-81.9332], 10);
     this.sub();//for parcelpin data. Will be fired everytime there is an update to the data
+    this.centralService.getGeoCoderData();
     this.googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
       maxZoom: 20,
       subdomains:['mt0','mt1','mt2','mt3']
@@ -63,19 +65,7 @@ export class LeafletMapComponent implements OnInit {
     this.geoJsonLayer = L.geoJSON();
     this.sat = true;
     this.setBaseLayer();
-    //Neighborhood layers
-    // let nb = new NeighborhoodBoundaries();
-    // for(var feature in nb.nb.features){
-    //   //reverse coords from [lng, lat] -> [lat, lng]
-    //   for(var coord in nb.nb.features[feature].geometry.coordinates){
-    //     nb.nb.features[feature].geometry.coordinates[coord] =
-    //       nb.nb.features[feature].geometry.coordinates[coord].reverse();
-    //   }
-    //   this.neighborhoodBoundaries.push({"coordinates":nb.nb.features[feature].geometry.coordinates,
-    //          "neighborhood":nb.nb.features[feature].properties.SPA_NAME});
-    //   // var p = new L.Polygon(nb.nb.features[feature].geometry.coordinates as [number, number][],{color:"red"});
-    // }
-    console.log(this.pointInsideNeighborhood([41.50,-81.68]));
+
   }
 
   changed(){
@@ -111,7 +101,7 @@ export class LeafletMapComponent implements OnInit {
             this.neighborhoodBoundaries.push({"coordinates": feature.geometry.coordinates,
             "neighborhood":feature.properties.SPA_NAME});
           }
-          console.log(this.neighborhoodBoundaries);
+          // console.log(this.neighborhoodBoundaries);
           //Given search bar address lng/lat [Number,Number]
           //Create Neighborhood Layers and run Point in Polygon
         //   var hood = this.neighborhoodBoundaries;
@@ -260,16 +250,28 @@ export class LeafletMapComponent implements OnInit {
     this.centralService.getViews();
   }
   addLassoData(){ //fired
-    let tempArray = [];
-    // this.selectfeature = this.map.selectAreaFeature.enable();
+    let lassoPoints = [];
     let latlng_area = this.selectfeature.getAreaLatLng();
     for(let latlng of latlng_area){
       let temp = [latlng.lng,latlng.lat];
-      tempArray.push(temp);
+      lassoPoints.push(temp);
     }
-    if(tempArray === null || tempArray.length == 0) {
+    if(lassoPoints === null || lassoPoints.length == 0) {
       throw new Error("temp array is empty");
     }
+
+    // ----DO NOT DELETE----
+    // var externalHoods: Boolean = false;
+    // var activeHoods: String[] = [];
+    // var tempHood: String = "";
+    // for(var point in lassoPoints){  //check if lasso area includes additional neighborhoods
+    //   tempHood = this.pointInsideNeighborhood([lassoPoints[point][1],lassoPoints[point][0]]);//[lng,lat] -> [lat,lng]
+    //   console.log("Temp Hood" + tempHood);
+    //   if((tempHood != "") && !(activeHoods.includes(tempHood))){
+    //     externalHoods = true;
+    //     activeHoods.push(tempHood);
+    //   }
+    // }
     let feature = [];
     let allPoints = 0;
     for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
@@ -278,7 +280,7 @@ export class LeafletMapComponent implements OnInit {
         for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
           allPoints = 0;
           for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
-            if(inside(feature[j][k][l],tempArray) % 2 == 1){
+            if(inside(feature[j][k][l],lassoPoints)){
               allPoints+=1;
               if(!this.selectedParcels.includes(this.recentData.features[i].properties.parcelpin) && allPoints == feature[j][k].length){
                 this.selectedParcels.push(this.recentData.features[i].properties.parcelpin);
@@ -304,7 +306,6 @@ export class LeafletMapComponent implements OnInit {
       }else{
         this.selectionToggle = true;
       }
-
       if(this.lassoToggle) {
         this.map.selectAreaFeature.disable();
         this.lassoToggle = false;
@@ -323,15 +324,16 @@ export class LeafletMapComponent implements OnInit {
       if(this.selectionToggle) this.selectionToggle = false;
     }
   }
-  //returns String[] of neighborhoods that contain point param 
+  //returns String of neighborhood that contain point param
   pointInsideNeighborhood(point:Number[]){
-    let neighborhoods:String[] = [];
+    let neighborhood:String = "";
     for(var bounds in this.neighborhoodBoundaries){
-      if(inside(point,this.neighborhoodBoundaries[bounds].coordinates)){
-        neighborhoods.push(this.neighborhoodBoundaries[bounds].neighborhood);
+      if(inside(point,this.neighborhoodBoundaries[bounds].coordinates[0])){
+        neighborhood = this.neighborhoodBoundaries[bounds].neighborhood;
+        break;
       }
     }
-    return neighborhoods;
+    return neighborhood;
   }
 
 }

@@ -138,6 +138,7 @@ mat-checkbox{
   position: absolute;
   left: 323px;
   bottom: 94px;
+  color: var(--blue);
 }
 .ownerMessage{
   font-size: 12px;
