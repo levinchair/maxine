@@ -8,7 +8,7 @@ console.log("Connected to database 1");
 
 var schema = mongoose.Schema;
 var parcelDataSchema = new schema({},{collection:'cuyahoga_test'});
-let citydataSchema = new schema({view: String, city: String, data: Array}, {collection: 'cuyahoga_cities'});
+let cityBoundsSchema = new schema({view: String, city: String, data: Array}, {collection: 'cuyahoga_cities'});
 let xwalkdataSchema = new schema({}, {collection: 'xwalk_full_lodes'});
 let neighborhoodBoundariesSchema = new schema({}, {collection: "cleveland_spa"});
 
@@ -22,14 +22,14 @@ var quotesDataSchema = new schema({
 {collection:'cuyahoga'});*/
 
 let parcelDataModel =  mongoose.model('cuyahoga_test',parcelDataSchema);
-let cityDataModel = mongoose.model('cuyahoga_cities', citydataSchema);
+let cityBoundsModel = mongoose.model('cuyahoga_cities', cityBoundsSchema);
 let xwalkdataModel = mongoose.model('xwalk_full_lodes', xwalkdataSchema);
 let neighborhoodBoundariesModel = mongoose.model('cleveland_spa', neighborhoodBoundariesSchema);
 
 module.exports = {
     mongoose,
     parcelDataModel,
-    cityDataModel,
+    cityBoundsModel,
     xwalkdataModel,
     neighborhoodBoundariesModel
 }
