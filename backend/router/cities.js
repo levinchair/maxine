@@ -28,6 +28,9 @@ router.all("/getCitiesBoundaries", (req,res,next) => {
       newJson = {
         type: "FeatureCollection",
         name: "cityBoundaries",
+        crs: {
+          name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+        },
         features: result
       }
       res.json(newJson);
