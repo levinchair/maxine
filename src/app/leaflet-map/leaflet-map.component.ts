@@ -68,13 +68,13 @@ export class LeafletMapComponent implements OnInit {
 
   }
 
-  changed(){
+  changed(siteCatChosen){
     /** Fired when there is a change in the selection of the radio button */
     if(this.shapeLayer !== undefined){
         this.shapeLayer.settings.color = (index: Number, feature: JsonForm) => {
-          if(this.currentSiteCat === feature.properties.SiteCat1){
-            return L1.color.fromHex(this.getColors(this.currentSiteCat));
-          } else if(this.currentSiteCat === "All"){
+          if(siteCatChosen === feature.properties.SiteCat1){
+            return L1.color.fromHex(this.getColors(siteCatChosen));
+          } else if(siteCatChosen === "All"){
             return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
           } else {
             return L1.color.grey;
@@ -129,11 +129,12 @@ export class LeafletMapComponent implements OnInit {
         //   }
          }
       );
-      this.centralService.currentSiteCat.subscribe(
-        siteCat1 => {
-          this.currentSiteCat = siteCat1;
-          this.changed();
-        });
+      //commented out for later global use
+      // this.centralService.currentSiteCat.subscribe(
+      //   siteCat1 => {
+      //     this.currentSiteCat = siteCat1;
+      //     this.changed();
+      //   });
   }
   setShapeLayer(parcels){
     if(this.shapeLayer !== undefined) this.shapeLayer.remove();

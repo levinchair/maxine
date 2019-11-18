@@ -36,7 +36,7 @@ export class ControlPanelComponent implements OnInit {
   selectedHood:string = "";
   public isCollapsed = true;
   private citiesSub: Subscription;
-  private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
+  public LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
                     "Mixed", "Utility", "null", "All"];
    acresMinValue: number = 0; acresMaxValue: number = 5;
    valueMinValue: number = 0; valueMaxValue: number = 10;
@@ -344,6 +344,9 @@ export class ControlPanelComponent implements OnInit {
     console.log("Address search");
     //maybe try to make this modal totally fit in the page
     const modalRef = this.modalService.open(AddressSearchComponent,{ centered: true, size: 'lg'});
+  }
+  get landuse(){
+    return this.centralService.get_landUse();
   }
 
 }

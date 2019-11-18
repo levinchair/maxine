@@ -48,9 +48,9 @@
       <button class="btn btn-outline-primary" id="dropdownLandUse" ngbDropdownToggle
       [ngbPopover]="popCContent" [openDelay]="666" #c="ngbPopover" [autoClose]="false"
       triggers="manual" [popoverTitle]="popCTitle" (click)="c.close()">
-      Land Use: {{this.centralService._landUse | titlecase}}</button>
+      Land Use: {{ landuse | titlecase}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button *ngFor="let landUse of LANDUSE"
+        <button *ngFor="let landUse of this.LANDUSE"
                   (click)="selectLandUse(landUse)"
                   [class.selected] = "landUse === selectedCity"
                   class="landUseDropdownButton"

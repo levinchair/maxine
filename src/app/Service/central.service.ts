@@ -14,7 +14,7 @@ export class CentralService {
   private _hood : string;
   private _landUse : string;
   private _arr : Array<String> = [];
-  private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
+  private _LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
                     "Mixed", "Utility", null, "All"];
   currentView = "view1";
   currentAttr = "AssessedValue";
@@ -22,7 +22,7 @@ export class CentralService {
   areas = [];
   firstVisit = false;
   options : SearchOptions = new SearchOptions();
-  currentSiteCat = new Subject<any>();
+  // currentSiteCat = new Subject<any>();
   geocoderData = new Subject<any>();
   geometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
@@ -106,7 +106,7 @@ export class CentralService {
     return this._landUse;
   }
   getLanduse(){
-    return this.LANDUSE;
+    return this._LANDUSE;
   }
 
   resizeAreas(domE:String){
