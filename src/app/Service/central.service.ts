@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient,  HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { tap, catchError, retry } from 'rxjs/operators';
+import inside from 'point-in-polygon';
 //Models
 import { SearchOptions } from '../../model/SearchOptions.model';
 import { SearchAddress } from 'src/model/search-address';
@@ -21,9 +22,12 @@ export class CentralService {
   search      = "";
   areas = [];
   firstVisit = false;
+  cityBoundaries = [];
+  neighborhoodBoundaries =[];
   options : SearchOptions = new SearchOptions();
   // currentSiteCat = new Subject<any>();
   geocoderData = new Subject<any>();
+  cityBounds   = new Subject<any>();
   geometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
   view1Data = new Subject<any>(); view1DataRaw: any;
@@ -73,6 +77,13 @@ export class CentralService {
       }
     )
   }
+  getCityBounds(){
+    this.http.get("http://localhost:3000/getCitiesBoundaries").subscribe(
+      (data) => {
+        this.cityBounds.next(data);
+      }
+    )
+  }
   setGeocoderData(data){
     this.geocoderData.next(data);
   }
@@ -82,7 +93,7 @@ export class CentralService {
   }
 
   setAddressdata(searchM: SearchAddress){
-    //instantiate a new searchAddress object here with the passed object 
+    //instantiate a new searchAddress object here with the passed object
     //from the addressSearch component
     this.searchAddr = searchM;
     // console.log(this.searchAddr);
@@ -255,6 +266,21 @@ export class CentralService {
          }
        },
        error => this.handleError(error));
+   }
+   //returns String array of neighborhood/city name that contain lasso area param
+   pointInsideBounds(lassoPoints:Number[][], boundaries:any[]){
+     let returnVal:String[] = [];
+     //iterates over each point in lassoPoints checking if the point is inside any of the
+     //  boundaries passed(city/hood) and returns an array of each city/hood that contains
+     //  any of the points in lassoPoints
+     for(var point in lassoPoints){
+       for(var bounds in boundaries){
+         if(!returnVal.includes(boundaries[bounds].name)){//if city/hood in retVal
+           if(inside(lassoPoints[point],boundaries[bounds].coordinates[0])){ //if point inside boundaries
+           returnVal.push(boundaries[bounds].name);
+         }}}
+     }
+     return returnVal;
    }
    getFilterMaxData(){
      this.http.post(`http://localhost:3000/maxproperties/${this._city}/${this._hood}`,this.options)
