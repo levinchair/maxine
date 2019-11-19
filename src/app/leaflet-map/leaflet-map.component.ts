@@ -21,7 +21,7 @@ export class LeafletMapComponent implements OnInit {
   geoJsonLayer;
   selectfeature:any;
   recentData:any;
-  lassoData:any;
+  cityHoodLassoData:any = [];
   sat: boolean;
   googleSat: any;
   maplabels:any;
@@ -33,7 +33,6 @@ export class LeafletMapComponent implements OnInit {
   landuse: String[];
   marker:any;
   currentSiteCat:String;
-  neighborhoodRecentData:any;
 
   constructor(
     private centralService : CentralService,
@@ -244,7 +243,9 @@ export class LeafletMapComponent implements OnInit {
     //declare arrays of city/hood names lasso points are within
     let cities:String[] = this.centralService.pointInsideBounds(lassoPoints,this.centralService.cityBoundaries);
     let neighborhoods:String[] = this.centralService.pointInsideBounds(lassoPoints,this.centralService.neighborhoodBoundaries);
-    //
+    //get Geometry data for each neighborhood and city push it into cityHoodLassoData
+
+    //push recentData into cityHoodLassoDataxß
     let feature = [];
     let allPoints = 0;
     if(this.recentData !== undefined){
@@ -273,6 +274,7 @@ export class LeafletMapComponent implements OnInit {
       }
       this.shapeLayer.setup().render();
     }
+    this.cityHoodLassoData.length = 0;
   }//End addLassoData
 
   toggleTool(tool: String){

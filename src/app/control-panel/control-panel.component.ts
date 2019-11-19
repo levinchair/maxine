@@ -75,7 +75,6 @@ export class ControlPanelComponent implements OnInit {
       "VALLEY VIEW","WALTON HILLS","WESTLAKE","WOODMERE"
      ];
   ngOnInit() {
-    console.log(this.centralService.firstVisit);
      this.citiesSub = this.centralService.getCities()
       .subscribe( (cities : string[]) => {
        cities.splice(0,1);
@@ -97,9 +96,10 @@ export class ControlPanelComponent implements OnInit {
        this.abatementList.push(i);
      }
      //Opens landing page
-     this.open();
    }
-
+   ngAfterViewInit(){//fixes expression changeeed after it has been checked error
+     setTimeout(()=> this.open());
+   }
   onSelect(city: string) {
     this.selectedCity = city;
     this.centralService.setCity(city);

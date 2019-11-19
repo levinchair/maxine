@@ -267,6 +267,7 @@ export class CentralService {
        },
        error => this.handleError(error));
    }
+
    //returns String array of neighborhood/city name that contain lasso area param
    pointInsideBounds(lassoPoints:Number[][], boundaries:any[]){
      let returnVal:String[] = [];

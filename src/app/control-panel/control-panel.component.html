@@ -98,7 +98,7 @@
               <ng5-slider [(value)]="unitsMinValue" [(highValue)]="unitsMaxValue" [options]="unitsOptions"></ng5-slider>
             </div>
           </div>
-          <!-- Owners selected go here -->
+          <!-- Owners selected, displayed here this could be improved as it extends beyond screen if too many selected -->
           <div class="ownerDisplay">
             <div *ngFor="let owner of ownerInputList" class="ownerDisplayItem">
               <span class="ownerDisplayItemText">{{owner | titlecase }}</span>
