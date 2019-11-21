@@ -25,7 +25,7 @@
 </div> -->
 <div class="main-body">
   <!-- <app-charts [ngClass]="this.centralService.resizeAreas('chart')"></app-charts> -->
-  <app-leaflet-map [ngClass]="this.centralService.resizeAreas('map')"></app-leaflet-map>
+  <app-leaflet-map [ngClass]="{'base':true,'half':false,'full':false,'hidden':false}"></app-leaflet-map>
   <app-sidebar></app-sidebar>
 </div>
 

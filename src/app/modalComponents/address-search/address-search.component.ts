@@ -68,6 +68,8 @@ export class AddressAreaComponent {
   ngOnInit(){
     this.areas = ['half-mile radius', 'Neighborhood', 'City', 'County'];
   }
-
+  onSubmit(){
+    //not used
+  }
 
 }
