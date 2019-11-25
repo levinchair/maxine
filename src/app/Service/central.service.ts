@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,  HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, Subject } from 'rxjs';
+import { Observable, throwError, Subject, forkJoin } from 'rxjs';
 import { tap, catchError, retry } from 'rxjs/operators';
 import inside from 'point-in-polygon';
 //Models
@@ -24,11 +24,13 @@ export class CentralService {
   firstVisit = false;
   cityBoundaries = [];
   neighborhoodBoundaries =[];
+  enhancedLasso:Boolean = false;
   options : SearchOptions = new SearchOptions();
   // currentSiteCat = new Subject<any>();
   geocoderData = new Subject<any>();
   cityBounds   = new Subject<any>();
   geometryData = new Subject<any>();
+  lassoGeometryData = new Subject<any>();
   neighborhoods = new Subject<string[]>();
   view1Data = new Subject<any>(); view1DataRaw: any;
   view2Data = new Subject<any>(); view2DataRaw: any;
@@ -58,18 +60,7 @@ export class CentralService {
   setLandUse(landUse:string){
     this._landUse = landUse;
   }
-  setParcelArray(arr: Array<String>){
-    if(arr === undefined || arr.length == 0 || !Array.isArray(arr)){
-        this._arr = [];
-        delete this.options.parcelpins;
-    }else {
-        this._arr = [...arr];
-        this.options.parcelpins = [...this._arr]; //set the options array
-    }
-  }
-  resetParcelArray(){
-    this._arr = [];
-  }
+
   getGeoCoderData(){
     this.http.get("http://localhost:3000/getNeighborhoodBoundaries").subscribe(
       (data) => {
@@ -83,6 +74,39 @@ export class CentralService {
         this.cityBounds.next(data);
       }
     )
+  }
+  getLassoGeometryData(cities:string[],hoods?:string[]){
+    //take cities and hoods into account to create the least number of searches necessary
+    //for now the only neighborhoodBounds are for Cleveland so it's simple but when
+    //more are added this should be better optimized
+    var search:any[] = [];
+    for(var city of cities){
+      if(hoods && city == 'Cleveland'){
+        for(var hood of hoods){
+          search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/${hood}`,this.options));
+        }
+      }else{
+        search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/`,this.options));
+      }
+    }
+    forkJoin(search).subscribe(results =>{
+      this.lassoGeometryData.next(results);
+    },
+    err => {
+      this.handleError(err);
+    });
+  }
+  setParcelArray(arr: Array<String>){
+    if(arr === undefined || arr.length == 0 || !Array.isArray(arr)){
+        this._arr = [];
+        delete this.options.parcelpins;
+    }else {
+        this._arr = [...arr];
+        this.options.parcelpins = [...this._arr]; //set the options array
+    }
+  }
+  resetParcelArray(){
+    this._arr = [];
   }
   setGeocoderData(data){
     this.geocoderData.next(data);
@@ -174,16 +198,22 @@ export class CentralService {
     this.getConcentrationValues(this._city, this._hood);
 
   }
-  getbyParcelpins(){
-    this.getViews(); // get views with updated options object
-    this.http.post(`http://localhost:3000/showgeometry/${this._city}/${this._hood}`, this.options)
-    .subscribe(view => {
-          this.geometryData.next(view);
-          //spinner will be turned off after geometry is loaded
-          this.showSpinner.next(false);
-    }, err => {
-      this.handleError(err);
+  getbyParcelpins(cities:string[], neighborhoods:string[]){
+    var search:any[] = [];
+    for(var city of cities){
+      if(neighborhoods && city == 'Cleveland'){
+        for(var hood of neighborhoods){
+          search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/${hood}`, this.options));
+        }
+      }else{
+        search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/`, this.options));
+      }
+    }
+    forkJoin(search).subscribe(results =>{
+      this.geometryData.next(results);
+      this.showSpinner.next(false);
     });
+    this.getViews(); // get views with updated options object
   }
 
   getGeometry(){
@@ -268,9 +298,9 @@ export class CentralService {
        error => this.handleError(error));
    }
 
-   //returns String array of neighborhood/city name that contain lasso area param
+   //returns string array of neighborhood/city name that contain lasso area param
    pointInsideBounds(lassoPoints:Number[][], boundaries:any[]){
-     let returnVal:String[] = [];
+     let returnVal:string[] = [];
      //iterates over each point in lassoPoints checking if the point is inside any of the
      //  boundaries passed(city/hood) and returns an array of each city/hood that contains
      //  any of the points in lassoPoints

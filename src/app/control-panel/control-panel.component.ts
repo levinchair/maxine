@@ -196,7 +196,7 @@ export class ControlPanelComponent implements OnInit {
         || this.unitsMaxValue != this.unitsOptions.ceil){
       this.centralService.options.scale_units = [this.unitsMinValue,this.unitsMaxValue];
     }//Check if value was changed from default
-    console.log(this.centralService.options);
+    console.log("options:" + JSON.stringify(this.centralService.options));
   }
 
   setMax(data){

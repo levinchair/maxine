@@ -59,7 +59,7 @@ export class ChartsComponent implements OnInit {
     this.createChart();
     this.centralService.view1Data
       .subscribe( view => {
-        console.log("View1:" + JSON.stringify(view));
+        // console.log("View1:" + JSON.stringify(view));
         this.view1Data = view;
         this.updateChart1("value");
       });
@@ -73,7 +73,7 @@ export class ChartsComponent implements OnInit {
       });
     this.centralService.landUseConcentrationData
       .subscribe( view => {
-        console.log("LUCdata:" + JSON.stringify(view));
+        // console.log("LUCdata:" + JSON.stringify(view));
         this.landUseConcentrationData = view;
         this.updateChart1("value");
       });

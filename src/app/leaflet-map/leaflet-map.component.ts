@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
 import { CurrencyPipe } from '@angular/common';
+import { BehaviorSubject } from "rxjs/Rx";
 // import { NeighborhoodBoundaries } from '../../assets/JSON/cleveland_spa';
 
 @Component({
@@ -22,6 +23,8 @@ export class LeafletMapComponent implements OnInit {
   selectfeature:any;
   recentData:any;
   cityHoodLassoData:any = [];
+  cities:string[];
+  neighborhoods:string[];
   sat: boolean;
   googleSat: any;
   maplabels:any;
@@ -33,6 +36,7 @@ export class LeafletMapComponent implements OnInit {
   landuse: String[];
   marker:any;
   currentSiteCat:String;
+  lassoPoints:any;
 
   constructor(
     private centralService : CentralService,
@@ -86,12 +90,29 @@ export class LeafletMapComponent implements OnInit {
   sub(){
      this.centralService.geometryData.subscribe(
       view => {
-        this.recentData = view;
-        this.geoJsonLayer = L.geoJSON();
-        this.geoJsonLayer.addData(view);
-        var latLngBounds = this.geoJsonLayer.getBounds();
-        this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
-        this.setShapeLayer(view);
+        console.log("Enhanced Lasso Response");
+        console.log(view);
+        if(view.length > 1){
+          var allFeatures = view[0];
+          var temp;
+          for(var index in view){
+            temp = view[index].features;
+            allFeatures.features = temp.concat(allFeatures.features);
+          }
+          this.recentData = allFeatures;
+        }else if(Array.isArray(view)){
+          this.recentData = view[0];
+        }else{
+          this.recentData = view;
+        }
+        console.log("Recent Data to display");
+        console.log(this.recentData);
+          this.geoJsonLayer = L.geoJSON();
+          this.geoJsonLayer.addData(this.recentData);
+          var latLngBounds = this.geoJsonLayer.getBounds();
+          this.setShapeLayer(this.recentData);
+          this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
+          this.centralService.showSpinner.next(false);
       });
       this.centralService.geocoderData.subscribe(
         data => {
@@ -108,6 +129,35 @@ export class LeafletMapComponent implements OnInit {
             "name":feature.properties.NAME});
           }
          }
+      );
+      this.centralService.lassoGeometryData.subscribe(
+        data => {
+          this.cityHoodLassoData = data;
+          var matches = [];
+          if(this.cityHoodLassoData){
+            for(var posts of this.cityHoodLassoData){
+              for(var parcels of posts.features){
+                for(var point of parcels.geometry.coordinates[0][0]){
+                  if(inside(point,this.lassoPoints)){
+                    matches.push(parcels.properties.parcelpin);
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          if(this.selectedParcels.length){
+            this.selectedParcels = matches;
+          }else{
+            this.selectedParcels.concat(matches);
+          }
+          let toolData = [...this.selectedParcels];
+          if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
+          this.centralService.setParcelArray(toolData);
+          this.centralService.getbyParcelpins(this.cities,this.neighborhoods); // this will initiate a http request which will update subscription
+          this.selectedParcels = [];
+          toolData = [];
+        }
       );
       //commented out for later global use
       // this.centralService.currentSiteCat.subscribe(
@@ -206,46 +256,52 @@ export class LeafletMapComponent implements OnInit {
       this.streets.removeFrom(this.map);
     }
   }
+
   //add check initialized/undefined flags
   getLassoPlots(){
-    let toolData = [...this.selectedParcels];
-
-    if (!toolData || toolData.length == 0) {
-      alert("No parcels were selected");
-      // this.removeLassoPolygons();
-    } else {
+    this.centralService.showSpinner.next(true);
+    //starts enhancedLasso process
+    if(this.cities && this.centralService.enhancedLasso){
+      this.centralService.getLassoGeometryData(this.cities,this.neighborhoods);
+    }else if(!this.centralService.enhancedLasso && this.recentData !== undefined){
+      console.log("reached");
+      let toolData = [...this.selectedParcels];
       if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
-      this.centralService.showSpinner.next(true);
       this.centralService.setParcelArray(toolData);
-      this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
+      this.centralService.getbyParcelpins(this.cities,this.neighborhoods); // this will initiate a http request which will update subscription
       this.selectedParcels = [];
       toolData = [];
+    }else{
+      //To-Do:: no data loaded or selected should alert user maybe alert or popup
+      console.log("no data entered");
+      this.centralService.showSpinner.next(false);
     }
   }
   removeLassoPolygons(){
     if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
     this.selectedParcels = [];
     this.centralService.setParcelArray([]);
-    this.centralService.showSpinner.next(true);
-    this.centralService.getGeometry();
-    this.centralService.getViews();
+    this.cityHoodLassoData = [];
+    if(this.recentData !== undefined){
+      this.centralService.showSpinner.next(true);
+      this.centralService.getGeometry();
+      this.centralService.getViews();
+    }
   }
   addLassoData(){ //fired
-    let lassoPoints = [];
+    this.lassoPoints = [];
     let latlng_area = this.selectfeature.getAreaLatLng();
     for(let latlng of latlng_area){
       let temp = [latlng.lng,latlng.lat];
-      lassoPoints.push(temp);
+      this.lassoPoints.push(temp);
     }
-    if(lassoPoints === null || lassoPoints.length == 0) {
+    if(this.lassoPoints === null || this.lassoPoints.length == 0) {
       throw new Error("temp array is empty");
     }
     //declare arrays of city/hood names lasso points are within
-    let cities:String[] = this.centralService.pointInsideBounds(lassoPoints,this.centralService.cityBoundaries);
-    let neighborhoods:String[] = this.centralService.pointInsideBounds(lassoPoints,this.centralService.neighborhoodBoundaries);
-    //get Geometry data for each neighborhood and city push it into cityHoodLassoData
-
-    //push recentData into cityHoodLassoDataxß
+    this.cities = this.centralService.pointInsideBounds(this.lassoPoints,this.centralService.cityBoundaries);
+    this.neighborhoods = this.centralService.pointInsideBounds(this.lassoPoints,this.centralService.neighborhoodBoundaries);
+    console.log(this.cities);
     let feature = [];
     let allPoints = 0;
     if(this.recentData !== undefined){
@@ -255,15 +311,11 @@ export class LeafletMapComponent implements OnInit {
           for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
             allPoints = 0;
             for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
-              if(inside(feature[j][k][l],lassoPoints)){
+              if(inside(feature[j][k][l],this.lassoPoints)){
                 allPoints+=1;
                 if(!this.selectedParcels.includes(this.recentData.features[i].properties.parcelpin) && allPoints == feature[j][k].length){
                   this.selectedParcels.push(this.recentData.features[i].properties.parcelpin);
-                }
-              }
-            }
-          }
-        }
+                }}}}}
       }
       this.shapeLayer.settings.color = (e, feature: JsonForm) => { // change color of the circled parcels
         if(this.selectedParcels.includes(feature.properties.parcelpin)){
@@ -274,8 +326,7 @@ export class LeafletMapComponent implements OnInit {
       }
       this.shapeLayer.setup().render();
     }
-    this.cityHoodLassoData.length = 0;
-  }//End addLassoData
+  }
 
   toggleTool(tool: String){
     if(tool === "select"){ // then toggle selection tool
