@@ -105,14 +105,15 @@ export class LeafletMapComponent implements OnInit {
         }else{
           this.recentData = view;
         }
-        console.log("Recent Data to display");
-        console.log(this.recentData);
+          console.log("Recent Data to display");
+          console.log(this.recentData);
           this.geoJsonLayer = L.geoJSON();
           this.geoJsonLayer.addData(this.recentData);
           var latLngBounds = this.geoJsonLayer.getBounds();
           this.setShapeLayer(this.recentData);
           this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
           this.centralService.showSpinner.next(false);
+          this.centralService.getViews();
       });
       this.centralService.geocoderData.subscribe(
         data => {

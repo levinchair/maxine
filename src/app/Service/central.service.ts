@@ -206,6 +206,7 @@ export class CentralService {
           search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/${hood}`, this.options));
         }
       }else{
+        console.log(city);
         search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/`, this.options));
       }
     }
