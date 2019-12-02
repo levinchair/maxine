@@ -37,7 +37,7 @@ export class LeafletMapComponent implements OnInit {
   marker:any;
   currentSiteCat:String;
   lassoPoints:any;
-
+  enhancedLasso: boolean = false;
   constructor(
     private centralService : CentralService,
     public cp: CurrencyPipe
@@ -90,8 +90,6 @@ export class LeafletMapComponent implements OnInit {
   sub(){
      this.centralService.geometryData.subscribe(
       view => {
-        console.log("Enhanced Lasso Response");
-        console.log(view);
         if(view.length > 1){
           var allFeatures = view[0];
           var temp;
@@ -105,15 +103,12 @@ export class LeafletMapComponent implements OnInit {
         }else{
           this.recentData = view;
         }
-          console.log("Recent Data to display");
-          console.log(this.recentData);
           this.geoJsonLayer = L.geoJSON();
           this.geoJsonLayer.addData(this.recentData);
           var latLngBounds = this.geoJsonLayer.getBounds();
           this.setShapeLayer(this.recentData);
           this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
           this.centralService.showSpinner.next(false);
-          this.centralService.getViews();
       });
       this.centralService.geocoderData.subscribe(
         data => {
@@ -265,7 +260,7 @@ export class LeafletMapComponent implements OnInit {
     if(this.cities && this.centralService.enhancedLasso){
       this.centralService.getLassoGeometryData(this.cities,this.neighborhoods);
     }else if(!this.centralService.enhancedLasso && this.recentData !== undefined){
-      console.log("reached");
+      // console.log("reached");
       let toolData = [...this.selectedParcels];
       if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
       this.centralService.setParcelArray(toolData);
@@ -302,7 +297,7 @@ export class LeafletMapComponent implements OnInit {
     //declare arrays of city/hood names lasso points are within
     this.cities = this.centralService.pointInsideBounds(this.lassoPoints,this.centralService.cityBoundaries);
     this.neighborhoods = this.centralService.pointInsideBounds(this.lassoPoints,this.centralService.neighborhoodBoundaries);
-    console.log(this.cities);
+    // console.log(this.cities);
     let feature = [];
     let allPoints = 0;
     if(this.recentData !== undefined){

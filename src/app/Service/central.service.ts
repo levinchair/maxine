@@ -206,15 +206,13 @@ export class CentralService {
           search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/${hood}`, this.options));
         }
       }else{
-        console.log(city);
-        search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/`, this.options));
+       search.push(this.http.post(`http://localhost:3000/showgeometry/${city}/`, this.options));
       }
     }
     forkJoin(search).subscribe(results =>{
       this.geometryData.next(results);
       this.showSpinner.next(false);
     });
-    this.getViews(); // get views with updated options object
   }
 
   getGeometry(){

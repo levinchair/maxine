@@ -211,6 +211,7 @@ export class ControlPanelComponent implements OnInit {
       }if(Math.ceil(data[i].maxScale) > maxScale){
         maxScale = Math.ceil(data[i].maxScale);
       }
+      this.resetFilter();
     }
     //Create new options objects to assign for each slider
     const newOptions: Options = Object.assign({}, this.acresOptions);
@@ -341,7 +342,7 @@ export class ControlPanelComponent implements OnInit {
     )
   addressSearch(){
     /** Do something when Address Searh button is clicked */
-    console.log("Address search");
+    // console.log("Address search");
     //maybe try to make this modal totally fit in the page
     const modalRef = this.modalService.open(AddressSearchComponent,{ centered: true, size: 'lg'});
   }

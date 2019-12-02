@@ -7,10 +7,10 @@
 <div class="toggleDiv">
   <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="model">
     <label ngbButtonLabel class="btn-primary">
-      <input ngbButton type="radio" value="value" (click)="updateChart1('value')"> Value
+      <input ngbButton type="radio" value="value" (click)="updateCharts('value',this.centralService.get_landUse())"> Value
     </label>
     <label ngbButtonLabel class="btn-primary">
-      <input ngbButton type="radio" value="acres" (click)="updateChart1('acres')"> Acres
+      <input ngbButton type="radio" value="acres" (click)="updateCharts('acres',this.centralService.get_landUse())"> Acres
     </label>
   </div>
 </div>
