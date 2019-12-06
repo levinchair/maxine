@@ -1,10 +1,9 @@
 .lp-choose{
-  width:800px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
 }
 .btn-text{
   position:absolute;
-  color:black;
-  font-size: 26px;
   top:99px;
   left:0px;
   width:250px;
@@ -12,20 +11,33 @@
 }
 .btn-choice{
   position:relative;
-  width:250px;
+}
+.btn-choice{
+  display:grid;
+  background-color: inherit;
+  border-radius: 2px;
+  margin:0px;
   padding:0px;
-  margin-right:5px;
+  color:black;
+  font-size:26px;
+  border:2px solid white;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+  transition-property: border;
+  transition-duration:0.3s;
+  transition-timing-function: linear;
+}
+.btn-choice:hover{
+  border: 2px solid var(--primary);
 }
 img{
-  opacity:0.60;
-  filter: alpha(opacity=60); /* For IE8 and earlier */
+  width:100%;
+  opacity:0.50;
+  filter: alpha(opacity=50); /* For IE8 and earlier */
 }
+
 p, h4{
   padding-left:10px;
 }
 p{
   font-size: 20px;
-}
-.center{
-  text-align: center;
 }

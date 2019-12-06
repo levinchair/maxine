@@ -14,7 +14,6 @@ router.all("/concentration/:param?/:hood?", (req, res, next) => {
 
     utils.processOwnerConcentration(req.params.param2, req.params.hood2, req.body).then(
     (payload) => { //callback
-
       var data = payload;
       var landuseSum = [];
       var cr4;

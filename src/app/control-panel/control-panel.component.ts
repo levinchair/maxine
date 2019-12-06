@@ -30,13 +30,12 @@ export class ControlPanelComponent implements OnInit {
   cityFromService = this.centralService.getCity();
   selectedCity : string = "Select city...";
   selectedLandUse : string;
-  sitecat2Selected: boolean = false;
   abatementList = [];
   neighborhood : string[] = [];
   selectedHood:string = "";
   public isCollapsed = true;
   private citiesSub: Subscription;
-  private LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
+  public LANDUSE = ["Residential", "Commercial", "Government", "Industrial", "Institutional",
                     "Mixed", "Utility", "null", "All"];
    acresMinValue: number = 0; acresMaxValue: number = 5;
    valueMinValue: number = 0; valueMaxValue: number = 10;
@@ -65,17 +64,16 @@ export class ControlPanelComponent implements OnInit {
     cityAll = [
       "BAY VILLAGE","BEACHWOOD","BEDFORD","BEDFORD HEIGHTS",
       "BENTLEYVILLE","BEREA","BRECKSVILLE","BROADVIEW HEIGHTS",
-      "CHAGRIN FALLS","GATES MILLS","GLENWILLOW","HIGHLAND HEIGHTS",
+      "CHAGRIN FALLS","CHAGRIN FALLS TOWNSHIP","GATES MILLS","GLENWILLOW","HIGHLAND HEIGHTS",
       "HIGHLAND HILLS","HUNTING VALLEY","INDEPENDENCE","LINNDALE",
-      "LYNDHURST","MAPLE HEIGHTS","MAYFIELD","MAYFIELD HEIGHTS",
-      "MORLAND HILLS","NEWBURGH HEIGHTS","NORTH OLMSTED","NORTH RANDALL",
+      "LYNDHURST","MAPLE HEIGHTS","MAYFIELD","MAYFIELD HEIGHTS","MIDDLEBURG HEIGHTS",
+      "MORELAND HILLS","NEWBURGH HEIGHTS","NORTH OLMSTED","NORTH RANDALL",
       "NORTH ROYALTON","OAKWOOD","OLMSTED FALLS","OLMSTED TOWNSHIP",
       "ORANGE","PARMA","PARMA HEIGHTS","PEPPER PIKE","RICHMOND HEIGHTS",
       "ROCKY RIVER","SEVEN HILLS","SOLON","STRONGSVILLE","UNIVERSITY HEIGHTS",
       "VALLEY VIEW","WALTON HILLS","WESTLAKE","WOODMERE"
      ];
   ngOnInit() {
-    console.log(this.centralService.firstVisit);
      this.citiesSub = this.centralService.getCities()
       .subscribe( (cities : string[]) => {
        cities.splice(0,1);
@@ -97,9 +95,10 @@ export class ControlPanelComponent implements OnInit {
        this.abatementList.push(i);
      }
      //Opens landing page
-     this.open();
    }
-
+   ngAfterViewInit(){//fixes expression changeeed after it has been checked error
+     setTimeout(()=> this.open());
+   }
   onSelect(city: string) {
     this.selectedCity = city;
     this.centralService.setCity(city);
@@ -142,11 +141,6 @@ export class ControlPanelComponent implements OnInit {
     if(this.centralService.firstVisit){
       this.popC.close();
       this.popD.open();
-    }
-    if(landUse == "All"){
-      this.sitecat2Selected = true;
-    }else{
-      this.sitecat2Selected = false;
     }
   }
 
@@ -196,7 +190,7 @@ export class ControlPanelComponent implements OnInit {
         || this.unitsMaxValue != this.unitsOptions.ceil){
       this.centralService.options.scale_units = [this.unitsMinValue,this.unitsMaxValue];
     }//Check if value was changed from default
-    console.log(this.centralService.options);
+    console.log("options:" + JSON.stringify(this.centralService.options));
   }
 
   setMax(data){
@@ -211,6 +205,7 @@ export class ControlPanelComponent implements OnInit {
       }if(Math.ceil(data[i].maxScale) > maxScale){
         maxScale = Math.ceil(data[i].maxScale);
       }
+      this.resetFilter();
     }
     //Create new options objects to assign for each slider
     const newOptions: Options = Object.assign({}, this.acresOptions);
@@ -264,7 +259,7 @@ export class ControlPanelComponent implements OnInit {
     // Reset Owner
     this.ownerInputList = [];
     this.ownerInput = "";
-    
+
     this.centralService.resetSearchOptionsData(); //need to reset centralService object
 
   }
@@ -341,9 +336,12 @@ export class ControlPanelComponent implements OnInit {
     )
   addressSearch(){
     /** Do something when Address Searh button is clicked */
-    console.log("Address search");
+    // console.log("Address search");
     //maybe try to make this modal totally fit in the page
     const modalRef = this.modalService.open(AddressSearchComponent,{ centered: true, size: 'lg'});
+  }
+  get landuse(){
+    return this.centralService.get_landUse();
   }
 
 }

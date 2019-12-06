@@ -1,8 +1,10 @@
 var express= require('express')
 var router= express.Router()
-var db = require("../model/db.js").parcelDataModel;
+var parcelData = require("../model/db.js").parcelDataModel;
+var cityBounds = require("../model/db.js").cityBoundsModel;
+
  router.all("/showcities",(req,res,next)=>{
-    db.distinct("properties.par_city")
+    parcelData.distinct("properties.par_city")
     .exec(function(err, result) {
       if(err) {
        // res.send('error occured')
@@ -15,5 +17,24 @@ var db = require("../model/db.js").parcelDataModel;
       }
     });
     //next();
+});
+
+router.all("/getCitiesBoundaries", (req,res,next) => {
+  cityBounds.find().exec( (err, result) => {
+    if(err) {
+       throw new Error("Error at Aggregation: " + err.message);
+     } else {
+      result = result.filter(x => x !== 'NULL');
+      newJson = {
+        type: "FeatureCollection",
+        name: "cityBoundaries",
+        crs: {
+          name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+        },
+        features: result
+      }
+      res.json(newJson);
+     }
+  });
 });
 module.exports=router;

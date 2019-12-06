@@ -2,7 +2,7 @@
 <mat-radio-group
   class="map-radio-group"
   [(ngModel)]="this.currentSiteCat"
-  (ngModelChange)="this.centralService.currentSiteCat.next($event)">
+  (ngModelChange)="this.changed($event)">
   <mat-radio-button
     *ngFor="let sitecat of landuse"
     [ngStyle]="{'background-color': getColors(sitecat), 'color' : sitecat === null ? 'whitesmoke':' black'}"
@@ -20,15 +20,4 @@
   <button id="getLasso" mat-stroked-button color="primary" (click)='this.getLassoPlots()' height="24" width="24" title="Calculate values based on Selection Tool" >Go</button><br>
   <button id="destroyLasso" mat-stroked-button color="warn" (click)='this.removeLassoPolygons()' title="Remove and reset map"><img src="../assets/icons-24px/png/008-trash.png" height="24" width="24"></button><br>
 </mat-button-toggle-group>
-
-<!-- <div id='map-legend'>
-  <div class="Commercial legend-block">Commercial</div>
-  <div class="Government legend-block">Government</div>
-  <div class="Industrial legend-block">Industrial</div>
-  <div class="Institutional legend-block">Institutional</div>
-  <div class="Mixed legend-block">Mixed</div>
-  <div class="Null legend-block">Null</div>
-  <div class="Residential legend-block">Residential</div>
-  <div class="Utility legend-block">Utility</div>
-  <div class="Vacant legend-block">Vacant</div>
-</div> -->
+<mat-checkbox class="enhancedLasso" [(ngModel)]="this.centralService.enhancedLasso"> Enhanced Lasso </mat-checkbox>

@@ -48,9 +48,9 @@
       <button class="btn btn-outline-primary" id="dropdownLandUse" ngbDropdownToggle
       [ngbPopover]="popCContent" [openDelay]="666" #c="ngbPopover" [autoClose]="false"
       triggers="manual" [popoverTitle]="popCTitle" (click)="c.close()">
-      Land Use: {{this.centralService._landUse | titlecase}}</button>
+      Land Use: {{ landuse | titlecase}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button *ngFor="let landUse of LANDUSE"
+        <button *ngFor="let landUse of this.LANDUSE"
                   (click)="selectLandUse(landUse)"
                   [class.selected] = "landUse === selectedCity"
                   class="landUseDropdownButton"
@@ -92,13 +92,13 @@
               </div>
           </div>
           <!-- Only visible if a Sitecat2 was selected in Land Use -->
-          <div *ngIf="sitecat2Selected" class="units-container">
-            <p>Units/Square Feet <br><input type="number" [(ngModel)]="unitsMinValue"><input type="number" [(ngModel)]="unitsMaxValue"></p>
+          <div *ngIf="this.selectedLandUse != 'All' && this.selectedLandUse" class="units-container">
+            <p>{{this.selectedLandUse == "Residential" ? "Units" : "Square Foot"}}<br><input type="number" [(ngModel)]="unitsMinValue"><input type="number" [(ngModel)]="unitsMaxValue"></p>
             <div class="custom-slider">
               <ng5-slider [(value)]="unitsMinValue" [(highValue)]="unitsMaxValue" [options]="unitsOptions"></ng5-slider>
             </div>
           </div>
-          <!-- Owners selected go here -->
+          <!-- Owners selected, displayed here this could be improved as it extends beyond screen if too many selected -->
           <div class="ownerDisplay">
             <div *ngFor="let owner of ownerInputList" class="ownerDisplayItem">
               <span class="ownerDisplayItemText">{{owner | titlecase }}</span>
@@ -130,7 +130,7 @@
             <span alert class="ownerMessage">{{ownerMessage}}</span>
           </div>
           <!-- Only visible if a Sitecat2 was selected in Land Use -->
-          <div *ngIf="sitecat2Selected" ngbDropdown class="d-inline-block DTLU-container">
+          <div *ngIf="this.selectedLandUse != 'All' && this.selectedLandUse" ngbDropdown class="d-inline-block DTLU-container">
             Detailed Taxable Land Use
             <img class="info-button" title="info-button" src="../assets/icons-24px/png/iconfinder_exclamation.png" height="20" width="20" title="info-button" (click)="openDTLUModal()">
             <br>

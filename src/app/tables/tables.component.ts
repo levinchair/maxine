@@ -28,6 +28,8 @@ export class TablesComponent implements OnInit {
   screenWidth:any;
   concentrationData: any;
   landUseConcentrationData: any;
+  currentLandUse:String;
+  displayLandUse:string;
   private table1 : String = "show";
   model = "lu";
   constructor(
@@ -37,39 +39,21 @@ export class TablesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.view1Data = this.centralService.view1DataRaw;
-    this.view2Data = this.centralService.view2DataRaw;
-    this.view3Data = this.centralService.view3DataRaw;
-    this.view4Data = this.centralService.view4DataRaw;
+    if(this.centralService.get_landUse() == undefined || this.centralService.get_landUse()=="All"){
+      this.currentLandUse = "All";
+      this.displayLandUse = "Land Use";
+    }else{
+      this.currentLandUse = this.centralService.get_landUse();
+      this.displayLandUse = this.centralService.get_landUse();
+    }
+    //we need to do a deep copy as we are changing the data, see shallow vs deep copies
+    //this is a gimmicky way to create a deep copy without external libraries/more code
+    this.view1Data = JSON.parse(JSON.stringify(this.centralService.view1DataRaw));this.addTotal(this.view1Data,"view1");
+    this.view2Data = JSON.parse(JSON.stringify(this.centralService.view2DataRaw));this.addTotal(this.view2Data,"view2");
+    this.view3Data = JSON.parse(JSON.stringify(this.centralService.view3DataRaw));this.addTotal(this.view3Data,"view3");
+    this.view4Data = JSON.parse(JSON.stringify(this.centralService.view4DataRaw));this.addTotal(this.view4Data,"view4");
     this.concentrationData = this.centralService.concentrationDataRaw;
     this.landUseConcentrationData = this.centralService.landUseConcentrationDataRaw;
-    this.centralService.view1Data
-      .subscribe( view => {
-        this.view1Data = view;
-        //console.log(JSON.stringify(view));
-      });
-    this.centralService.view2Data
-      .subscribe( view => {
-        this.view2Data = view;
-        // console.log("view3");
-        // console.log(JSON.stringify(view));
-      });
-    this.centralService.view3Data
-        .subscribe( view => {
-          this.view3Data = view;
-        });
-    this.centralService.view4Data
-      .subscribe( view => {
-        this.view4Data = view;
-      });
-    this.centralService.concentrationData
-      .subscribe( view => {
-        this.concentrationData = view;
-      });
-    this.centralService.landUseConcentrationData
-      .subscribe( view => {
-        this.landUseConcentrationData = view;
-      });
   }
 
   changeFix(value, precision){
@@ -81,18 +65,66 @@ export class TablesComponent implements OnInit {
     }
   }
 
-  print(content){
-    console.log(content);
+  addTotal(view, name){
+    switch(name){
+      case 'view2':{
+        var totals = {};
+        totals['cat'] = 'Total'; totals['No_Parcels'] = 0;
+        totals['AssessedValue'] = 0; totals['No_Units'] = 0;
+        totals['AssessedValPerUnit'] = 0;
+        for(var el of view){
+          totals['No_Parcels'] += el.No_Parcels;
+          totals['AssessedValue'] += el.AssessedValue;
+          totals['No_Units'] += el.No_Units;
+          totals['AssessedValPerUnit'] += el.AssessedValPerUnit;
+        }
+        this.view2Data.push(totals);
+        break;
+      }
+      case 'view3':{
+        var totals = {};
+        totals['cat'] = 'Total'; totals['sq_feet'] = 0;
+        totals['AssessedValue'] = 0; totals['percSq_feet'] = 0;
+        totals['AssessedValPerSqFeet'] = 0;
+        for(var el of view){
+          totals['sq_feet'] += el.sq_feet;
+          totals['AssessedValue'] += el.AssessedValue;
+          totals['percSq_feet'] += el.percSq_feet;
+          totals['AssessedValPerSqFeet'] += el.AssessedValPerSqFeet;
+        }
+        this.view3Data.push(totals);
+        break;
+      }
+      case 'view4':{
+        var totals = {};
+        totals['cat'] = 'Total'; totals['sq_feet'] = 0;
+        totals['AssessedValue'] = 0; totals['percSq_feet'] = 0;
+        totals['AssessedValPerSqFeet'] = 0;
+        for(var el of view){
+          totals['sq_feet'] += el.sq_feet;
+          totals['AssessedValue'] += el.AssessedValue;
+          totals['percSq_feet'] += el.percSq_feet;
+          totals['AssessedValPerSqFeet'] += el.AssessedValPerSqFeet;
+        }
+        this.view4Data.push(totals);
+        break;
+      }
+      default:{
+        var totals = {};
+        totals['cat'] = 'Total'; totals['No_parcels'] = 0;
+        totals['AssessedValue'] = 0; totals['percOfLand'] = 0;
+        totals['percOfAssessedVal'] = 0;
+        for(var el of view){
+          totals['No_parcels'] += el.No_parcels;
+          totals['AssessedValue'] += el.AssessedValue;
+          totals['percOfLand'] += el.percOfLand;
+          totals['percOfAssessedVal'] += el.percOfAssessedVal;
+        }
+        this.view1Data.push(totals);
+        break;
+      }
+    }
   }
-
-  views: Views[] = [
-    {value:'view1',viewValue:'View 1'},
-    {value:'view2',viewValue:'View 2'},
-    {value:'view3',viewValue:'View 3'},
-    {value:'view4',viewValue:'View 4'},
-    {value:'concentration',viewValue:'Owner Concentration'},
-    {value:'landUseConcentrationData',viewValue:'Land Use Concentration'}
-  ];
 //------------------------------------------------------------------------
 //All of the settings will be down here because they take up a lot of room
   view1settings = {
@@ -103,35 +135,38 @@ export class TablesComponent implements OnInit {
         title: 'Land Use',
         valuePrepareFunction: (value) => {if(value == null){return 'Null';}
                                           else{return value;}}
+        },
+        AssessedValue: {
+          title: 'Total Value',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
+        },
+        No_parcels: {
+          title: '# Parcels',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
+        },
+        percOfLand: {
+          title: '% Land',
+          valuePrepareFunction: (value) => { return this.changeFix(value*100,1)+ "%";}
+        },
+        percOfAssessedVal: {
+          title: '% Value',
+          valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
+        },
+        Scale: {
+          title: 'Scale',
+          valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
+        }
       },
-      AssessedValue: {
-        title: 'Total Value',
-        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
-      },
-      No_parcels: {
-        title: '# Parcels',
-        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
-      },
-      percOfLand: {
-        title: '% Land',
-        valuePrepareFunction: (value) => { return this.changeFix(value*100,1)+ "%";}
-      },
-      percOfAssessedVal: {
-        title: '% Value',
-        valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
-      },
-      Scale: {
-        title: 'Scale',
-        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
-      }
+      pager : {
+        perPage: 11
       }
   };
   view2settings = {
     actions:false,
     noDataMessage: "Choose a City and Neighborhood",
     columns: {
-      _id:{
-        title: 'Land Use',
+      cat:{
+        title: 'Subcategory',
         valuePrepareFunction: (value) => {if(value == null){return 'null';}
                                           else{return value;}}
       },
@@ -140,26 +175,29 @@ export class TablesComponent implements OnInit {
         valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
       },
       No_Parcels: {
-        title: '# Parcels'
+        title: '# Parcels',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
+
       },
       No_Units: {
-        title: '# Units'
+        title: '# Units',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","","1.0-0");}
+
       },
       AssessedValPerUnit: {
         title: 'Value/Unit',
         valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
-      },
-      CR4: {
-        title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
       }
+    },
+    pager : {
+      perPage: 11
     }
   };
   view3settings = {
     actions:false,
     noDataMessage: "Choose a City and Neighborhood",
     columns: {
-      _id:{
+      cat:{
         title: 'Land Use',
         valuePrepareFunction: (value) => {if(value == null){return 'null';}
                                           else{return value;}}
@@ -179,21 +217,17 @@ export class TablesComponent implements OnInit {
       AssessedValPerSqFeet: {
         title: 'Total Value/Sq Foot',
         valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
-      },
-      CR4: {
-        title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
       }
     },
     pager : {
-      perPage: 6
+      perPage: 11
     }
   };
   view4settings = {
     actions:false,
     noDataMessage: "Choose a City and Neighborhood",
     columns: {
-      _id:{
+      cat:{
         title: 'Land Use',
         valuePrepareFunction: (value) => {if(value == null){return 'null';}
                                           else{return value;}}
@@ -213,14 +247,10 @@ export class TablesComponent implements OnInit {
       AssessedValPerSqFeet: {
         title: 'Value/Sq Foot',
         valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
-      },
-      CR4: {
-        title: 'CR4',
-        valuePrepareFunction: (value) => {return this.changeFix(value*100,1)+ "%";}
       }
     },
     pager : {
-      perPage: 6
+      perPage: 11
     }
   };
   view5settings = {
@@ -247,10 +277,10 @@ export class TablesComponent implements OnInit {
       }
     },
     pager : {
-      perPage: 5
+      perPage: 11
     }
   };
-  view6settings = {
+  view1CR4Settings = {
     actions:false,
     noDataMessage: "Choose a City and Neighborhood",
     columns: {
@@ -267,7 +297,70 @@ export class TablesComponent implements OnInit {
       }
     },
     pager : {
-      perPage: 8
+      perPage: 11
+    }
+  };
+
+  view2CR4Settings = {
+    actions:false,
+    noDataMessage: "Choose a City and Neighborhood",
+    columns: {
+      cat:{
+        title:'Subcategory'
+      },
+      CR4:{
+        title: 'CR4',
+        valuePrepareFunction: (value) => {if(value == 0){return null;}
+                       else{return this.changeFix(value*100,1) + "%";}}
+      },
+      AssessedValue: {
+        title:'Total Value',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
+      }
+    },
+    pager : {
+      perPage: 11
+    }
+  };
+  view3CR4Settings = {
+    actions:false,
+    noDataMessage: "Choose a City and Neighborhood",
+    columns: {
+      cat:{
+        title:'Subcategory'
+      },
+      CR4:{
+        title: 'CR4',
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
+      },
+      AssessedValue: {
+        title:'Total Value',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
+      }
+    },
+    pager : {
+      perPage: 11
+    }
+  };
+
+  view4CR4Settings = {
+    actions:false,
+    noDataMessage: "Choose a City and Neighborhood",
+    columns: {
+      cat:{
+        title:'Subcategory'
+      },
+      CR4:{
+        title: 'CR4',
+        valuePrepareFunction: (value) => {return this.changeFix(value*100,1) + "%";}
+      },
+      AssessedValue: {
+        title:'Total Value',
+        valuePrepareFunction: (value) => {return this.cp.transform(value,"USD","symbol","1.0-0");}
+      }
+    },
+    pager : {
+      perPage: 11
     }
   };
 }

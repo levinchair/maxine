@@ -12,7 +12,7 @@
   <div class="toggleDiv">
     <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="model">
       <label ngbButtonLabel class="btn-primary">
-        <input ngbButton type="radio" value="lu"> Land Use
+        <input ngbButton type="radio" value="lu"> {{this.displayLandUse}}
       </label>
       <label ngbButtonLabel class="btn-primary">
         <input ngbButton type="radio" value="cr4"> CR4
@@ -20,13 +20,35 @@
     </div>
   </div>
   <div *ngIf="this.model == 'lu'">
-    <ng2-smart-table [ngClass]="table1" [settings]="this.view1settings" [source] = "this.view1Data" (userRowSelect)="this.centralService.currentSiteCat.next($event.data.cat)"></ng2-smart-table>
+    <!-- https://www.tjvantoll.com/2013/03/14/better-ways-of-comparing-a-javascript-string-to-multiple-values/ -->
+    <div *ngIf="currentLandUse == 'All'">
+      <ng2-smart-table [ngClass]="table1" [settings]="this.view1settings" [source]="this.view1Data"></ng2-smart-table>
+    </div>
+    <div *ngIf="currentLandUse == 'Residential'">
+      <ng2-smart-table [ngClass]="table2" [settings]="this.view2settings" [source]="this.view2Data"></ng2-smart-table>
+    </div>
+    <div *ngIf="currentLandUse == 'Commercial'">
+      <ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source]="this.view3Data"></ng2-smart-table>
+    </div>
+    <div *ngIf="currentLandUse == 'Industrial'">
+      <ng2-smart-table [ngClass]="table4" [settings]="this.view4settings" [source]="this.view4Data"></ng2-smart-table>
+    </div>
   </div>
-  <!-- <ng2-smart-table [ngClass]="table2" [settings]="this.view2settings" [source] = "this.view2Data"></ng2-smart-table>
-  <ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source] = "this.view3Data"></ng2-smart-table>
+  <!-- <ng2-smart-table [ngClass]="table3" [settings]="this.view3settings" [source] = "this.view3Data"></ng2-smart-table>
   <ng2-smart-table [ngClass]="table4" [settings]="this.view4settings" [source] = "this.view4Data"></ng2-smart-table>
   <ng2-smart-table [ngClass]="table5" [settings]="this.view5settings" [source] = "this.concentrationData"></ng2-smart-table> -->
   <div *ngIf="this.model == 'cr4'">
-    <ng2-smart-table [ngClass]="table6" [settings]="this.view6settings" [source] = "this.landUseConcentrationData"></ng2-smart-table>
+    <div *ngIf="currentLandUse == 'All'">
+      <ng2-smart-table [ngClass]="table6" [settings]="this.view1CR4Settings" [source] = "this.landUseConcentrationData"></ng2-smart-table>
+    </div>
+    <div *ngIf="currentLandUse == 'Residential'">
+      <ng2-smart-table [ngClass]="table6" [settings]="this.view2CR4Settings" [source] = "this.view2Data"></ng2-smart-table>
+    </div>
+    <div *ngIf="currentLandUse == 'Commercial'">
+      <ng2-smart-table [ngClass]="table3" [settings]="this.view3CR4Settings" [source]="this.view3Data"></ng2-smart-table>
+    </div>
+    <div *ngIf="currentLandUse == 'Industrial'">
+      <ng2-smart-table [ngClass]="table4" [settings]="this.view4CR4Settings" [source]="this.view4Data"></ng2-smart-table>
+    </div>
   </div>
 </div>

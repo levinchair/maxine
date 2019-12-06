@@ -19,7 +19,7 @@ console.log(process.argv[2]);
 var filename = process.argv[2];
 var argCollection = process.argv[3];
 //if(filename === undefined) throw new Error("Please pass filepath as argument");
-if(argCollection === undefined) argCollection = "cleveland_spa"
+if(argCollection === undefined) argCollection = "cuyahoga_cities"
 
 console.log("\n *STARTING* \n");
 // Get content from file
@@ -44,7 +44,7 @@ var parceldataformat = {
 var parceldataSchema = new mongoose.Schema(parceldataformat, {collection: argCollection});
 console.log("writing to collection: " + argCollection);
 console.log("This might take a while.");
-var cleveland_spa = mongoose.model("cleveland_spa", parceldataSchema);
+var cleveland_spa = mongoose.model("cuyahoga_cities", parceldataSchema);
 
 let newData;
 
@@ -64,7 +64,7 @@ cleveland_spa.find({}).exec((err, res) => {
     console.log(JSON.stringify(res[0].geometry));
     //replace the database with newData
     for(let document of newData){    
-        cleveland_spa.updateOne({"properties.SPA_NAME": document.properties.SPA_NAME}, {$set: {"geometry.coordinates": document.geometry.coordinates}}).exec(
+        cleveland_spa.updateOne({"_id": document.properties._id}, {$set: {"geometry.coordinates": document.geometry.coordinates}}).exec(
             (err, writeResult) => {
                 if(err) throw new Error("Error and update Aggregation: " + err);
                 console.log(writeResult);

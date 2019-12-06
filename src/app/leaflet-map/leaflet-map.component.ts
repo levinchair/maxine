@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 import 'leaflet-selectareafeature/dist/Leaflet.SelectAreaFeature.js'; // strictly import dist
 import * as L1 from 'leaflet.glify';
 import { CurrencyPipe } from '@angular/common';
+import { BehaviorSubject } from "rxjs/Rx";
 // import { NeighborhoodBoundaries } from '../../assets/JSON/cleveland_spa';
 
 @Component({
@@ -21,6 +22,9 @@ export class LeafletMapComponent implements OnInit {
   geoJsonLayer;
   selectfeature:any;
   recentData:any;
+  cityHoodLassoData:any = [];
+  cities:string[];
+  neighborhoods:string[];
   sat: boolean;
   googleSat: any;
   maplabels:any;
@@ -32,8 +36,8 @@ export class LeafletMapComponent implements OnInit {
   landuse: String[];
   marker:any;
   currentSiteCat:String;
-  neighborhoodBoundaries =[];
-
+  lassoPoints:any;
+  enhancedLasso: boolean = false;
   constructor(
     private centralService : CentralService,
     public cp: CurrencyPipe
@@ -63,28 +67,17 @@ export class LeafletMapComponent implements OnInit {
     this.geoJsonLayer = L.geoJSON();
     this.sat = true;
     this.setBaseLayer();
-    //Neighborhood layers
-    // let nb = new NeighborhoodBoundaries();
-    // for(var feature in nb.nb.features){
-    //   //reverse coords from [lng, lat] -> [lat, lng]
-    //   for(var coord in nb.nb.features[feature].geometry.coordinates){
-    //     nb.nb.features[feature].geometry.coordinates[coord] =
-    //       nb.nb.features[feature].geometry.coordinates[coord].reverse();
-    //   }
-    //   this.neighborhoodBoundaries.push({"coordinates":nb.nb.features[feature].geometry.coordinates,
-    //          "neighborhood":nb.nb.features[feature].properties.SPA_NAME});
-    //   // var p = new L.Polygon(nb.nb.features[feature].geometry.coordinates as [number, number][],{color:"red"});
-    // }
-    console.log(this.pointInsideNeighborhood([41.50,-81.68]));
+    this.centralService.getGeoCoderData();
+    this.centralService.getCityBounds();
   }
 
-  changed(){
+  changed(siteCatChosen){
     /** Fired when there is a change in the selection of the radio button */
     if(this.shapeLayer !== undefined){
         this.shapeLayer.settings.color = (index: Number, feature: JsonForm) => {
-          if(this.currentSiteCat === feature.properties.SiteCat1){
-            return L1.color.fromHex(this.getColors(this.currentSiteCat));
-          } else if(this.currentSiteCat === "All"){
+          if(siteCatChosen === feature.properties.SiteCat1){
+            return L1.color.fromHex(this.getColors(siteCatChosen));
+          } else if(siteCatChosen === "All"){
             return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
           } else {
             return L1.color.grey;
@@ -97,53 +90,77 @@ export class LeafletMapComponent implements OnInit {
   sub(){
      this.centralService.geometryData.subscribe(
       view => {
-        this.recentData = view;
-        this.geoJsonLayer = L.geoJSON();
-        this.geoJsonLayer.addData(view);
-        var latLngBounds = this.geoJsonLayer.getBounds();
-        this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
-        this.setShapeLayer(view);
+        if(view.length > 1){
+          var allFeatures = view[0];
+          var temp;
+          for(var index in view){
+            temp = view[index].features;
+            allFeatures.features = temp.concat(allFeatures.features);
+          }
+          this.recentData = allFeatures;
+        }else if(Array.isArray(view)){
+          this.recentData = view[0];
+        }else{
+          this.recentData = view;
+        }
+          this.geoJsonLayer = L.geoJSON();
+          this.geoJsonLayer.addData(this.recentData);
+          var latLngBounds = this.geoJsonLayer.getBounds();
+          this.setShapeLayer(this.recentData);
+          this.map.flyToBounds(latLngBounds,{duration:0.6,easeLinearity:1.0});
+          this.centralService.showSpinner.next(false);
       });
       this.centralService.geocoderData.subscribe(
         data => {
-
           for(let feature of data.features){
-            this.neighborhoodBoundaries.push({"coordinates": feature.geometry.coordinates,
-            "neighborhood":feature.properties.SPA_NAME});
+            this.centralService.neighborhoodBoundaries.push({"coordinates": feature.geometry.coordinates[0],
+            "name":feature.properties.SPA_NAME});
           }
-          console.log(this.neighborhoodBoundaries);
-          //Given search bar address lng/lat [Number,Number]
-          //Create Neighborhood Layers and run Point in Polygon
-        //   var hood = this.neighborhoodBoundaries;
-        //   for(var i = 0; i < hood.length;i++){
-        //     // console.log(inside(data,hood[i][2]));
-        //     if(inside(data,hood[i][2])){
-        //       //Found neighborhood
-        //       this.centralService.showSpinner.next(true);
-        //       this.centralService.search = "";
-        //       this.centralService.setCity(hood[i][0]);
-        //       this.centralService.setHood(hood[i][1]);
-        //       this.centralService.getGeometry();
-        //       this.centralService.getViews();
-        //       break;
-        //     }
-        //   }
-        //   if(i == hood.length){
-        //     //No neighborhood found Let user know
-        //     this.centralService.search = "Address not within our Database";
-        //   }
-        //   if(this.marker === undefined){
-        //     this.marker = L.marker(data).addTo(this.map);
-        //   }else{
-        //     this.marker.setLatLng(data);
-        //   }
          }
       );
-      this.centralService.currentSiteCat.subscribe(
-        siteCat1 => {
-          this.currentSiteCat = siteCat1;
-          this.changed();
-        });
+      this.centralService.cityBounds.subscribe(
+        data => {
+          for(let feature of data.features){
+            this.centralService.cityBoundaries.push({"coordinates": feature.geometry.coordinates[0],
+            "name":feature.properties.NAME});
+          }
+         }
+      );
+      this.centralService.lassoGeometryData.subscribe(
+        data => {
+          this.cityHoodLassoData = data;
+          var matches = [];
+          if(this.cityHoodLassoData){
+            for(var posts of this.cityHoodLassoData){
+              for(var parcels of posts.features){
+                for(var point of parcels.geometry.coordinates[0][0]){
+                  if(inside(point,this.lassoPoints)){
+                    matches.push(parcels.properties.parcelpin);
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          if(this.selectedParcels.length){
+            this.selectedParcels = matches;
+          }else{
+            this.selectedParcels.concat(matches);
+          }
+          let toolData = [...this.selectedParcels];
+          if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
+          this.centralService.setParcelArray(toolData);
+          this.centralService.getbyParcelpins(this.cities,this.neighborhoods); // this will initiate a http request which will update subscription
+          this.selectedParcels = [];
+          toolData = [];
+        }
+      );
+      //commented out for later global use
+      // this.centralService.currentSiteCat.subscribe(
+      //   siteCat1 => {
+      //     this.currentSiteCat = siteCat1;
+      //     this.changed();
+      //   });
   }
   setShapeLayer(parcels){
     if(this.shapeLayer !== undefined) this.shapeLayer.remove();
@@ -235,68 +252,78 @@ export class LeafletMapComponent implements OnInit {
       this.streets.removeFrom(this.map);
     }
   }
+
   //add check initialized/undefined flags
   getLassoPlots(){
-    let toolData = [...this.selectedParcels];
-
-    if (!toolData || toolData.length == 0) {
-      alert("No parcels were selected");
-      // this.removeLassoPolygons();
-    } else {
+    this.centralService.showSpinner.next(true);
+    //starts enhancedLasso process
+    if(this.cities && this.centralService.enhancedLasso){
+      this.centralService.getLassoGeometryData(this.cities,this.neighborhoods);
+    }else if(!this.centralService.enhancedLasso && this.recentData !== undefined){
+      // console.log("reached");
+      let toolData = [...this.selectedParcels];
       if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
-      this.centralService.showSpinner.next(true);
       this.centralService.setParcelArray(toolData);
-      this.centralService.getbyParcelpins(); // this will initiate a http request which will update subscription
+      this.centralService.getbyParcelpins(this.cities,this.neighborhoods); // this will initiate a http request which will update subscription
       this.selectedParcels = [];
       toolData = [];
+    }else{
+      //To-Do:: no data loaded or selected should alert user maybe alert or popup
+      console.log("no data entered");
+      this.centralService.showSpinner.next(false);
     }
   }
   removeLassoPolygons(){
     if(this.selectfeature !== undefined) this.selectfeature.removeAllArea();
     this.selectedParcels = [];
     this.centralService.setParcelArray([]);
-    this.centralService.showSpinner.next(true);
-    this.centralService.getGeometry();
-    this.centralService.getViews();
+    this.cityHoodLassoData = [];
+    if(this.recentData !== undefined){
+      this.centralService.showSpinner.next(true);
+      this.centralService.getGeometry();
+      this.centralService.getViews();
+    }
   }
   addLassoData(){ //fired
-    let tempArray = [];
-    // this.selectfeature = this.map.selectAreaFeature.enable();
+    this.lassoPoints = [];
     let latlng_area = this.selectfeature.getAreaLatLng();
     for(let latlng of latlng_area){
       let temp = [latlng.lng,latlng.lat];
-      tempArray.push(temp);
+      this.lassoPoints.push(temp);
     }
-    if(tempArray === null || tempArray.length == 0) {
+    if(this.lassoPoints === null || this.lassoPoints.length == 0) {
       throw new Error("temp array is empty");
     }
+    //declare arrays of city/hood names lasso points are within
+    this.cities = this.centralService.pointInsideBounds(this.lassoPoints,this.centralService.cityBoundaries);
+    this.neighborhoods = this.centralService.pointInsideBounds(this.lassoPoints,this.centralService.neighborhoodBoundaries);
+    // console.log(this.cities);
     let feature = [];
     let allPoints = 0;
-    for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
-      feature = this.recentData.features[i].geometry.coordinates;
-      for(let j = 0; j < feature.length;j++){ //for each polygon in feature
-        for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
-          allPoints = 0;
-          for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
-            if(inside(feature[j][k][l],tempArray) % 2 == 1){
-              allPoints+=1;
-              if(!this.selectedParcels.includes(this.recentData.features[i].properties.parcelpin) && allPoints == feature[j][k].length){
-                this.selectedParcels.push(this.recentData.features[i].properties.parcelpin);
-              }
-            }
-          }
+    if(this.recentData !== undefined){
+      for(let i = 0; i < this.recentData.features.length;i++){ // for each feature in features
+        feature = this.recentData.features[i].geometry.coordinates;
+        for(let j = 0; j < feature.length;j++){ //for each polygon in feature
+          for(let k = 0; k < feature[j].length; k++  ){ //for each hole in polygon
+            allPoints = 0;
+            for(let l = 0; l < feature[j][k].length; l++){ // for each point in polygon
+              if(inside(feature[j][k][l],this.lassoPoints)){
+                allPoints+=1;
+                if(!this.selectedParcels.includes(this.recentData.features[i].properties.parcelpin) && allPoints == feature[j][k].length){
+                  this.selectedParcels.push(this.recentData.features[i].properties.parcelpin);
+                }}}}}
+      }
+      this.shapeLayer.settings.color = (e, feature: JsonForm) => { // change color of the circled parcels
+        if(this.selectedParcels.includes(feature.properties.parcelpin)){
+          return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
+        } else {
+          return L1.color.grey;
         }
       }
+      this.shapeLayer.setup().render();
     }
-    this.shapeLayer.settings.color = (e, feature: JsonForm) => { // change color of the circled parcels
-      if(this.selectedParcels.includes(feature.properties.parcelpin)){
-        return L1.color.fromHex(this.getColors(feature.properties.SiteCat1));
-      } else {
-        return L1.color.grey;
-      }
-    }
-    this.shapeLayer.setup().render();
   }
+
   toggleTool(tool: String){
     if(tool === "select"){ // then toggle selection tool
       if(this.selectionToggle){
@@ -304,7 +331,6 @@ export class LeafletMapComponent implements OnInit {
       }else{
         this.selectionToggle = true;
       }
-
       if(this.lassoToggle) {
         this.map.selectAreaFeature.disable();
         this.lassoToggle = false;
@@ -323,15 +349,6 @@ export class LeafletMapComponent implements OnInit {
       if(this.selectionToggle) this.selectionToggle = false;
     }
   }
-  //returns String[] of neighborhoods that contain point param 
-  pointInsideNeighborhood(point:Number[]){
-    let neighborhoods:String[] = [];
-    for(var bounds in this.neighborhoodBoundaries){
-      if(inside(point,this.neighborhoodBoundaries[bounds].coordinates)){
-        neighborhoods.push(this.neighborhoodBoundaries[bounds].neighborhood);
-      }
-    }
-    return neighborhoods;
-  }
+
 
 }

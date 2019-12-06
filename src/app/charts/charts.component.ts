@@ -30,16 +30,19 @@ export class ChartsComponent implements OnInit {
   view1Data: any;
   view2Data: any;
   view3Data: any;
+  view4Data: any;
   landUseConcentrationData = [];
   chartType: string;
   title = "Title";
   yAxisLabel = "Acre %"
   labels = [];
-  colorsLU = [];
+  colorsLU:any = [];
   colorsCR4 = [];
-  landUseData = [];
+  chartData = [];
   CR4 = [];
   model = "value";
+  updateChartPending = false;
+  currentView = "Land Use";
   //CREATE A MAP OF CAT->HEX COLORS
   CATCOLORS = new Map([["Residential","#E5BE77"],["Commercial","#FF4C4C"],
                       ["Industrial","#BE69F2"],["Mixed","#fd8f45"],
@@ -50,7 +53,9 @@ export class ChartsComponent implements OnInit {
                       ["No_parcels","Number of Parcels"],
                       ["percOfLand","Percentage of Land"],
                       ["percOfAssessedVal","Percentage of Assessed Value"]];
-
+  DEFAULTCOLORS    = ["#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99",
+                      "#e31a1c","#fdbf6f","#ff7f00","#cab2d6","#6a3d9a",
+                      "#ffff99","#b15928"];
   constructor(private centralService: CentralService,
               public cp: CurrencyPipe,
               private modalService: NgbModal) { }
@@ -59,24 +64,50 @@ export class ChartsComponent implements OnInit {
     this.createChart();
     this.centralService.view1Data
       .subscribe( view => {
-        console.log("View1:" + JSON.stringify(view));
+        // console.log("View1:" + JSON.stringify(view));
         this.view1Data = view;
-        this.updateChart1("value");
       });
     this.centralService.view2Data
       .subscribe( view => {
         this.view2Data = view;
+        // console.log(view);
+        this.updateCharts(this.model,'Residential');
       });
     this.centralService.view3Data
       .subscribe( view => {
         this.view3Data = view;
+        // console.log(view);
+        this.updateCharts(this.model,'Commercial');
+
       });
+      this.centralService.view4Data
+        .subscribe( view => {
+          this.view4Data = view;
+          // console.log(view);
+          this.updateCharts(this.model,'Industrial');
+
+        });
     this.centralService.landUseConcentrationData
       .subscribe( view => {
-        console.log("LUCdata:" + JSON.stringify(view));
+        // console.log("LUCdata:" + JSON.stringify(view));
         this.landUseConcentrationData = view;
-        this.updateChart1("value");
+        this.updateChartPending = true;
+        this.updateCharts(this.model,'All');
       });
+  }
+  updateCharts(yAxisType, sender){
+    var sitecat1 = this.centralService.get_landUse();
+    if(sitecat1 == 'Commercial' || sitecat1 == 'Residential' || sitecat1 == 'Industrial'){
+      if(sitecat1 == sender){
+        this.updateChart2(yAxisType,sender);
+      }
+    }else if(sitecat1 == 'Institutional' || sitecat1 == 'Govermment' ||
+      sitecat1 == "Mixed" || sitecat1 == "Utility" || sitecat1 == "All" || sitecat1 == null){
+        if(this.updateChartPending){
+          this.updateChart1(yAxisType);
+          this.updateChartPending = false;
+        }
+      }
   }
 //http://jsfiddle.net/1Lngmtz7/
   createChart(){
@@ -97,8 +128,8 @@ export class ChartsComponent implements OnInit {
             showLine:false,
             yAxisID: 'cr4-y-axis'
           },{
-            label:"Land Use",
-            data: this.landUseData, // your data array
+            label:this.currentView,
+            data: this.chartData,
             type: 'bar',
             backgroundColor: this.colorsLU,
             borderColor: '#FFFFFF',
@@ -160,65 +191,17 @@ export class ChartsComponent implements OnInit {
         hover:{
           mode:'nearest'
         },
-        onClick:(e, active)=>{
-         // var helpers = Chart.helpers;
-         //
-         // var eventPosition = helpers.getRelativePosition(e, this.chart);
-         // var mouseX = eventPosition.x;
-         // var mouseY = eventPosition.y;
-         // var activePoints = [];
-         // var ctx = this.chartRef.nativeElement.getContext("2d");
-         // // loop through all the labels
-         // helpers.each(this.chart.scale.ticks, function (label, index) {
-         //     for (var i = this.getValueCount() - 1; i >= 0; i--) {
-         //         // here we effectively get the bounding box for each label
-         //         var pointLabelPosition = this.getPointPosition(i, this.getDistanceFromCenterForValue(this.options.reverse ? this.min : this.max) + 5);
-         //         var pointLabelFontSize = helpers.getValueOrDefault(this.options.pointLabels.fontSize, Chart.defaults.global.defaultFontSize);
-         //         var pointLabeFontStyle = helpers.getValueOrDefault(this.options.pointLabels.fontStyle, Chart.defaults.global.defaultFontStyle);
-         //         var pointLabeFontFamily = helpers.getValueOrDefault(this.options.pointLabels.fontFamily, Chart.defaults.global.defaultFontFamily);
-         //         var pointLabeFont = helpers.fontString(pointLabelFontSize, pointLabeFontStyle, pointLabeFontFamily);
-         //         ctx.font = pointLabeFont;
-         //         var labelsCount = this.pointLabels.length,
-         //             halfLabelsCount = this.pointLabels.length / 2,
-         //             quarterLabelsCount = halfLabelsCount / 2,
-         //             upperHalf = (i < quarterLabelsCount || i > labelsCount - quarterLabelsCount),
-         //             exactQuarter = (i === quarterLabelsCount || i === labelsCount - quarterLabelsCount);
-         //         var width = ctx.measureText(this.pointLabels[i]).width;
-         //         var height = pointLabelFontSize;
-         //         var x, y;
-         //         if (i === 0 || i === halfLabelsCount)
-         //             x = pointLabelPosition.x - width / 2;
-         //         else if (i < halfLabelsCount)
-         //             x = pointLabelPosition.x;
-         //         else
-         //             x = pointLabelPosition.x - width;
-         //         if (exactQuarter)
-         //             y = pointLabelPosition.y - height / 2;
-         //         else if (upperHalf)
-         //             y = pointLabelPosition.y - height;
-         //         else
-         //             y = pointLabelPosition.y
-         //         // check if the click was within the bounding box
-         //         if ((mouseY >= y && mouseY <= y + height) && (mouseX >= x && mouseX <= x + width))
-         //             activePoints.push({ index: i, label: this.pointLabels[i] });
-         //     }}, this.chart.scale);
-         //         var firstPoint = activePoints[0];
-         //         if (firstPoint !== undefined) {
-         //             alert(firstPoint.index + ': ' + firstPoint.label);
-         //         }
-              },
-              responsive:true,
-              maintainAspectRatio:false,
-              devicePixelRatio: 1
-            },
-          });
+        responsive:true,
+        maintainAspectRatio:false,
+        devicePixelRatio: 1
+      },
+    });
   }
 
-  updateChart1(selection:String){
+  updateChart1(selection){
     if(this.view1Data){
       this.labels.length = 0;
       this.colorsLU.length = 0;
-      this.colorsCR4.length = 0;
       this.chart.options.title.text = this.centralService.getCity() + ' : ' + this.centralService.getHood();
       //Pushing Colors for matching
       for(var x = 0; x < this.view1Data.length; x++){
@@ -229,8 +212,8 @@ export class ChartsComponent implements OnInit {
           this.colorsLU.push("#5050505");
         }
       }
-      this.chart.update(); //Charts can never have an empty data variable
-      this.landUseData.length = 0;
+      // this.chart.update(); //Charts can never have an empty data variable
+      this.chartData.length = 0; 
       this.CR4.length = 0;
       //Check for selection value/acres
       if(selection == 'value'){
@@ -239,7 +222,7 @@ export class ChartsComponent implements OnInit {
           return this.cp.transform(value,"USD","symbol","1.0-0");
         };
         for(var y = 0; y < this.view1Data.length; y++){
-          this.landUseData.push(this.view1Data[y].AssessedValue.toFixed(0));
+          this.chartData.push(this.view1Data[y].AssessedValue.toFixed(0));
         }
         for(var z = 0; z < this.landUseConcentrationData.length; z++){
           this.CR4.push((this.landUseConcentrationData[z].MarketCR4 * 100).toFixed(0));
@@ -250,7 +233,7 @@ export class ChartsComponent implements OnInit {
           return this.cp.transform(value,"USD","","1.0-0");
         };
         for(var y = 0; y < this.view1Data.length; y++){
-          this.landUseData.push(this.view1Data[y].Scale.toFixed(2));
+          this.chartData.push(this.view1Data[y].Scale.toFixed(2));
         }
         for(var z = 0; z < this.landUseConcentrationData.length; z++){
           this.CR4.push((this.landUseConcentrationData[z].MarketCR4 * 100).toFixed(0));
@@ -259,67 +242,81 @@ export class ChartsComponent implements OnInit {
       this.chart.update();
     }
   }
+  updateChart2(selection,sitecat1){
+    //set labels, CR4, currentView,chartData,colorsLU
+    this.labels.length = 0;
+    if(this.centralService.getHood() == "All"){
+      this.chart.options.title.text = this.centralService.getCity() + ":" + sitecat1;
+    }else{
+      this.chart.options.title.text = this.centralService.getHood() + ":" + sitecat1;
+    }
+    this.colorsLU.length = 0;
+    this.chartData.length = 0;
+    this.CR4.length = 0;
+    if(sitecat1 == "Residential" && this.view2Data !== undefined){
+      for(var subcat in this.view2Data){
+        this.labels.push(this.view2Data[subcat].cat);
+        this.colorsLU.push(this.DEFAULTCOLORS[subcat])
+      }
+
+      if(selection == "value"){ //y-axis should display value
+        this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Value $";
+        this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
+          return this.cp.transform(value,"USD","symbol","1.0-0");
+        };
+        for(var y in this.view2Data){
+          this.chartData.push(this.view2Data[y].AssessedValue.toFixed(0));
+          this.CR4.push((this.view2Data[y].CR4 * 100).toFixed(0));
+        }
+
+      }else{ //y-axis should display acres
+
+      }
+    }else if(sitecat1 == "Commercial" && this.view3Data !== undefined){
+      for(var subcat in this.view3Data){
+        this.labels.push(this.view3Data[subcat].cat);
+        this.colorsLU.push(this.DEFAULTCOLORS[subcat])
+      }
+      if(selection == "value"){ //y-axis should display value
+        this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Value $";
+        this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
+          return this.cp.transform(value,"USD","symbol","1.0-0");
+        };
+        for(var x in this.view3Data){
+          this.chartData.push(this.view3Data[x].AssessedValue.toFixed(0));
+          this.CR4.push((this.view3Data[x].CR4* 100).toFixed(0));
+        }
+      }else{ //y-axis should display acres
+
+      }
+    }else if(sitecat1 == "Industrial" && this.view4Data !== undefined){
+      for(var subcat in this.view4Data){
+        this.labels.push(this.view4Data[subcat].cat);
+        this.colorsLU.push(this.DEFAULTCOLORS[subcat])
+      }
+      if(selection == "value"){ //y-axis should display value
+        this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Value $";
+        this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
+          return this.cp.transform(value,"USD","symbol","1.0-0");
+        };
+        for(var y in this.view4Data){
+          this.chartData.push(this.view4Data[y].AssessedValue.toFixed(0));
+          // this.CR4.push((this.view4Data[y].CR4 * 100).toFixed(0)); no cr4s
+        }
+      }else{ //y-axis should display acres
+
+      }
+    }else{console.log("Error charts.comp.ts: something seriously broke")}
+    this.chart.update();
+  }
   yAxisCheck(data){
     if(this.model == 'value'){
-      return this.cp.transform(this.landUseData[data],"USD","symbol","1.0-0");
+      return this.cp.transform(this.chartData[data],"USD","symbol","1.0-0");
     }else{
-      return this.cp.transform(this.landUseData[data],"USD","","1.0-0");
+      return this.cp.transform(this.chartData[data],"USD","","1.0-0");
     }
   }
   openTable(){
     const modalRef = this.modalService.open(TablesComponent,{ centered: true, size: 'lg'});
   }
-  // yAxisAcres(value, index, values){
-  //
-  // }
-  // yAxisValue(value, index, values){
-  //      //cannot call outside methods wtf charts.js
-  //      value = value.toString();
-  //      var retVal = "";
-  //      if(value.includes(".")){//checks for decimals
-  //        while(value.slice(-1) != '.'){
-  //          retVal = value.slice(-1) + retVal;
-  //          value = value.slice(0,-1);
-  //        }
-  //        retVal =  value.slice(-1) + retVal;
-  //        value = value.slice(0,-1);
-  //      }
-  //      if(value.slice(0,1) == "-"){
-  //        for(var i = 0; i < value.length-1; i++){
-  //          if(i%3 == 0 && i > 2){
-  //            retVal = value.slice(-1) + "," + retVal;
-  //            value  = value.slice(0,-1);
-  //          }else{
-  //            retVal = value.slice(-1) + retVal;
-  //            value  = value.slice(0,-1);
-  //          }
-  //        }
-  //        return '$-' + retVal;
-  //      }
-  //      var q = value.length;
-  //      for(var i = 0; i < q; i++){
-  //        if(i%3 == 0 && i > 2){
-  //          retVal = value.slice(-1) + "," + retVal;
-  //          value  = value.slice(0,-1);
-  //        }else{
-  //          retVal = value.slice(-1) + retVal;
-  //          value  = value.slice(0,-1);
-  //        }
-  //      }
-  //      return '$' + retVal;
-  //  }
-
-  // View1: [
-  //   {"_id":{"cat":"Mixed"},
-  //    "Scale":170037,"AssessedValue":1002200,"No_parcels":31,"percOfLand":3.170551611874675,
-  //    "percOfAssessedVal":0.3737736368376259},
-  //    {"_id":{"cat":null},
-  //    "Scale":16861,"AssessedValue":2900,"No_parcels":115,"percOfLand":0.3143943419833265,
-  //    "percOfAssessedVal":0.0010815641057963631},
-  //    {"_id":{"cat":"Utility"},"Scale":4690,"AssessedValue":108600,"No_parcels":2,"percOfLand":0.08745089045144425,
-  //    "percOfAssessedVal":0.04050271099637415},
-  //    {"_id":{"cat":"Industrial"},"Scale":237474,"AssessedValue":2925000,"No_parcels":30,
-  //    "percOfLand":4.427998456090889,"percOfAssessedVal":1.0908879342946076},
-  //    {"_id":{"cat":"Institutional"},"Scale":782749,"AssessedValue":41988900,"No_parcels":379,"percOfLand":14.595329861402458,"percOfAssessedVal":15.659892097197556},
-  //    {"_id":{"cat":"Government"},"Scale":1542624,"AssessedValue":84820100,"No_parcels":1675,"percOfLand":28.76414550783981,"percOfAssessedVal":31.633922624157968},{"_id":{"cat":"Commercial"},"Scale":719408,"AssessedValue":15546700,"No_parcels":249,"percOfLand":13.414258037930193,"percOfAssessedVal":5.798190580546317},{"_id":{"cat":"Residential"},"Scale":1889167,"AssessedValue":121735800,"No_parcels":3118,"percOfLand":35.2258712924272,"percOfAssessedVal":45.40174885186376}]
 }
