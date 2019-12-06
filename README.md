@@ -23,25 +23,13 @@
 * `central.service:` main data control point, creates subjects for all data views when a component subscribes to receive data on any update this is the control point for that data.
 
 ## Assets: *contains all icons and pictures, structured by data type*
-<details>
-   <summary>bootstrap-png</summary>
-   <p>contains useful bootstrap icons</p>
-</details><details>
-   <summary>data</summary>
-   <p>Location for testing data and temporary data files</p>
-</details><details>
-   <summary>icons-16px</summary>
-   <p>contains 16px size icons</p>
-</details><details>
-   <summary>icons-24px</summary>
-   <p>contains 24px size icons</p>
-</details><details>
-   <summary>icons-50px</summary>
-   <p>contains 50px size icons</p>
-</details><details>
-   <summary>images</summary>
-   <p>contains high resolution images</p>
-</details>
+
+`bootstrap-png:` contains useful bootstrap icons
+`data:` Location for testing data and temporary data files
+`icons-16px:` contains 16px size icons
+`icons-24px:` contains 24px size icons
+`icons-50px:` contains 50px size icons
+`images:` contains high resolution images
 
 ## Models: *structures for custom data types*
 
