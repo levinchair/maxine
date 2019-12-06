@@ -24,12 +24,12 @@
 
 ## Assets: *contains all icons and pictures, structured by data type*
 
-`bootstrap-png:` contains useful bootstrap icons
-`data:` Location for testing data and temporary data files
-`icons-16px:` contains 16px size icons
-`icons-24px:` contains 24px size icons
-`icons-50px:` contains 50px size icons
-`images:` contains high resolution images
+* `bootstrap-png:` contains useful bootstrap icons
+* `data:` Location for testing data and temporary data files
+* `icons-16px:` contains 16px size icons
+* `icons-24px:` contains 24px size icons
+* `icons-50px:` contains 50px size icons
+* `images:` contains high resolution images
 
 ## Models: *structures for custom data types*
 
