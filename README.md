@@ -183,17 +183,19 @@ These are Node scripts that allow for precise and miscellaneuos data calculation
 - updatecollection.js 
     - Usage: 
          `node updatecollection.js <location of .geojson file> <name  of collection to update in database urbanNeighbourhood2> `
-    - Updates the specified colletion with the new data in the database by matching the parcelpin of the file with the parclepin in the databse. If the parcelpin is not found, it will add a new document.
+    - Updates the specified collection with the new data in the database by matching the parcelpin of the file with the parclepin in the databse. If the parcelpin is not found, it will add a new document.
 - Various.
 ## model
 
 # DataBase Management
 
 ## Indexes
-There are two indexes that are required to optimize the database.
-1. Index on the city and the Neighborhood ({"properties.par_city": 1, "properties.SPA_NAME": 1})
-2. Index on the parcelpins ({"properties.parcelpin": 1})
-3. **Expiremental** Index on the coordinates (geospatial). ({ geometry: "2dsphere" }). Creating this query has worked on the recent dataset.
+There are two indexes that are required to optimize the database. You will need to recreate these everytime you create or replace a mongodb collection.
+1. Index on the city and the Neighborhood `({"properties.par_city": 1, "properties.SPA_NAME": 1})` and `{properties.SPA_NAME}`
+2. Index on the parcelpins `({"properties.parcelpin": 1})`
+3. **Expiremental** Index on the coordinates (geospatial). `({ geometry: "2dsphere" })`. Creating this query has worked on the recent dataset.
+
+On the collection `cuyahoga_test`, you need to notice that it will not let you insert any documents because of the fact that "properties.parcelpin" is a unique key within the collection. You may need to delete the collection, or delete the keys. 
 
 Database Commands that are useful (when connected usign the mogno client): 
 ```
