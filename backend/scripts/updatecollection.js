@@ -19,7 +19,7 @@ console.log(process.argv[2]);
 var filename = process.argv[2];
 var argCollection = process.argv[3];
 if(filename === undefined) throw new Error("Please pass filepath as argument");
-if(argCollection === undefined) argCollection = "cuyahoga_test"
+if(argCollection === undefined) argCollection = "cuyahoga" // this is the default test collection
 
 console.log("\n *STARTING* \n");
 // Get content from file

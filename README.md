@@ -34,7 +34,7 @@
 
 
 ## Front End File Structure
-```bash
+```
 .
 ├── app
 │   ├── charts
@@ -103,9 +103,9 @@ To run the Backend, go to folder /backend and run:
 ```
 node server.js
 ```
-- This will start the server at IP:  http://localhost:3000
+This will start the server at IP:  http://localhost:3000
 
-```bash
+```
 .
 ├── app.js
 ├── index.html
@@ -174,8 +174,49 @@ node server.js
         - Updates the prerendered files
     - updatecollection.js 
         - Usage: 
-            ``` node updatecollection.js <location of .geojson file> <name  of collection to update in database urbanNeighbourhood2> ```
+            ``` node updatecollection.js <location of .geojson file> <name  of collection to update in database urbanNeighbourhood2> 
+            ```
         - Updates the specified colletion with the new data in the database by matching the parcelpin of the file with the parclepin in the databse. If the parcelpin is not found, it will add a new document.
     - Various.
 ## model
-    
+
+# DataBase Management
+
+## Indexes
+    There are two indexes that are required to optimize the database.
+    1. Index on the city and the Neighborhood ({"properties.par_city": 1, "properties.SPA_NAME": 1})
+    2. Index on the parcelpins ({"properties.parcelpin": 1})
+    3. **Expiremental** Index on the coordinates (geospatial). ({ geometry: "2dsphere" }). Creating this query has worked on the recent dataset.
+
+    Database Commands that are useful (when connected usign the mogno client): 
+    ```
+        db.collection.createIndex({ geometry: "2dsphere" })
+        db.collection.dropIndexes()
+        db.collection.getIndexes()
+
+        db.collection.drop()
+    ```
+    Current Important Collections in the MongoServer: 
+    ```
+    cleveland_spa
+    cuyahoga
+    cuyahoga_cities
+    cuyahoga_test
+    od_cuyahoga_lodes
+    rac_lodes
+    wac_lodes
+    xwalk_cuyahoga_lodes
+    xwalk_full_lodes
+    ```
+
+## Adding a New Data Set to Database
+    In order to update a collection on the mongoDB server, you will need to have access to the Mongo Server EC2 instance. ***Make sure this repository stays private.***
+
+    1. Make sure data is in the correct GeoJSON fomat.
+    2. Connect to the EC2 instance that is running the mongo instance. 
+    3. Use 'scp' to send the json file to the remote server (you will need the keyfile to do this)
+    4. Use `sudo mongoimport --host localhost:27017 --username <username> --password <password> --authenticationDatabase admin  --db urbanNeighbourhood2 -c <name_of_collection>  --file <location_of_geojson_file> --jsonArray` in order to create or replace a collection in the mongodb with the new data. You might need to covert the data from a featureCollecton to an array of features. If you overwrite a collection, you will need to recreate all indexes. 
+
+## Testing Data in a collection
+    1. Change the file *backend/app/db.js* and change every instance of "cuyahoga_test" to "cuyahoga". Make sure that you change it back for developmental purposes. One or the other could be considered the test collection. 
+
