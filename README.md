@@ -26,17 +26,23 @@
 <details>
    <summary>bootstrap-png</summary>
    <p>contains useful bootstrap icons</p>
+</details><details>
    <summary>data</summary>
    <p>Location for testing data and temporary data files</p>
+</details><details>
    <summary>icons-16px</summary>
    <p>contains 16px size icons</p>
+</details><details>
    <summary>icons-24px</summary>
    <p>contains 24px size icons</p>
+</details><details>
    <summary>icons-50px</summary>
    <p>contains 50px size icons</p>
+</details><details>
    <summary>images</summary>
    <p>contains high resolution images</p>
 </details>
+
 ## Models: *structures for custom data types*
 
 * `SearchOptions:` Used in centralService, model of filters/options for database search query, set via control-panel upon search (located in ..app/Service)

@@ -30,7 +30,6 @@ export class ControlPanelComponent implements OnInit {
   cityFromService = this.centralService.getCity();
   selectedCity : string = "Select city...";
   selectedLandUse : string;
-  sitecat2Selected: boolean = false;
   abatementList = [];
   neighborhood : string[] = [];
   selectedHood:string = "";
@@ -142,11 +141,6 @@ export class ControlPanelComponent implements OnInit {
     if(this.centralService.firstVisit){
       this.popC.close();
       this.popD.open();
-    }
-    if(landUse == "All"){
-      this.sitecat2Selected = true;
-    }else{
-      this.sitecat2Selected = false;
     }
   }
 
