@@ -1,41 +1,48 @@
 # Cleveland State Urban Planning Neighborhood Web Application
-
+<!-- https://github.com/tchapi/markdown-cheatsheet/blob/master/README.md -->
 # --FrontEnd Structure--
 
 ## General Components
 
-`charts:` charts.js custom charts, contained in sidebar
-`control-panel:` select city, neighborhood, land use, filter options, search by
-                    address button, and go button
-`leaflet-map:` leaflet map with glify polygon rendering, lasso, and selection
-`sidebar:` contains charts expandable sections
+* `charts:` charts.js custom charts, contained in sidebar
+* `control-panel:` select city, neighborhood, land use, filter options, search by address button, and go button
+* `leaflet-map:` leaflet map with glify polygon rendering, lasso, and selection
+* `sidebar:` contains charts expandable sections
 
-## Modal Components: Uses Bootstrap modals
+## Modal Components: *Uses Bootstrap modals*
 
-`abatement-modal:` Displays information about abatements
-`dtlu-modal:` Displays information about Detailed Taxable Land Use
-`landing-page-content:` first modal displayed when website is loaded
-`progress-spinner:` after go is pressed in control panel displays loading spinner
-`tables:` ng2-tables displays data from relevant chart
-`address-search`: Display the form to search for an address. Area of interest
-                    is the area analyzed area around the parcel with associated address
+* `abatement-modal:` Displays information about abatements
+* `dtlu-modal:` Displays information about Detailed Taxable Land Use
+* `landing-page-content:` first modal displayed when website is loaded
+* `progress-spinner:` after go is pressed in control panel displays loading spinner
+* `tables:` ng2-tables displays data from relevant chart
+* `address-search`: Display the form to search for an address. Area of interest is the area analyzed area around the parcel with associated address
 
 ## Services
 
-`central.service:` main data control point, creates subjects for all data views
-                    when a component subscribes to receive data on any update this
-                    is the control point for that data.
+* `central.service:` main data control point, creates subjects for all data views when a component subscribes to receive data on any update this is the control point for that data.
 
-## Assets: contains all icons and pictures, structured by data type
+## Assets: *contains all icons and pictures, structured by data type*
+<details>
+   <summary>bootstrap-png</summary>
+   <p>contains useful bootstrap icons</p>
+   <summary>data</summary>
+   <p>Location for testing data and temporary data files</p>
+   <summary>icons-16px</summary>
+   <p>contains 16px size icons</p>
+   <summary>icons-24px</summary>
+   <p>contains 24px size icons</p>
+   <summary>icons-50px</summary>
+   <p>contains 50px size icons</p>
+   <summary>images</summary>
+   <p>contains high resolution images</p>
+</details>
+## Models: *structures for custom data types*
 
-## Models: structures for custom data types
-
-`SearchOptions:` Used in centralService, model of filters/options for
-                    database search query, set via control-panel upon search
-                    (located in ..app/Service)
-`view(n):` different data to send to charts/tables
-`AddressOptions`: Used in centralService and an address Componenet
-`featurecollection:` useful for formatting json feature collections
+* `SearchOptions:` Used in centralService, model of filters/options for database search query, set via control-panel upon search (located in ..app/Service)
+* `view(n):` different data to send to charts/tables
+* `AddressOptions`: Used in centralService and an address Componenet
+* `featurecollection:` useful for formatting json feature collections
 
 
 ## Front End File Structure
@@ -82,7 +89,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` or `npm start`(alias) for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Code Scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
@@ -90,22 +97,22 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
+## Running Unit Tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## Running End-to-end Tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
+## Further Help
 
     To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).]
 
 
 # --Backend Structure--
 
-To run the Backend, go to folder /backend and run: 
+To run the Backend, go to folder /backend and run:
 ```
 node server.js
 ```
@@ -152,7 +159,7 @@ This will start the server at IP:  http://localhost:3000
 
 ## Router
 
-These Express Routers handle incoming requests after the Parser verifies them, does some data manipulation using Mongo Aggregation Pipelines, then send a response with new data. 
+These Express Routers handle incoming requests after the Parser verifies them, does some data manipulation using Mongo Aggregation Pipelines, then send a response with new data.
 Here are some API Endpoints:
 
 ```
@@ -165,7 +172,7 @@ Here are some API Endpoints:
 - /concentrationbylanduse/:param2?/:hood2?
 - /owners/:city?/:hood?
 ```
-These are simple complementary routes to get supplemntary information for the main routes, which are listed below: 
+These are simple complementary routes to get supplemntary information for the main routes, which are listed below:
 ```
 - /view1/:param?/:hood?
 - /view2/:param?/:hood?
@@ -173,15 +180,15 @@ These are simple complementary routes to get supplemntary information for the ma
 - /view4/:param?/:hood?
 ```
 utils.js has some re-usable mongo pipelines as well as a function that takes req.body and converts it to a Mongo Match Query.
-## Prerendered 
+## Prerendered
 These are static file of outputs from the Mongo Aggregattion pipeline. Might be used a solution to speed up the backend by serving these files instead
 of re-calculating them.
 ## Scripts
 These are Node scripts that allow for precise and miscellaneuos data calculations.
 - prerenderedcities.js
     - Updates the prerendered files
-- updatecollection.js 
-    - Usage: 
+- updatecollection.js
+    - Usage:
          `node updatecollection.js <location of .geojson file> <name  of collection to update in database urbanNeighbourhood2> `
     - Updates the specified collection with the new data in the database by matching the parcelpin of the file with the parclepin in the databse. If the parcelpin is not found, it will add a new document.
 - Various.
@@ -195,9 +202,9 @@ There are two indexes that are required to optimize the database. You will need 
 2. Index on the parcelpins `({"properties.parcelpin": 1})`
 3. **Expiremental** Index on the coordinates (geospatial). `({ geometry: "2dsphere" })`. Creating this query has worked on the recent dataset.
 
-On the collection `cuyahoga_test`, you need to notice that it will not let you insert any documents because of the fact that "properties.parcelpin" is a unique key within the collection. You may need to delete the collection, or delete the keys. 
+On the collection `cuyahoga_test`, you need to notice that it will not let you insert any documents because of the fact that "properties.parcelpin" is a unique key within the collection. You may need to delete the collection, or delete the keys.
 
-Database Commands that are useful (when connected usign the mogno client): 
+Database Commands that are useful (when connected usign the mogno client):
 ```
     db.collection.createIndex({ geometry: "2dsphere" })
     db.collection.dropIndexes()
@@ -205,7 +212,7 @@ Database Commands that are useful (when connected usign the mogno client):
 
     db.collection.drop()
 ```
-Current Important Collections in the MongoServer: 
+Current Important Collections in the MongoServer:
 ```
 cleveland_spa
 cuyahoga
@@ -222,10 +229,9 @@ xwalk_full_lodes
 In order to update a collection on the mongoDB server, you will need to have access to the Mongo Server EC2 instance. ***Make sure this repository stays private.***
 
 1. Make sure data is in the correct GeoJSON format.
-2. Connect to the EC2 instance that is running the mongo instance. 
+2. Connect to the EC2 instance that is running the mongo instance.
 3. Use 'scp' to send the json file to the remote server (you will need the keyfile to do this)
-4. Use `sudo mongoimport --host localhost:27017 --username <username> --password <password> --authenticationDatabase admin  --db urbanNeighbourhood2 -c <name_of_collection>  --file <location_of_geojson_file> --jsonArray` in order to create or replace a collection in the mongodb with the new data. You might need to covert the data from a featureCollecton to an array of features. If you overwrite a collection, you will need to recreate all indexes. 
+4. Use `sudo mongoimport --host localhost:27017 --username <username> --password <password> --authenticationDatabase admin  --db urbanNeighbourhood2 -c <name_of_collection>  --file <location_of_geojson_file> --jsonArray` in order to create or replace a collection in the mongodb with the new data. You might need to covert the data from a featureCollecton to an array of features. If you overwrite a collection, you will need to recreate all indexes.
 
 ## Testing Data in a collection
-1. Change the file *backend/app/db.js* and change every instance of *cuyahoga_test* to *cuyahoga*. Make sure that you change it back for developmental purposes. One or the other could be considered the test collection. 
-
+1. Change the file *backend/app/db.js* and change every instance of *cuyahoga_test* to *cuyahoga*. Make sure that you change it back for developmental purposes. One or the other could be considered the test collection.

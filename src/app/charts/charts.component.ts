@@ -213,7 +213,7 @@ export class ChartsComponent implements OnInit {
         }
       }
       // this.chart.update(); //Charts can never have an empty data variable
-      this.chartData.length = 0;
+      this.chartData.length = 0; 
       this.CR4.length = 0;
       //Check for selection value/acres
       if(selection == 'value'){
