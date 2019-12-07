@@ -24,7 +24,7 @@ router.all("/maxproperties/:city?/:hood?", (req, res, next) => {
         {$group: {
             _id: "$properties.SiteCat1",
             maxValue: { 
-                $max: "$properties.gross_ce_2"},
+                $max: "$properties.certifie_2"},
             maxScale: { //scale based on SiteCat 
                 //$push: {cat: catfilter, site:"$properties.SiteCat1", total_com: "$properties.total_com_"}
                 $max: catfilter

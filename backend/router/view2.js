@@ -23,7 +23,7 @@ var utils = require("./utils");
                   "_id":"$properties.SiteCat2",
                   "No_Units":{"$sum":"$properties.Units2"},
                   "No_Parcels":{"$sum":1},
-                  "AssessedValue":{"$sum":"$properties.gross_ce_2"}
+                  "AssessedValue":{"$sum":"$properties.certifie_2"}
                   }},
             {"$project":{ 
                   "No_Units":1,

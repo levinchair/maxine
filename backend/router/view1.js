@@ -21,12 +21,12 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
  
   var sum1 = { // this contains the sums for totals for the pipeline from the query
     _id: null,  // property to group by, set to null to sum all documents
-    tot_assessedval: {$sum: "$properties.gross_ce_2"},
+    tot_assessedval: {$sum: "$properties.certifie_2"},
     tot_land:  {$sum: "$properties.total_acre"},
     indivs:{
       $push: { // creates an array
         indiv_pin: "$properties.parcelpin",
-        indiv_assessed: "$properties.gross_ce_2",
+        indiv_assessed: "$properties.certifie_2",
         indiv_land: "$properties.total_acre",
         indiv_SiteCat1: "$properties.SiteCat1",
         indiv_SiteCat2: "$properties.SiteCat2",
@@ -87,8 +87,9 @@ router.all("/view1/:param?/:hood?", (req, res, next) => {
   db.aggregate(pipeline).allowDiskUse(true).exec(
     function(err, result){ //callback
       if(err) return next("Error at aggregation: " + err);
-      console.log(result);
+      // console.log(result);
       res.send(result);
+      console.log("Sent view1 data");
     }
   );
 

@@ -42,7 +42,7 @@ router.all("/view4/:param?/:hood?", async (req,res,next)=>{
                 {"$group":{
                     "_id":"$properties.SiteCat2",
                     "sq_feet":{"$sum":"$properties.total_com_"},
-                    "AssessedValue":{"$sum":"$properties.gross_ce_2"}}},
+                    "AssessedValue":{"$sum":"$properties.certifie_2"}}},
                 {"$project":{ 
                     "sq_feet":1,
                     "AssessedValue":1, 

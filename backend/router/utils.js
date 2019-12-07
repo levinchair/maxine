@@ -12,7 +12,7 @@ dbKeysArrays = new Map([
 ]);
 dbKeysRange = new Map([
   ['acres', {dbName: 'properties.total_acre'}],
-  ['value', {dbName: 'properties.gross_ce_2'}],
+  ['value', {dbName: 'properties.certifie_2'}],
   ['scale_units', {dbName1: 'properties.total_com_', dbName2: 'properties.units2'}]
 ]);
 dbKeysStrings = new Map([
