@@ -127,8 +127,6 @@ const processOwnerConcentration =  async(param, hood, body) => {
             a = await db.aggregate(pipeline); //gets executed here. Promises are executed on the microtask queue
             payload = payload.concat(a);
         }
-        // a = await db.aggregate(pipeline); //gets executed here. Promises are executed on the microtask queue
-        // payload = payload.concat(a);
     }catch(err){
         throw err;
     }

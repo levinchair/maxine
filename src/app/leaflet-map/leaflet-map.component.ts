@@ -39,7 +39,7 @@ export class LeafletMapComponent implements OnInit {
   lassoPoints:any;
   enhancedLasso: boolean = false;
   constructor(
-    private centralService : CentralService,
+    public centralService : CentralService,
     public cp: CurrencyPipe
   ){}
 
