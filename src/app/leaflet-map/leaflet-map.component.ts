@@ -13,7 +13,7 @@ import { BehaviorSubject } from "rxjs/Rx";
 @Component({
   selector: 'app-leaflet-map',
   templateUrl: './leaflet-map.component.html',
-  styleUrls: ['./leaflet-map.component.css']
+  styleUrls: ['./leaflet-map.component.scss']
 })
 
 export class LeafletMapComponent implements OnInit {

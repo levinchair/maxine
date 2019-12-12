@@ -4,7 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-dtlu-modal',
   templateUrl: './dtlu-modal.component.html',
-  styleUrls: ['./dtlu-modal.component.css']
+  styleUrls: ['./dtlu-modal.component.scss']
 })
 export class DTLUModalComponent implements OnInit {
 

@@ -4,7 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-abatement-modal',
   templateUrl: './abatement-modal.component.html',
-  styleUrls: ['./abatement-modal.component.css']
+  styleUrls: ['./abatement-modal.component.scss']
 })
 export class AbatementModalComponent implements OnInit {
 

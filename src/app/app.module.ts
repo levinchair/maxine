@@ -16,7 +16,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule} from '@angular/material/button';
 import { CurrencyPipe} from '@angular/common';
-import { NgxMapboxGLModule } from 'ngx-mapbox-gl';
 
 // angular material imports begin here
 import { MatPaginatorModule } from '@angular/material';
@@ -77,9 +76,6 @@ import { AddressSearchComponent, AddressAreaComponent } from './modalComponents/
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDf4tl3dmehWlQPMVkud7Z1IjwbVTZATQU',
       libraries: ['places']
-    }),
-    NgxMapboxGLModule.withConfig({
-      accessToken: 'pk.eyJ1IjoiZGFrb3RhaHBldHRyeSIsImEiOiJjam9iemZvM2swdXM1M3FvNTlsaTQ4aXllIn0.maTU03NWhWklC_UNGGNifw' // Optionnal, can also be set per map (accessToken input of mgl-map)
     }),
     BrowserAnimationsModule,
     HttpModule,

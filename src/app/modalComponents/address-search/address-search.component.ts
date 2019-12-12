@@ -5,12 +5,12 @@ import { Component, OnInit } from '@angular/core';
 import { SearchAddress } from 'src/model/search-address';
 
 import { CentralService } from '../../Service/central.service';
- 
+
 
 @Component({
   selector: 'app-address-search',
   templateUrl: './address-search.component.html',
-  styleUrls: ['./address-search.component.css']
+  styleUrls: ['./address-search.component.scss']
 })
 export class AddressSearchComponent implements OnInit {
 
@@ -53,7 +53,7 @@ export class AddressSearchComponent implements OnInit {
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button> 
+      <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
     </div>
   `
 })
@@ -63,8 +63,8 @@ export class AddressAreaComponent {
   areas: String[];
 
   constructor(private modalService: NgbModal, public activeModal: NgbActiveModal) { }
-  
-  
+
+
   ngOnInit(){
     this.areas = ['half-mile radius', 'Neighborhood', 'City', 'County'];
   }

@@ -16,7 +16,7 @@ import { AddressSearchComponent } from '../modalComponents/address-search/addres
 @Component({
   selector: 'app-control-panel',
   templateUrl: './control-panel.component.html',
-  styleUrls: ['./control-panel.component.css'],
+  styleUrls: ['./control-panel.component.scss'],
   encapsulation: ViewEncapsulation.Emulated
 })
 

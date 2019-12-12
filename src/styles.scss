@@ -1,0 +1,67 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import "~@angular/material/theming";
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// imported above. For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$angular-material-v1-primary: mat-palette($mat-blue-grey, 600, 400, 800);
+$angular-material-v1-accent: mat-palette($mat-teal, 800, 900, 500);
+$angular-material-v1-warn: mat-palette($mat-red, 900, 500, A700);
+
+// Create the theme object (a Sass map containing all of the palettes).
+// If you prefer a dark theme, switch to mat-dark-theme and it will switch over to your darker hues
+$angular-material-v1-theme: mat-light-theme(
+  $angular-material-v1-primary,
+  $angular-material-v1-accent,
+  $angular-material-v1-warn
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($angular-material-v1-theme);
+
+body::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+body {
+  padding: 0%;
+  margin: 0%;
+  overflow: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+/* background color primary */
+.primary{
+  background-color: #528aae;
+}
+/* accent color */
+.accent {
+  color: #ff4081;
+}
+button {
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+}
+html,body { height: 100%; }
+body { margin: 0; font-family: 'Roboto', sans-serif; }
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}

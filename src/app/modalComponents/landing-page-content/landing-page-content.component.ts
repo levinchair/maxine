@@ -5,7 +5,7 @@ import { CentralService } from '../../Service/central.service';
 @Component({
   selector: 'app-landing-page-content',
   templateUrl: './landing-page-content.component.html',
-  styleUrls: ['./landing-page-content.component.css']
+  styleUrls: ['./landing-page-content.component.scss']
 })
 export class LandingPageContentComponent implements OnInit {
 
