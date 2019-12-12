@@ -213,8 +213,8 @@ export class ChartsComponent implements OnInit {
         }
       }
       // this.chart.update(); //Charts can never have an empty data variable
-      this.chartData.length = 0; 
-      this.CR4.length = 0;
+      this.chartData.length = 0;this.chartData.length = this.view1Data.length;
+      this.CR4.length = 0; this.CR4.length = this.landUseConcentrationData.length;
       //Check for selection value/acres
       if(selection == 'value'){
         this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Value $";
@@ -222,28 +222,27 @@ export class ChartsComponent implements OnInit {
           return this.cp.transform(value,"USD","symbol","1.0-0");
         };
         for(var y = 0; y < this.view1Data.length; y++){
-          this.chartData.push(this.view1Data[y].AssessedValue.toFixed(0));
+          var index = this.labels.indexOf(this.view1Data[y].cat);
+          this.chartData[index] = this.view1Data[y].AssessedValue.toFixed(0);
         }
         for(var z = 0; z < this.landUseConcentrationData.length; z++){
-          this.CR4.push((this.landUseConcentrationData[z].MarketCR4 * 100).toFixed(0));
+          var cr4Index = this.labels.indexOf(this.landUseConcentrationData[z].landuse);
+          this.CR4[cr4Index] = (this.landUseConcentrationData[z].MarketCR4 * 100).toFixed(0);
         }
       }else{
         this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Acres";
         this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
           return this.cp.transform(value,"USD","","1.0-0");
         };
-        for(var y = 0; y < this.view1Data.length; y++){
-          this.chartData.push(this.view1Data[y].Scale.toFixed(2));
-        }
         for(var z = 0; z < this.landUseConcentrationData.length; z++){
-          this.CR4.push((this.landUseConcentrationData[z].MarketCR4 * 100).toFixed(0));
+          var cr4Index = this.labels.indexOf(this.landUseConcentrationData[z].landuse);
+          this.chartData[cr4Index] = this.landUseConcentrationData[z].landuseTot.toFixed(0);
         }
       }
       this.chart.update();
     }
   }
   updateChart2(selection,sitecat1){
-    //set labels, CR4, currentView,chartData,colorsLU
     this.labels.length = 0;
     if(this.centralService.getHood() == "All"){
       this.chart.options.title.text = this.centralService.getCity() + ":" + sitecat1;
@@ -251,24 +250,24 @@ export class ChartsComponent implements OnInit {
       this.chart.options.title.text = this.centralService.getHood() + ":" + sitecat1;
     }
     this.colorsLU.length = 0;
-    this.chartData.length = 0;
-    this.CR4.length = 0;
+    this.chartData.length = 0;this.chartData.length = this.view1Data.length;
+    this.CR4.length = 0;this.CR4.length = this.landUseConcentrationData.length;
+    //Residential subcats
     if(sitecat1 == "Residential" && this.view2Data !== undefined){
       for(var subcat in this.view2Data){
         this.labels.push(this.view2Data[subcat].cat);
         this.colorsLU.push(this.DEFAULTCOLORS[subcat])
       }
-
       if(selection == "value"){ //y-axis should display value
         this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Value $";
         this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
           return this.cp.transform(value,"USD","symbol","1.0-0");
         };
         for(var y in this.view2Data){
-          this.chartData.push(this.view2Data[y].AssessedValue.toFixed(0));
-          this.CR4.push((this.view2Data[y].CR4 * 100).toFixed(0));
+          var indexA = this.labels.indexOf(this.view2Data[y].cat);
+          this.chartData[indexA] = this.view2Data[y].AssessedValue.toFixed(0);
+          this.CR4[indexA] = (this.view2Data[y].CR4 * 100).toFixed(0);
         }
-
       }else{ //y-axis should display acres
 
       }
@@ -283,11 +282,20 @@ export class ChartsComponent implements OnInit {
           return this.cp.transform(value,"USD","symbol","1.0-0");
         };
         for(var x in this.view3Data){
-          this.chartData.push(this.view3Data[x].AssessedValue.toFixed(0));
-          this.CR4.push((this.view3Data[x].CR4* 100).toFixed(0));
+          var indexB = this.labels.indexOf(this.view3Data[x].cat);
+          this.chartData[indexB] = this.view3Data[x].AssessedValue.toFixed(0);
+          this.CR4[indexB] = (this.view3Data[x].CR4 * 100).toFixed(0);
         }
       }else{ //y-axis should display acres
-
+        this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Acres";
+        this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
+          return this.cp.transform(value,"USD","","1.0-0");
+        };
+        for(var y2 in this.view3Data){
+          var index2 = this.labels.indexOf(this.view3Data[y2].cat);
+          this.chartData[index2] = ((this.view3Data[y2].sq_feet)/43560).toFixed(0);
+          // this.CR4[index2] = (this.view3Data[y2].CR4 * 100).toFixed(0);
+        }
       }
     }else if(sitecat1 == "Industrial" && this.view4Data !== undefined){
       for(var subcat in this.view4Data){
@@ -300,11 +308,19 @@ export class ChartsComponent implements OnInit {
           return this.cp.transform(value,"USD","symbol","1.0-0");
         };
         for(var y in this.view4Data){
-          this.chartData.push(this.view4Data[y].AssessedValue.toFixed(0));
-          // this.CR4.push((this.view4Data[y].CR4 * 100).toFixed(0)); no cr4s
+          var indexC = this.labels.indexOf(this.view4Data[y].cat);
+          this.chartData[indexC] = this.view4Data[y].AssessedValue.toFixed(0);
+          // this.CR4[indexC] = (this.view4Data[y].CR4 * 100).toFixed(0);
         }
       }else{ //y-axis should display acres
-
+        this.chart.options.scales.yAxes[1].scaleLabel.labelString = "Total Acres";
+        this.chart.options.scales.yAxes[1].ticks.callback = (value,index,values) =>{
+          return this.cp.transform(value,"USD","","1.0-0");
+        };
+        for(var y2 in this.view4Data){
+          var index2 = this.labels.indexOf(this.view4Data[y2].cat);
+          this.chartData[index2] = ((this.view4Data[y2].sq_feet)/43560).toFixed(0);
+        }
       }
     }else{console.log("Error charts.comp.ts: something seriously broke")}
     this.chart.update();
